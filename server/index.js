@@ -1,6 +1,13 @@
 import express from "express";
 import colors from "colors";
 import cors from "cors";
+import testRouter from "./routes/testRoute.js";
+import * as dotenv from "dotenv";
+import mongoose from "mongoose";
+import productsRouter from "./routes/productsRoute.js";
+
+// loading .env file
+dotenv.config();
 
 const app = express();
 
@@ -18,3 +25,20 @@ app.use(cors());
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`.bgGreen);
 });
+
+app.use("/api", testRouter); //whatever arrives in localhost:5100/api, I'll trigger testRouter
+app.use("/api/products", productsRouter);
+
+// use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+async function main() {
+  try {
+    const mongoDBConnection = await mongoose.connect(process.env.MONGODB_URI);
+    if (mongoDBConnection) {
+      console.log("Connected with MongoDB".bgGreen);
+    }
+  } catch (error) {
+    console.log("Error connecting to MongoDB:>> ".bgRed, error);
+  }
+}
+
+main();
