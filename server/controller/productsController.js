@@ -4,7 +4,10 @@ const getAllProducts = async (req, res) => {
   console.log("get All products running");
 
   try {
-    const allProducts = await ProductModel.find();
+    const allProducts = await ProductModel.find().populate({
+      path: "seller",
+      select: ["s_name", "s_address"],
+    });
 
     console.log("allProducts :>> ", allProducts);
     if (allProducts.length === 0) {
