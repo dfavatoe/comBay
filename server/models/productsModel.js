@@ -29,8 +29,9 @@ const productsSchema = new Schema({
     reviewerEmail: { type: String },
   },
   meta: {
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
+    //?check if this will work without the 'timestamp' object
+    createdAt: "created_at",
+    updatedAt: "updated_at",
     barcode: { type: String },
     qrcode: { type: String },
   },

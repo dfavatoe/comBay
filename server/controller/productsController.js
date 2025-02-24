@@ -6,7 +6,7 @@ const getAllProducts = async (req, res) => {
   try {
     const allProducts = await ProductModel.find().populate({
       path: "seller",
-      select: ["s_name", "s_address"],
+      select: ["sName", "sAddress"],
     });
 
     console.log("allProducts :>> ", allProducts);
