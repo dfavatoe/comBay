@@ -11,31 +11,28 @@ const { Schema } = mongoose;
 //   },
 // });
 
-const sellersSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-  sName: { type: String, require: true },
-  sEmail: { type: String, require: true },
-  s_url: String,
-  sPassword: { type: String, require: true },
-  sAddress: { type: String, require: true },
-  geo: {
-    lat: { type: Number, require: true },
-    lon: { type: Number, require: true },
-    pluscode: { type: String, require: false },
-  },
-  sProducts: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-  timestamp: {
-    timestamps: {
-      createdAt: "created_at",
-      updatedAt: "updated_at",
+const sellersSchema = new Schema(
+  {
+    _id: Schema.Types.ObjectId,
+    sName: { type: String, require: true },
+    sEmail: { type: String, require: true },
+    s_url: String,
+    sPassword: { type: String, require: true },
+    sAddress: { type: String, require: true },
+    geo: {
+      lat: { type: Number, require: true },
+      lon: { type: Number, require: true },
+      pluscode: { type: String, require: false },
     },
+    sProducts: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    // geo: {
+    //   geo: {
+    //     type: geoSchema,
+    //   },
+    // },
   },
-  // geo: {
-  //   geo: {
-  //     type: geoSchema,
-  //   },
-  // },
-});
+  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
+);
 
 const SellerModel = mongoose.model("Seller", sellersSchema);
 

@@ -4,7 +4,7 @@ const getAllSellers = async (req, res) => {
   // console.log("all sellers working");
   try {
     const allSellers = await SellerModel.find().populate({
-      path: "s_products",
+      path: "sProducts",
       select: ["title", "price"],
     });
 
