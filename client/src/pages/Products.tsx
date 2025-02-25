@@ -9,7 +9,7 @@ function Products() {
   };
 
   useEffect(() => {
-    fetchAllProducts();
+    // fetchAllProducts();
   }, []);
 
   return <div>Products</div>;

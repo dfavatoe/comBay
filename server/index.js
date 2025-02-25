@@ -6,7 +6,8 @@ import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import productsRouter from "./routes/productsRoute.js";
 import sellersRouter from "./routes/sellersRoute.js";
-import usersRouter from "./routes/usersRouter.js";
+import usersRouter from "./routes/usersRoute.js";
+import userRouter from "./routes/usersRoute.js";
 
 // loading .env file
 dotenv.config();
@@ -36,7 +37,7 @@ function loadRoutes() {
   app.use("/api", testRouter); //whatever arrives in localhost:5100/api, I'll trigger testRouter
   app.use("/api/products", productsRouter);
   app.use("/api/sellers", sellersRouter);
-  app.use("api/user", usersRouter);
+  app.use("/api/users", userRouter);
 }
 
 // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
