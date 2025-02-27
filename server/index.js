@@ -13,7 +13,7 @@ dotenv.config();
 
 const app = express();
 
-const port = process.env.PORT || 5100; //we use the PORT variable to let our project ready for deployment, because we don't know which PORT will be used in the server. 5000 is our port while developing the project.
+const port = process.env.PORT || 5100; //we use the PORT variable to let our project ready for deployment, because we don't know which PORT will be used in the server. 5100 is our port while developing the project.
 
 function addMiddleWares() {
   app.use(express.json());

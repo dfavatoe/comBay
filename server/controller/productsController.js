@@ -36,7 +36,7 @@ import { getAllRecords } from "./getAllRecords.js";
 
 const getAllProducts = getAllRecords(ProductModel, {
   path: "seller",
-  select: ["sName", "sAddress"],
+  select: ["name", "address"],
 });
 
 const getProductsByCategory = async (req, res) => {

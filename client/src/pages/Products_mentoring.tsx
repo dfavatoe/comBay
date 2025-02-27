@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { fetchData } from "../hooks/useFetch";
+import { fetchData } from "../hooks/useFetch_mentoring.tsx";
 import { Col, Container, Row } from "react-bootstrap";
 import ProductCard from "./ProductCard";
-import { ProductT, Root } from "../types/customTypes";
+import { ProductT } from "../types/customTypes";
 
 function Products() {
   const [products, setProducts] = useState<any>({});
   const [categories, setCategories] = useState({});
 
-  const productsRecords = products.records as ProductT[];
-  console.log("productsArrays :>> ", productsRecords);
-  console.log("type of productsArrays :>> ", typeof productsRecords);
+  // const productsRecords = products.records;
+  // console.log("productsArrays :>> ", productsRecords);
+  // console.log("type of productsArrays :>> ", typeof productsRecords);
 
   // productsRecords.map((item: {}) => {
   //   console.log(item);
@@ -34,9 +34,15 @@ function Products() {
   //     .catch((error) => console.error(error));
   // };
 
+  // const productsResult = await fetchData<ProductT[]>;
+
   useEffect(() => {
-    fetchData("products", setProducts);
-    fetchData("products/categories-list", setCategories);
+    const productsResult = fetchData<ProductT[]>("products", setProducts);
+
+    const categories = fetchData<any>(
+      "products/categories-list",
+      setCategories
+    );
 
     // fetchAllProducts();
     // fetchCategoriesList();
@@ -47,14 +53,11 @@ function Products() {
       <div>Products</div>
       <Container className="justify-content-center">
         <Row className="g-1">
-          {productsRecords &&
-            productsRecords.map((product) => {
+          {productsResult &&
+            productsResult.map((product) => {
               return (
-                <Col
-                  className="d-flex justify-content-center"
-                  key={product._id}
-                >
-                  <ProductCard key={product._id} product={product} />
+                <Col className="d-flex justify-content-center" key={product.id}>
+                  <ProductCard key={product.id} product={product} />
                 </Col>
               );
             })}
