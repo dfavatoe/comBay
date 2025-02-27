@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "../hooks/useFetch";
-import { Col, Container, Row } from "react-bootstrap";
-import ProductCard from "./ProductCard";
+import { Container, Row, Spinner } from "react-bootstrap";
 import { ProductT, Root } from "../types/customTypes";
+import Grid from "../components/Grid";
 
 function Products() {
   const [products, setProducts] = useState<any>({});
   const [categories, setCategories] = useState({});
+  // const [loading, setLoading] = useState(true);
 
   const productsRecords = products.records as ProductT[];
   console.log("productsArrays :>> ", productsRecords);
@@ -37,30 +38,40 @@ function Products() {
   useEffect(() => {
     fetchData("products", setProducts);
     fetchData("products/categories-list", setCategories);
-
+    // setLoading(false);
     // fetchAllProducts();
     // fetchCategoriesList();
   }, []);
 
   return (
-    <>
-      <div>Products</div>
+    <div>
+      <h1>Products</h1>
       <Container className="justify-content-center">
-        <Row className="g-1">
-          {productsRecords &&
-            productsRecords.map((product) => {
-              return (
-                <Col
-                  className="d-flex justify-content-center"
-                  key={product._id}
-                >
-                  <ProductCard key={product._id} product={product} />
-                </Col>
-              );
-            })}
-        </Row>
+        <>
+          {productsRecords ? (
+            <Grid products={productsRecords}></Grid>
+          ) : (
+            <h3>Sorry, no matches were found! 😕</h3>
+          )}
+        </>
+        {/* <>
+          {loading ? (
+            <div>
+              <Spinner animation="border" variant="warning" />
+              <p>Loading...</p>
+            </div>
+          ) : (
+            <>
+              {productsRecords ? (
+                <Grid products={productsRecords}></Grid>
+              ) : (
+                <h3>Sorry, no matches were found! 😕</h3>
+              )}
+            </>
+          )}
+        </> */}
       </Container>
-    </>
+    </div>
   );
 }
 

@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const fetchData = async <T,>(endpoint: string, setter: (data: T) => void) => {
   try {
     const response = await fetch(`http://localhost:5100/api/${endpoint}`);

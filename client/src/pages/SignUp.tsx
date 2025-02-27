@@ -1,10 +1,11 @@
-import { ChangeEvent, useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { ChangeEvent, MouseEvent, useState } from "react";
+import { Button, Container, Form, InputGroup } from "react-bootstrap";
 
 function SignUp() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | string>("");
 
   // const navigateTo = useNavigate();
 
@@ -19,6 +20,38 @@ function SignUp() {
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const handleAttachFile = (e: ChangeEvent<HTMLInputElement>) => {
+    // console.log("e.target :>> ", e);
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleImageUpload = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault;
+    // console.log('selectedFile :>> ', selectedFile);
+    const formdata = new FormData();
+    formdata.append("image", selectedFile);
+
+    const requestOptions = {
+      method: "POST",
+      body: formdata,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5100/api/users/uploadimage",
+        requestOptions
+      );
+
+      const result = await response.json();
+      console.log("result :>> ", result);
+    } catch (error) {
+      console.log("error :>> ", error);
+    }
   };
 
   // const handleSubmitRegister = async (e: FormEvent<HTMLFormElement>) => {
@@ -80,6 +113,25 @@ function SignUp() {
               placeholder="Chose a password"
             />
           </Form.Group>
+
+          <Form.Label>Upload your profile picture</Form.Label>
+          <Form.Group controlId="formFile" className="mb-3">
+            <InputGroup>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleAttachFile}
+              />
+              <Button
+                onClick={handleImageUpload}
+                variant="outline-secondary"
+                id="button-addon2"
+              >
+                Upload
+              </Button>
+            </InputGroup>
+          </Form.Group>
+
           {/* {user ? (
             <>
               <p>

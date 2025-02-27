@@ -1,7 +1,16 @@
-// import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 
-// const imageUpload = cloudinary.uploader
-//   .upload("my_image.jpg")
-//   .then((result) => console.log(result));
+const uploadToCloudinary = async (file) => {
+  try {
+    const uploadedImage = await cloudinary.uploader.upload(file.path, {
+      folder: "comBay",
+    });
+    return uploadedImage;
+  } catch (error) {
+    console.log("error uploading to cloundinary :>> ", error);
 
-// export { imageUpload };
+    return null;
+  }
+};
+
+export default uploadToCloudinary;

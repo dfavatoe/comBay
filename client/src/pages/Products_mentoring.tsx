@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "../hooks/useFetch_mentoring.tsx";
 import { Col, Container, Row } from "react-bootstrap";
-import ProductCard from "./ProductCard";
+import ProductCard from "../components/ProductCard.tsx";
 import { ProductT } from "../types/customTypes";
 
 function Products() {

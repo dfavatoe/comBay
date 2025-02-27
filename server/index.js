@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import productsRouter from "./routes/productsRoute.js";
 import sellersRouter from "./routes/sellersRoute.js";
 import userRouter from "./routes/usersRoute.js";
+import cloudinaryConfig from "./config/cloudinaryConfig.js";
 
 // loading .env file
 dotenv.config();
@@ -23,6 +24,7 @@ function addMiddleWares() {
     })
   );
   app.use(cors());
+  cloudinaryConfig();
 }
 
 function startServer() {

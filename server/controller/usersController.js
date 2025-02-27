@@ -1,4 +1,5 @@
 import UserModel from "../models/usersModel.js";
+import uploadToCloudinary from "../utils/imageUpload.js";
 
 const getAllUsers = async (req, res) => {
   console.log("all users working");
@@ -19,9 +20,33 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const avatarUpload = async (req, res) => {
-  console.log("avatarUpload working");
+const imageUpload = async (req, res) => {
+  console.log("imageUpload working");
   console.log("req file :>> ", req.file);
+  if (!req.file) {
+    return res.status(500).json({
+      error: "File not supported",
+    });
+  }
+  if (req.file) {
+    //check file size
+    //Upload file to Cloudinary
+    const uploadedImage = await uploadToCloudinary(req.file);
+
+    console.log("uploadedImage:".green, uploadedImage);
+    if (!uploadedImage) {
+      return res.status(400).json({
+        error: "Image couldn't be uploaded",
+      });
+    }
+
+    if (uploadedImage) {
+      res.status(200).json({
+        message: "Image uploaded successfully",
+        imageURL: uploadedImage.secure_url,
+      });
+    }
+  }
 };
 
 const registerUser = async (req, res) => {
@@ -29,4 +54,4 @@ const registerUser = async (req, res) => {
   console.log("req :>> ", req);
 };
 
-export { registerUser, avatarUpload, getAllUsers };
+export { registerUser, imageUpload, getAllUsers };
