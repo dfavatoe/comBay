@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #ffd43b;
+  --secondary: #7950f2;
+  --electric-violet: #8000e2;
+  --veronica: #a020f0;
+  --fast-white: rgb(233, 232, 232);
+  --old-star: #ff9900;
+  --electric-yellow: #ffe700;
+  --alert-yellow: #fdf5db;
+}
+
+#root {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  padding: 0rem;
+  /* text-align: center; */
+  padding-bottom: 0;
+  background-color: none;
+  min-width: 375px; /*iphone 12 mini */
+  height: 100vh;
+}
+
+.content-container {
+  min-height: calc(100vh - 24px);
+}
+
+.footer-container {
+  position: relative;
+  left: 0;
+  bottom: 0;
+}
+
+.active {
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: orange;
+}
+
+body {
+  background-color: white;
+  height: 100%;
+}

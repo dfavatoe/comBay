@@ -1,8 +1,17 @@
 import express from "express";
-import { getAllSellers } from "../controller/sellersController.js";
+import {
+  getAllSellers,
+  logoUpload,
+  registerSeller,
+} from "../controller/sellersController.js";
+import multerUploader from "../middleware/multer.js";
 
 const sellersRouter = express.Router();
 
-sellersRouter.get("/all", getAllSellers);
+sellersRouter.get("/", getAllSellers);
+
+sellersRouter.post("/uploadlogo", multerUploader.single("logo"), logoUpload);
+
+sellersRouter.post("/registerseller", registerSeller);
 
 export default sellersRouter;

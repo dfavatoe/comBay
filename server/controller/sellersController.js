@@ -21,4 +21,14 @@ const getAllSellers = async (req, res) => {
   }
 };
 
-export { getAllSellers };
+const logoUpload = async (req, res) => {
+  console.log("logoUpload working");
+  console.log("req file :>> ", req.file);
+};
+
+const registerSeller = async (req, res) => {
+  console.log("seller's register working");
+  console.log("req :>> ", req);
+};
+
+export { getAllSellers, logoUpload, registerSeller };

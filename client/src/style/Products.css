@@ -1,0 +1,29 @@
+div.scrollmenu {
+  background-color: #d3d3d3;
+  overflow: auto;
+  white-space: nowrap;
+  width: 100vw;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+div.scrollmenu::-webkit-scrollbar {
+  display: none;
+}
+
+div.scrollmenu button {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  border-radius: 0px;
+  cursor: pointer;
+  outline: none;
+}
+
+div.scrollmenu button:hover {
+  background-color: #e5e5e5;
+}

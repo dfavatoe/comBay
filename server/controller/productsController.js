@@ -1,36 +1,43 @@
+import CategoryListModel from "../models/categoriesModel.js";
 import ProductModel from "../models/productsModel.js";
+import { getAllRecords } from "./getAllRecords.js";
 
-const getAllProducts = async (req, res) => {
-  console.log("get All products running");
+// const getAllProducts = async (req, res) => {
+//   console.log("get All products running");
 
-  try {
-    const allProducts = await ProductModel.find().populate({
-      path: "seller",
-      select: ["sName", "sAddress"],
-    });
+//   try {
+//     const allProducts = await ProductModel.find().populate({
+//       path: "seller",
+//       select: ["sName", "sAddress"],
+//     });
 
-    console.log("allProducts :>> ", allProducts);
-    if (allProducts.length === 0) {
-      //! should the status code below be 200 or 400?
-      res.status(200).json({
-        message: "No records found in the database.",
-        amount: allProducts.length,
-        allProducts,
-      });
-    }
+//     console.log("allProducts :>> ", allProducts);
+//     if (allProducts.length === 0) {
+//       //! should the status code below be 200 or 400?
+//       res.status(200).json({
+//         message: "No records found in the database.",
+//         amount: allProducts.length,
+//         allProducts,
+//       });
+//     }
 
-    res.status(200).json({
-      message: "All the records from the database.",
-      amount: allProducts.length,
-      allProducts,
-    });
-  } catch (error) {
-    console.log("error :>> ", error);
-    res.status(500).json({
-      error: "something went wrong",
-    });
-  }
-};
+//     res.status(200).json({
+//       message: "All the records from the database.",
+//       amount: allProducts.length,
+//       allProducts,
+//     });
+//   } catch (error) {
+//     console.log("error :>> ", error);
+//     res.status(500).json({
+//       error: "something went wrong",
+//     });
+//   }
+// };
+
+const getAllProducts = getAllRecords(ProductModel, {
+  path: "seller",
+  select: ["sName", "sAddress"],
+});
 
 const getProductsByCategory = async (req, res) => {
   console.log("controller function running"); // Try in Postman and check the CLI
@@ -93,4 +100,6 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
-export { getAllProducts, getProductsByCategory };
+const getCategoriesList = getAllRecords(CategoryListModel);
+
+export { getAllProducts, getProductsByCategory, getCategoriesList };
