@@ -1,4 +1,5 @@
 import UserModel from "../models/usersModel.js";
+import deleteTempFile from "../utils/deleteTempFile.js";
 import { hashingPassword } from "../utils/hashingPassword.js";
 import uploadToCloudinary from "../utils/imageUpload.js";
 
@@ -36,12 +37,14 @@ const imageUpload = async (req, res) => {
 
     console.log("uploadedImage:".green, uploadedImage);
     if (!uploadedImage) {
+      deleteTempFile(req.file);
       return res.status(400).json({
         error: "Image couldn't be uploaded",
       });
     }
 
     if (uploadedImage) {
+      deleteTempFile(req.file);
       res.status(200).json({
         message: "Image uploaded successfully",
         imageURL: uploadedImage.secure_url,
@@ -55,6 +58,19 @@ const registerNewUser = async (req, res) => {
   // console.log("req :>> ", req);
   const { userName, email, password, image, role } = req.body;
   console.log("req.body :>> ", req.body);
+
+  if (password < 4) {
+    return res.status(400).json({
+      error: "Password should be at least 4 characters.",
+    });
+  }
+
+  //example of validation in the controller:
+  // if (userName.length < 100) {
+  //   return res.status(400).json({
+  //     error: "Username too short",
+  //   });
+
   //Check if user exists in database
   try {
     const existingUser = await UserModel.findOne({ emai: email });
@@ -87,7 +103,6 @@ const registerNewUser = async (req, res) => {
           role: role,
         });
 
-        //? what is the save function
         console.log("newUserObject :>> ", newUserObject);
         //Model.prototype.save()
         //Saves this document by inserting a new document into the database
@@ -111,7 +126,7 @@ const registerNewUser = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Something went wrong during register.",
-      errorMessage: error.message,
+      errorStack: error.message,
     });
   }
 };

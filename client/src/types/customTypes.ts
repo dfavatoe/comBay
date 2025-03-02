@@ -16,7 +16,7 @@ export interface ProductT {
   dimensions: Dimensions;
   reviews: Reviews;
   meta: Meta;
-  _id: string;
+  id: string;
   title: string;
   description: string;
   category: string;
@@ -92,13 +92,21 @@ export interface UpdatedAt {
 
 //!maybe has to be changed after users roles are established
 export interface Seller {
-  _id: string;
+  id: string;
   address: string;
   name: string;
 }
 
 //!maybe has to be changed after users roles are established
 export type User = {
+  id: string;
+  userName: string;
+  email: string;
+  image: string;
+  role: string;
+};
+
+export type UserRegisterForm = {
   userName: string;
   email: string;
   password: string;

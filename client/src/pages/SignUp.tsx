@@ -3,12 +3,15 @@ import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
 import {
   ImageUploadOkResponse,
   User,
+  UserRegisterForm,
   UserUploadOkResponse,
 } from "../types/customTypes";
 
 function SignUp() {
-  const [newUser, setNewUser] = useState<User | null>(null);
+  const [newUser, setNewUser] = useState<UserRegisterForm | null>(null);
+  const [user, setUser] = useState<User | null>(null); // bring this user to the userContext
   const [selectedFile, setSelectedFile] = useState<File | string>("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   // const navigateTo = useNavigate();
 
@@ -18,6 +21,7 @@ function SignUp() {
     if (file instanceof File) {
       console.log("selected File set");
       setSelectedFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -46,6 +50,12 @@ function SignUp() {
       console.log("newUser :>> ", newUser);
     } catch (error) {
       console.log("error :>> ", error);
+    } finally {
+      //delete the image preview
+      if (typeof imagePreview === "string") {
+        URL.revokeObjectURL(imagePreview);
+        setImagePreview(null);
+      }
     }
   };
 
@@ -64,31 +74,39 @@ function SignUp() {
     e.preventDefault();
     console.log("newUser :>> ", newUser);
 
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    const urlencoded = new URLSearchParams();
+    if (newUser) {
+      urlencoded.append("userName", newUser.userName);
+      urlencoded.append("email", newUser.email);
+      if (newUser.password.length < 4) {
+        alert("Password should be at least 4 characters.");
+      } else {
+        urlencoded.append("password", newUser.password);
+      }
+      urlencoded.append("image", newUser.image);
+      urlencoded.append("role", newUser.role);
+    } else {
+      console.log("No empty forms allowed.");
+      alert("Please, complete the form.");
+    }
+
+    const requestOptionsUser = {
+      method: "POST",
+      headers: myHeaders,
+      body: urlencoded,
+    };
+
     try {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-      const urlencoded = new URLSearchParams();
-      urlencoded.append("userName", newUser!.userName);
-      urlencoded.append("email", newUser!.email);
-      urlencoded.append("password", newUser!.password);
-      urlencoded.append("image", newUser!.image);
-      urlencoded.append("role", newUser!.role);
-
-      const requestOptionsUser = {
-        method: "POST",
-        headers: myHeaders,
-        body: urlencoded,
-      };
-
       const response = await fetch(
         "http://localhost:5100/api/users/register",
         requestOptionsUser
       );
       const result = (await response.json()) as UserUploadOkResponse;
-
-      console.log("result :>> ", result);
-      console.log("newUser :>> ", newUser);
+      alert(result.message);
+      setUser(result.user); //bring this user to the userContext
     } catch (error) {
       console.log("error :>> ", error);
     }
@@ -98,8 +116,10 @@ function SignUp() {
     <>
       <Container className="justify-content-center">
         <h1>Sign Up</h1>
-        {/* {user ? (
+        <br />
+        {user ? (
           <div>
+            <h2>Welcome {user.userName}!</h2>
             <h3>
               Congratulations, you have successfully created an account!!! 🙌
             </h3>
@@ -109,8 +129,7 @@ function SignUp() {
             Join us today for exclusive deals, fast checkout, and a seamless
             shopping experience!
           </p>
-        )} */}
-        {/* <Form onSubmit={handleSubmitRegister}> */}
+        )}
 
         <Form onSubmit={handleSubmitRegister}>
           <Image
@@ -161,7 +180,7 @@ function SignUp() {
           <Form.Group>
             <Form.Label>Upload your profile picture</Form.Label>
             <Form.Group controlId="formFile" className="mb-3">
-              <InputGroup>
+              <InputGroup className="mb-4">
                 <Form.Control
                   type="file"
                   accept="image/*"
@@ -176,11 +195,20 @@ function SignUp() {
                   Upload
                 </Button>
               </InputGroup>
+              <div>
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="image preview"
+                    style={{ width: "70px", height: "auto", border: "solid" }}
+                  />
+                )}
+              </div>
             </Form.Group>
           </Form.Group>
 
           <Form.Group className="mb-4">
-            <Form.Label className="d-block">Your role in comBay</Form.Label>
+            <Form.Label className="d-block">Sign up as:</Form.Label>
             <Form.Check
               inline
               type="radio"
