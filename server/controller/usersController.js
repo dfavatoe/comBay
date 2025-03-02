@@ -1,4 +1,5 @@
 import UserModel from "../models/usersModel.js";
+import { hashingPassword } from "../utils/hashingPassword.js";
 import uploadToCloudinary from "../utils/imageUpload.js";
 
 const getAllUsers = async (req, res) => {
@@ -49,9 +50,70 @@ const imageUpload = async (req, res) => {
   }
 };
 
-const registerUser = async (req, res) => {
-  console.log("user's register working");
-  console.log("req :>> ", req);
+const registerNewUser = async (req, res) => {
+  // console.log("user's register working");
+  // console.log("req :>> ", req);
+  const { userName, email, password, image, role } = req.body;
+  console.log("req.body :>> ", req.body);
+  //Check if user exists in database
+  try {
+    const existingUser = await UserModel.findOne({ emai: email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email already exists in the database",
+      });
+    }
+    if (!existingUser) {
+      //Hash the password to protect others from seeing the original one.
+      const hashedPassword = await hashingPassword(password);
+      console.log("hashedPassword :>> ", hashedPassword);
+
+      if (!hashedPassword) {
+        return res.status(500).json({
+          error:
+            "We couldn't register the user, problem with hashing the password.",
+        });
+      }
+
+      if (hashedPassword) {
+        const newUserObject = new UserModel({
+          userName: userName,
+          email: email,
+          password: hashedPassword,
+          image: image
+            ? image
+            : "https://img.freepik.com/vecteurs-libre/homme-affaires-caractere-avatar-isole_24877-60111.jpg",
+          role: role,
+        });
+
+        //? what is the save function
+        console.log("newUserObject :>> ", newUserObject);
+        //Model.prototype.save()
+        //Saves this document by inserting a new document into the database
+        const newUser = await newUserObject.save();
+        console.log("newUser :>> ", newUser);
+
+        if (newUser) {
+          return res.status(201).json({
+            message: "User registered successfully",
+            user: {
+              id: newUser._id,
+              userName: newUser.userName,
+              email: newUser.email,
+              image: newUser.image,
+              role: newUser.role,
+            },
+          });
+        }
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Something went wrong during register.",
+      errorMessage: error.message,
+    });
+  }
 };
 
-export { registerUser, imageUpload, getAllUsers };
+export { registerNewUser, imageUpload, getAllUsers };

@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import productsRouter from "./routes/productsRoute.js";
 import sellersRouter from "./routes/sellersRoute.js";
-import userRouter from "./routes/usersRoute.js";
+import userRouter from "./routes/usersRoutes.js";
 import cloudinaryConfig from "./config/cloudinaryConfig.js";
 
 // loading .env file

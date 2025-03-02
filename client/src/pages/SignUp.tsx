@@ -1,38 +1,29 @@
-import { ChangeEvent, MouseEvent, useState } from "react";
-import { Button, Container, Form, InputGroup } from "react-bootstrap";
+import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
+import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
+import {
+  ImageUploadOkResponse,
+  User,
+  UserUploadOkResponse,
+} from "../types/customTypes";
 
 function SignUp() {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [newUser, setNewUser] = useState<User | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | string>("");
 
   // const navigateTo = useNavigate();
 
-  const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("object :>> ", e.target.value);
-    setUserName(e.target.value);
-  };
-
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
   const handleAttachFile = (e: ChangeEvent<HTMLInputElement>) => {
-    // console.log("e.target :>> ", e);
+    console.log("e.target :>> ", e);
     const file = e.target.files?.[0];
-    if (file) {
+    if (file instanceof File) {
+      console.log("selected File set");
       setSelectedFile(file);
     }
   };
 
   const handleImageUpload = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault;
-    // console.log('selectedFile :>> ', selectedFile);
+    e.preventDefault();
+    console.log("selectedFile :>> ", selectedFile);
     const formdata = new FormData();
     formdata.append("image", selectedFile);
 
@@ -47,18 +38,61 @@ function SignUp() {
         requestOptions
       );
 
-      const result = await response.json();
+      const result = (await response.json()) as ImageUploadOkResponse;
+
+      setNewUser({ ...newUser!, image: result.imageURL });
+
       console.log("result :>> ", result);
+      console.log("newUser :>> ", newUser);
     } catch (error) {
       console.log("error :>> ", error);
     }
   };
 
-  // const handleSubmitRegister = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   // console.log("email, password :>> ", email, password)
-  //   register(email, password);
-  // };
+  const handleRegisterInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.name :>> ", e.target.name);
+    console.log("e.target.value :>> ", e.target.value);
+    setNewUser({ ...newUser!, [e.target.name]: e.target.value });
+  };
+
+  const handleRoleButtonChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.name :>> ", e.target.id);
+    setNewUser({ ...newUser!, role: e.target.id });
+  };
+
+  const handleSubmitRegister = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("newUser :>> ", newUser);
+
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("userName", newUser!.userName);
+      urlencoded.append("email", newUser!.email);
+      urlencoded.append("password", newUser!.password);
+      urlencoded.append("image", newUser!.image);
+      urlencoded.append("role", newUser!.role);
+
+      const requestOptionsUser = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+      };
+
+      const response = await fetch(
+        "http://localhost:5100/api/users/register",
+        requestOptionsUser
+      );
+      const result = (await response.json()) as UserUploadOkResponse;
+
+      console.log("result :>> ", result);
+      console.log("newUser :>> ", newUser);
+    } catch (error) {
+      console.log("error :>> ", error);
+    }
+  };
 
   return (
     <>
@@ -77,59 +111,92 @@ function SignUp() {
           </p>
         )} */}
         {/* <Form onSubmit={handleSubmitRegister}> */}
-        <Form>
+
+        <Form onSubmit={handleSubmitRegister}>
+          <Image
+            className="mb-4"
+            width={200}
+            src={newUser ? newUser.image : ""}
+            rounded
+          />
           <Form.Group className="mb-3 justify-content-center">
             <Form.Label>User name</Form.Label>
             <Form.Control
-              type="user-name"
-              name="user-name"
+              type="text"
+              name="userName"
               id="signup-user-name"
-              value={userName}
-              onChange={handleUserNameChange}
+              // value={newUser}
+              // onChange={handleUserNameChange}
               placeholder="Enter a user name"
+              onChange={handleRegisterInputChange}
             />
           </Form.Group>
 
           <Form.Group className="mb-3 justify-content-center">
             <Form.Label>Email address</Form.Label>
             <Form.Control
-              type="email"
+              type="text"
               name="email"
               id="signup-email"
-              value={email}
-              onChange={handleEmailChange}
+              // value={email}
+              // onChange={handleEmailChange}
               placeholder="Enter your email"
+              onChange={handleRegisterInputChange}
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
             <Form.Control
-              type="password"
+              type="text"
               name="password"
               id="signup-password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="Chose a password"
+              // value={password}
+              // onChange={handlePasswordChange}
+              placeholder="Choose a password"
+              onChange={handleRegisterInputChange}
             />
           </Form.Group>
 
-          <Form.Label>Upload your profile picture</Form.Label>
-          <Form.Group controlId="formFile" className="mb-3">
-            <InputGroup>
-              <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={handleAttachFile}
-              />
-              <Button
-                onClick={handleImageUpload}
-                variant="outline-secondary"
-                id="button-addon2"
-              >
-                Upload
-              </Button>
-            </InputGroup>
+          <Form.Group>
+            <Form.Label>Upload your profile picture</Form.Label>
+            <Form.Group controlId="formFile" className="mb-3">
+              <InputGroup>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAttachFile}
+                />
+                <Button
+                  type="submit"
+                  variant="outline-secondary"
+                  id="button-addon2"
+                  onClick={handleImageUpload}
+                >
+                  Upload
+                </Button>
+              </InputGroup>
+            </Form.Group>
+          </Form.Group>
+
+          <Form.Group className="mb-4">
+            <Form.Label className="d-block">Your role in comBay</Form.Label>
+            <Form.Check
+              inline
+              type="radio"
+              label="Buyer"
+              name="roleOption"
+              id="buyer"
+              onChange={handleRoleButtonChange}
+            />
+            <Form.Check
+              inline
+              type="radio"
+              label="Seller"
+              name="roleOption"
+              id="seller"
+              onChange={handleRoleButtonChange}
+            />
           </Form.Group>
 
           {/* {user ? (
@@ -161,6 +228,7 @@ function SignUp() {
             Register
           </Button>
         </Form>
+
         {/* <ModalAlert
           showAlert={showAlert}
           alertText={alertText}

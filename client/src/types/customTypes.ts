@@ -98,11 +98,12 @@ export interface Seller {
 }
 
 //!maybe has to be changed after users roles are established
-export type UserT = {
-  name: string;
-  id: number;
+export type User = {
+  userName: string;
   email: string;
   password: string;
+  image: string;
+  role: string;
 };
 
 export type ModalLoginProps = {
@@ -120,3 +121,22 @@ export type ModalAlertProps = {
   setShowAlert: Dispatch<React.SetStateAction<boolean>>;
   alertText: string;
 };
+
+// This is the necessary type accordinglly to the positive response of the uploaded image in Cloudinary (Check imageUpload function in usersController)
+export type ImageUploadOkResponse = {
+  message: string;
+  imageURL: string;
+};
+
+export interface UserUploadOkResponse {
+  message: string;
+  user: UserR;
+}
+
+export interface UserR {
+  id: string; //double check, because it is an ObjectId from MongoDB
+  userName: string;
+  email: string;
+  image: string;
+  role: string;
+}
