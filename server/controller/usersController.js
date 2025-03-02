@@ -1,7 +1,8 @@
 import UserModel from "../models/usersModel.js";
 import deleteTempFile from "../utils/deleteTempFile.js";
-import { hashingPassword } from "../utils/hashingPassword.js";
+import { hashingPassword, verifyPassword } from "../utils/passwordServices.js";
 import uploadToCloudinary from "../utils/imageUpload.js";
+import { generateToken } from "../utils/tokenServices.js";
 
 const getAllUsers = async (req, res) => {
   console.log("all users working");
@@ -131,4 +132,60 @@ const registerNewUser = async (req, res) => {
   }
 };
 
-export { registerNewUser, imageUpload, getAllUsers };
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  //1. find user in DB
+
+  try {
+    const existingUser = await UserModel.findOne({ email: email });
+    if (!existingUser) {
+      return res.status(404).json({
+        message: "User don't have an account, register first.",
+      });
+    }
+    if (existingUser) {
+      //2. Verify password (compare password written in login form with hashedpass)
+      const isPasswordCorrect = await verifyPassword(
+        password,
+        existingUser.password
+      );
+      if (!isPasswordCorrect) {
+        return res.status(401).json({
+          message: "Invalid password credential.",
+        });
+      }
+
+      if (isPasswordCorrect) {
+        //Generate JWT token
+        const token = generateToken(existingUser._id, existingUser.role);
+        if (!token) {
+          return res.status(500).json({
+            error: "Something went wrong, try to login later.",
+          });
+        }
+        if (token) {
+          return res.status(200).json({
+            message: "Login successful",
+            user: {
+              id: existingUser._id,
+              userName: existingUser.userName,
+              email: existingUser.email,
+              role: existingUser.role,
+              image: existingUser.image,
+            },
+            token, //= token: token
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.log("error :>> ", error);
+    return res.status(500).json({
+      error: "Something went wrong during login.",
+      errorMessage: error.message,
+    });
+  }
+};
+
+export { registerNewUser, imageUpload, getAllUsers, login };
