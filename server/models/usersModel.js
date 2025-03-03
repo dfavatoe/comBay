@@ -9,9 +9,10 @@ const usersSchema = Schema(
       require: true,
       validate: {
         validator: function (v) {
-          return v.length > 3;
+          return v.length > 2;
         },
-        message: `User name {VALUE} should be longer than 3 characters!`,
+        //! Why error doesn't show anymore in the console? (just in Postman)
+        message: `User name {VALUE} should be longer than 2 characters!`,
       },
     },
     email: { type: String, require: true, unique: true },

@@ -97,6 +97,15 @@ export interface Seller {
   name: string;
 }
 
+export type UserFull = {
+  id: string;
+  userName: string;
+  email: string;
+  password: string;
+  image: string;
+  role: string;
+};
+
 //!maybe has to be changed after users roles are established
 export type User = {
   id: string;
@@ -106,13 +115,13 @@ export type User = {
   role: string;
 };
 
-export type UserRegisterForm = {
-  userName: string;
-  email: string;
-  password: string;
-  image: string;
-  role: string;
-};
+// using Pick and Omit
+export type LoginCredentials = Pick<
+  UserFull,
+  "userName" | "password" | "email"
+>; // Attention '|' means 'and' here
+
+export type RegisterCredentials = Omit<UserFull, "id">;
 
 export type ModalLoginProps = {
   showLogin: boolean;
@@ -136,15 +145,14 @@ export type ImageUploadOkResponse = {
   imageURL: string;
 };
 
-export interface UserUploadOkResponse {
+export interface RegisterOkResponse {
   message: string;
-  user: UserR;
+  user: User;
+  token: string;
 }
 
-export interface UserR {
-  id: string; //double check, because it is an ObjectId from MongoDB
-  userName: string;
-  email: string;
-  image: string;
-  role: string;
+export interface LoginOkResponse {
+  message: string;
+  user: User;
+  token: string;
 }

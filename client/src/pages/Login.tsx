@@ -1,49 +1,53 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { LoginCredentials } from "../types/customTypes";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { user, login } = useContext(AuthContext);
 
-  // const navigateTo = useNavigate();
+  const [loginCredentials, setLoginCredentials] =
+    useState<LoginCredentials | null>(null);
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+  const navigateTo = useNavigate();
+
+  const handleLoginInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.name :>> ", e.target.name);
+    console.log("e.target.value :>> ", e.target.value);
+
+    setLoginCredentials({
+      ...loginCredentials!,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  const submitLogin = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  // const handleSubmitRegister = (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   // console.log("email, password :>> ", email, password);
-  //   login(email, password);
-  // };
+    login(loginCredentials);
+  };
 
   return (
     <>
       <Container>
         <h1>Login</h1>
-        {/* {user ? (
+        {user ? (
           <div>
             <h3>You are logged in. 🔌</h3>
-            <p>Hi {profileUser?.displayName}! Welcome!</p>
+            <p>Hi {user.userName}! Welcome!</p>
           </div>
         ) : (
           <p>Log in to access your account and continue shopping.</p>
-        )} */}
-        {/* <Form onSubmit={handleSubmitRegister}> */}
-        <Form>
+        )}
+        <Form onSubmit={submitLogin}>
           <Form.Group className="mb-3">
             <Form.Label>Email address</Form.Label>
             <Form.Control
-              type="email"
+              type="text"
               name="email"
               id="email"
-              value={email}
-              onChange={handleEmailChange}
+              onChange={handleLoginInputChange}
               placeholder="Enter email"
             />
           </Form.Group>
@@ -51,15 +55,14 @@ function Login() {
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
             <Form.Control
-              type="password"
+              type="text"
               name="password"
               id="password"
-              value={password}
-              onChange={handlePasswordChange}
+              onChange={handleLoginInputChange}
               placeholder="Password"
             />
           </Form.Group>
-          {/* {user ? (
+          {user ? (
             <>
               <p>
                 Click on the Products button to continue your shopping
@@ -89,10 +92,7 @@ function Login() {
               <div>Still not registered?</div>
               <Link to={"/signup"}>Sign Up</Link>
             </>
-          )} */}
-          <Button className="mb-2" variant="warning" type="submit">
-            Login
-          </Button>
+          )}
         </Form>
         {/* <ModalAlert
           showAlert={showAlert}

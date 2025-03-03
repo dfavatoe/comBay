@@ -1,15 +1,20 @@
-import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  MouseEvent,
+  useContext,
+  useState,
+} from "react";
 import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
 import {
   ImageUploadOkResponse,
-  User,
-  UserRegisterForm,
-  UserUploadOkResponse,
+  RegisterCredentials,
 } from "../types/customTypes";
+import { AuthContext } from "../context/AuthContext";
 
 function SignUp() {
-  const [newUser, setNewUser] = useState<UserRegisterForm | null>(null);
-  const [user, setUser] = useState<User | null>(null); // bring this user to the userContext
+  const { user, register } = useContext(AuthContext);
+  const [newUser, setNewUser] = useState<RegisterCredentials | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -70,46 +75,49 @@ function SignUp() {
     setNewUser({ ...newUser!, role: e.target.id });
   };
 
-  const handleSubmitRegister = async (e: FormEvent<HTMLFormElement>) => {
+  const submitRegister = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("newUser :>> ", newUser);
 
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    register(newUser);
 
-    const urlencoded = new URLSearchParams();
-    if (newUser) {
-      urlencoded.append("userName", newUser.userName);
-      urlencoded.append("email", newUser.email);
-      if (newUser.password.length < 4) {
-        alert("Password should be at least 4 characters.");
-      } else {
-        urlencoded.append("password", newUser.password);
-      }
-      urlencoded.append("image", newUser.image);
-      urlencoded.append("role", newUser.role);
-    } else {
-      console.log("No empty forms allowed.");
-      alert("Please, complete the form.");
-    }
+    // const myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-    const requestOptionsUser = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-    };
+    // const urlencoded = new URLSearchParams();
+    // if (newUser) {
+    //   urlencoded.append("userName", newUser.userName);
+    //   urlencoded.append("email", newUser.email);
+    //   if (newUser.password.length < 4) {
+    //     alert("Password should be at least 4 characters.");
+    //   } else {
+    //     urlencoded.append("password", newUser.password);
+    //   }
+    //   urlencoded.append("image", newUser.image);
+    //   urlencoded.append("role", newUser.role);
+    // } else {
+    //   console.log("No empty forms allowed.");
+    //   alert("Please, complete the form.");
+    // }
 
-    try {
-      const response = await fetch(
-        "http://localhost:5100/api/users/register",
-        requestOptionsUser
-      );
-      const result = (await response.json()) as UserUploadOkResponse;
-      alert(result.message);
-      setUser(result.user); //bring this user to the userContext
-    } catch (error) {
-      console.log("error :>> ", error);
-    }
+    // const requestOptionsUser = {
+    //   method: "POST",
+    //   headers: myHeaders,
+    //   body: urlencoded,
+    // };
+
+    // try {
+    //   const response = await fetch(
+    //     "http://localhost:5100/api/users/register",
+    //     requestOptionsUser
+    //   );
+    //   const result = (await response.json()) as RegisterOkResponse;
+    //   console.log(result.message);
+    //   //insert alert successful login
+    //   setUser(result.user); //bring this user to the userContext
+    // } catch (error) {
+    //   console.log("error :>> ", error);
+    // }
   };
 
   return (
@@ -131,7 +139,7 @@ function SignUp() {
           </p>
         )}
 
-        <Form onSubmit={handleSubmitRegister}>
+        <Form onSubmit={submitRegister}>
           <Image
             className="mb-4"
             width={200}

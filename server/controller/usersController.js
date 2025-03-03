@@ -60,9 +60,9 @@ const registerNewUser = async (req, res) => {
   const { userName, email, password, image, role } = req.body;
   console.log("req.body :>> ", req.body);
 
-  if (password < 4) {
+  if (password < 6) {
     return res.status(400).json({
-      error: "Password should be at least 4 characters.",
+      error: "Password should be at least 6 characters.",
     });
   }
 
@@ -110,18 +110,43 @@ const registerNewUser = async (req, res) => {
         const newUser = await newUserObject.save();
         console.log("newUser :>> ", newUser);
 
+        //! Why I cannot create the token during register?
         if (newUser) {
-          return res.status(201).json({
-            message: "User registered successfully",
-            user: {
-              id: newUser._id,
-              userName: newUser.userName,
-              email: newUser.email,
-              image: newUser.image,
-              role: newUser.role,
-            },
-          });
+          //Generate JWT token
+          const token = generateToken(newUser._id, newUser.role);
+          if (!token) {
+            return res.status(500).json({
+              error:
+                "Something went wrong generating the token. Try to register again later.",
+            });
+          }
+          if (token) {
+            return res.status(200).json({
+              message: "User registered successfully",
+              user: {
+                id: newUser._id,
+                userName: newUser.userName,
+                email: newUser.email,
+                image: newUser.image,
+                role: newUser.role,
+              },
+              token, //= token: token
+            });
+          }
         }
+
+        // if (newUser) {
+        //   return res.status(201).json({
+        //     message: "User registered successfully",
+        //     user: {
+        //       id: newUser._id,
+        //       userName: newUser.userName,
+        //       email: newUser.email,
+        //       image: newUser.image,
+        //       role: newUser.role,
+        //     },
+        //   });
+        // }
       }
     }
   } catch (error) {

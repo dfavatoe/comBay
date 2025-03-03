@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import AboutBlank from "./pages/AboutBlank";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const Root = () => {
   return (
@@ -19,18 +20,20 @@ const Root = () => {
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" />
-          <Route element={<Root />}>
-            <Route index element={<Home />} />
-            <Route path="products" element={<Products />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="*" element={<AboutBlank />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <AuthContextProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" />
+            <Route element={<Root />}>
+              <Route index element={<Home />} />
+              <Route path="products" element={<Products />} />
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="*" element={<AboutBlank />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AuthContextProvider>
     </>
   );
 }
