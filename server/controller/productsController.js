@@ -115,7 +115,6 @@ const getProductById = async (req, res) => {
       res.status(400).json({
         message: `No products with id ${id} found in the database.`,
         amount: 0,
-        productById,
       });
       return;
     }

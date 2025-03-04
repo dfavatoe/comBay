@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import AboutBlank from "./pages/AboutBlank";
 import { AuthContextProvider } from "./context/AuthContext";
+import SingleProductPage from "./pages/SingleProductPage";
 
 const Root = () => {
   return (
@@ -27,6 +28,10 @@ function App() {
             <Route element={<Root />}>
               <Route index element={<Home />} />
               <Route path="products" element={<Products />} />
+              <Route
+                path="products/:productId"
+                element={<SingleProductPage />}
+              />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<SignUp />} />
               <Route path="*" element={<AboutBlank />} />

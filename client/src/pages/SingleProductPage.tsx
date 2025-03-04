@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ProductT } from "../types/customTypes";
+import { ProductSpecs, ProductT } from "../types/customTypes";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import ProductReviews from "../components/ProductReviews";
+import { baseUrl } from "../utils/urls";
+import { fetchData } from "../hooks/useFetch";
 // import { Timestamp } from "firebase/firestore";
 
 function SingleProductPage() {
   //State Hooks
-  const [productSpecs, setProductSpecs] = useState<ProductT | null>(null);
+  const [productSpecs, setProductSpecs] = useState<ProductSpecs | null>(null);
 
   const navigateTo = useNavigate();
 
@@ -23,22 +25,23 @@ function SingleProductPage() {
   const { productId } = useParams();
   console.log("productId :>> ", productId);
 
-  const productIdNumb = parseInt(productId!); //"!" forces the variable to be string, like casting
-  console.log("productIdNumb :>> ", productIdNumb);
+  // const productIdNumb = parseInt(productId!); //"!" forces the variable to be string, like casting
+  // console.log("productIdNumb :>> ", productIdNumb);
 
-  const url = `https://dummyjson.com/products/${productId}`;
+  //!stopped here
+  // const url = `${baseUrl}/api/products/productId/${productId}`;
 
-  const getSingleProduct = async () => {
-    const response = await fetch(url);
-    console.log("response :>> ", response);
-    if (!response.ok) {
-      navigateTo("/aboutblank");
-    } else {
-      const result = (await response.json()) as ProductT;
-      console.log("single Product :>> ", result);
-      setProductSpecs(result);
-    }
-  };
+  // const getSingleProduct = async () => {
+  //   const response = await fetch(url);
+  //   console.log("response :>> ", response);
+  //   if (!response.ok) {
+  //     navigateTo("/aboutblank");
+  //   } else {
+  //     const result = (await response.json()) as ProductT;
+  //     console.log("single Product :>> ", result);
+  //     setProductSpecs(result);
+  //   }
+  // };
 
   const countStars = (productRating: number | null) => {
     if (productRating) {
@@ -70,44 +73,45 @@ function SingleProductPage() {
   };
 
   useEffect(() => {
-    getSingleProduct();
+    // getSingleProduct();
+    fetchData(`products/productId/${productId}`, setProductSpecs);
   }, []);
 
   return (
     <div>
       <h1>allBuy Products</h1>
       {/* <p>Product ID: {productId} </p> */}
-
+      {/* {console.log("productSpecs", productSpecs)} */}
       <Container style={{ width: "auto", height: "auto", textAlign: "left" }}>
         <Row>
           {productSpecs && (
             <>
               <Col sm="6">
-                <h3>{productSpecs.title}</h3>
+                <h3>{productSpecs.productById.title}</h3>
                 <p>
-                  {productSpecs.rating}{" "}
+                  {productSpecs.productById.rating}{" "}
                   <span className="paint-stars">
-                    {countStars(productSpecs.rating)}
+                    {countStars(productSpecs.productById.rating)}
                   </span>
                   <Button onClick={() => scrollCallback()} variant="link">
                     See the reviews
                   </Button>
                 </p>
 
-                <h4>{productSpecs.price} €</h4>
-                <h6>{discount(productSpecs)} </h6>
-                <Image src={productSpecs.images[0]} rounded fluid />
+                <h4>{productSpecs.productById.price} €</h4>
+                <h6>{discount(productSpecs.productById)} </h6>
+                <Image src={productSpecs.productById.images[0]} rounded fluid />
               </Col>
 
               <Col className="mb-4" sm="6">
-                {inStock(productSpecs)}
+                {inStock(productSpecs.productById)}
                 <h5>Description:</h5>
                 <ul>
                   <li>
                     See more from
-                    <a href="#"> {productSpecs.brand}</a>{" "}
+                    <a href="#"> {productSpecs.productById.brand}</a>{" "}
                   </li>
-                  <li>{productSpecs?.description}</li>
+                  <li>{productSpecs?.productById.description}</li>
                 </ul>
                 <hr />
                 <h5>Product Details:</h5>
@@ -130,13 +134,14 @@ function SingleProductPage() {
                 <h5>Dimensions:</h5>
                 <ul>
                   <li>
-                    <b>Width:</b> {productSpecs.dimensions.width} cm
+                    <b>Width:</b> {productSpecs.productById.dimensions.width} cm
                   </li>
                   <li>
-                    <b>Height:</b> {productSpecs.dimensions.height} cm
+                    <b>Height:</b> {productSpecs.productById.dimensions.height}{" "}
+                    cm
                   </li>
                   <li>
-                    <b>Depth:</b> {productSpecs.dimensions.depth} cm
+                    <b>Depth:</b> {productSpecs.productById.dimensions.depth} cm
                   </li>
                 </ul>
                 <Button variant="warning">Add to cart</Button>

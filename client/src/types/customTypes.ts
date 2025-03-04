@@ -6,17 +6,19 @@ import { Dispatch } from "react";
 //   records: Record[];
 // }
 
-export interface Root {
+export interface ProductsRoot {
   message: string;
   amount: number;
   records: ProductT[];
 }
-
+export interface ProductSpecs {
+  productById: ProductT;
+}
 export interface ProductT {
   dimensions: Dimensions;
   reviews: Reviews;
   meta: Meta;
-  id: string;
+  _id: string;
   title: string;
   description: string;
   category: string;

@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "../hooks/useFetch";
 import { Container, Row, Spinner } from "react-bootstrap";
-import { ProductT, Root } from "../types/customTypes";
+import { ProductsRoot, ProductT } from "../types/customTypes";
 import Grid from "../components/Grid";
 
 function Products() {
-  const [products, setProducts] = useState<any>({});
+  const [products, setProducts] = useState<ProductsRoot | null>({
+    message: "",
+    amount: 0,
+    records: [],
+  });
   const [categories, setCategories] = useState({});
   // const [loading, setLoading] = useState(true);
-
-  const productsRecords = products.records as ProductT[];
+  console.log("products :>> ", products);
+  const productsRecords = products!.records as ProductT[];
   console.log("productsArrays :>> ", productsRecords);
   console.log("type of productsArrays :>> ", typeof productsRecords);
 
