@@ -5,7 +5,6 @@ const { Schema } = mongoose;
 // create the Schema for the collection
 const productsSchema = new Schema(
   {
-    _id: Schema.Types.ObjectId,
     title: { type: String, require: true },
     description: String,
     category: String,

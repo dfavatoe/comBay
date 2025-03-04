@@ -39,6 +39,8 @@ const getAllProducts = getAllRecords(ProductModel, {
   select: ["name", "address"],
 });
 
+const getCategoriesList = getAllRecords(CategoryListModel);
+
 const getProductsByCategory = async (req, res) => {
   console.log("controller function running"); // Try in Postman and check the CLI
   // console.log("req :>> ", req); // huge object is returned (check the property params: { category: 'whatever' } or query: )
@@ -57,7 +59,7 @@ const getProductsByCategory = async (req, res) => {
 
     if (productsByCategoryAndRating.length === 0) {
       res.status(400).json({
-        message: `No products with category ${req.params.category} and/or rating grater than ${req.query.rating} found in the database.`,
+        message: `No products with category ${req.params.category} and/or rating greater than ${req.query.rating} found in the database.`,
         amount: productsByCategoryAndRating.length,
         productsByCategoryAndRating,
       });
@@ -100,6 +102,39 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
-const getCategoriesList = getAllRecords(CategoryListModel);
+const getProductById = async (req, res) => {
+  console.log("controller function running");
 
-export { getAllProducts, getProductsByCategory, getCategoriesList };
+  console.log("params :>> ", req.params);
+
+  const { id } = req.params;
+
+  try {
+    const productById = await ProductModel.findById(id);
+    if (productById.length === 0) {
+      res.status(400).json({
+        message: `No products with id ${id} found in the database.`,
+        amount: 0,
+        productById,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: `Product with id ${id}`,
+      productById,
+    });
+  } catch (error) {
+    console.log("error :>> ", error);
+    res.status(500).json({
+      error: "Something went wrong",
+    });
+  }
+};
+
+export {
+  getAllProducts,
+  getProductsByCategory,
+  getCategoriesList,
+  getProductById,
+};
