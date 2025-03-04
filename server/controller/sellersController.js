@@ -20,7 +20,7 @@ const getAllSellers = async (req, res) => {
     });
   }
 };
-
+//not used: define new route in sellersRoute or use the user's imageUpload
 const logoUpload = async (req, res) => {
   console.log("logoUpload working");
   console.log("req file :>> ", req.file);
