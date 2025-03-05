@@ -24,6 +24,7 @@ function SingleProductPage() {
   // useParams extracts the ID from the URL
   const { productId } = useParams();
   console.log("productId :>> ", productId);
+  console.log("productSpecs :>> ", productSpecs);
 
   // const productIdNumb = parseInt(productId!); //"!" forces the variable to be string, like casting
   // console.log("productIdNumb :>> ", productIdNumb);
@@ -72,6 +73,19 @@ function SingleProductPage() {
     }
   };
 
+  const reservationMark = (productReservation: ProductT | null) => {
+    const checked = "✅ ";
+    const unchecked = "❌";
+    return productReservation?.reservation ? (
+      <span>
+        {checked}
+        {productReservation.reservationTime} minutes
+      </span>
+    ) : (
+      unchecked
+    );
+  };
+
   useEffect(() => {
     // getSingleProduct();
     fetchData(`products/productId/${productId}`, setProductSpecs);
@@ -79,7 +93,7 @@ function SingleProductPage() {
 
   return (
     <div>
-      <h1>allBuy Products</h1>
+      <h1>comBay Products</h1>
       {/* <p>Product ID: {productId} </p> */}
       {/* {console.log("productSpecs", productSpecs)} */}
       <Container style={{ width: "auto", height: "auto", textAlign: "left" }}>
@@ -108,6 +122,10 @@ function SingleProductPage() {
                 <h5>Description:</h5>
                 <ul>
                   <li>
+                    Seller:{" "}
+                    <a href="#">{productSpecs.productById.seller.userName}</a>{" "}
+                  </li>
+                  <li>
                     See more from
                     <a href="#"> {productSpecs.productById.brand}</a>{" "}
                   </li>
@@ -115,21 +133,23 @@ function SingleProductPage() {
                 </ul>
                 <hr />
                 <h5>Product Details:</h5>
-                {/* <ul>
+                <ul>
                   <li>
-                    <b>Shipping:</b> {productSpecs.shippingInformation}
+                    <b>Reservation:</b>{" "}
+                    {reservationMark(productSpecs.productById)}
                   </li>
                   <li>
-                    <b>Warranty:</b> {productSpecs.warrantyInformation}
+                    <b>Warranty:</b> {productSpecs.productById.warranty}
                   </li>
                   <li>
-                    <b>Return policy:</b> {productSpecs.returnPolicy}
+                    <b>Return policy:</b>{" "}
+                    {productSpecs.productById.returnPolicy}
                   </li>
                   <li>
                     <b>Minimum Order: </b>
-                    {productSpecs?.minimumOrderQuantity} items
+                    {productSpecs.productById.minReservationQty} items
                   </li>
-                </ul> */}
+                </ul>
                 <hr />
                 <h5>Dimensions:</h5>
                 <ul>

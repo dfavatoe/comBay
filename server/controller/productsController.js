@@ -34,9 +34,14 @@ import { getAllRecords } from "./getAllRecords.js";
 //   }
 // };
 
+// const getAllProducts = getAllRecords(ProductModel, {
+//   path: "seller",
+//   select: ["name", "address"],
+// });
+
 const getAllProducts = getAllRecords(ProductModel, {
   path: "seller",
-  select: ["name", "address"],
+  select: ["userName", "email"],
 });
 
 const getCategoriesList = getAllRecords(CategoryListModel);
@@ -110,7 +115,10 @@ const getProductById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const productById = await ProductModel.findById(id);
+    const productById = await ProductModel.findById(id).populate({
+      path: "seller",
+      select: ["userName", "email"],
+    });
     if (productById.length === 0) {
       res.status(400).json({
         message: `No products with id ${id} found in the database.`,

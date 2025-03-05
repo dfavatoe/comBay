@@ -32,7 +32,12 @@ export interface ProductT {
   thumbnail: string;
   images: string[];
   price: number;
-  seller: Seller;
+  seller: User;
+  reservation: boolean;
+  reservationTime: number;
+  minReservationQty: number;
+  warranty: string;
+  returnPolicy: string;
 }
 
 // export interface Record {
@@ -93,11 +98,13 @@ export interface UpdatedAt {
 }
 
 //!maybe has to be changed after users roles are established
-export interface Seller {
-  id: string;
+export interface Seller extends User {
+  telephone: string;
   address: string;
-  name: string;
+  productsList: ProductT[];
 }
+
+export interface ProductsList {}
 
 export type UserFull = {
   id: string;
@@ -115,6 +122,7 @@ export type User = {
   email: string;
   image: string;
   role: string;
+  productsList: ProductT[];
 };
 
 // using Pick and Omit

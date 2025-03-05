@@ -16,6 +16,11 @@ const productsSchema = new Schema(
     brand: String,
     sku: String,
     weight: Number,
+    reservation: Boolean,
+    reservationTime: Number,
+    minReservationQty: Number,
+    warranty: String,
+    returnPolicy: String,
     dimensions: {
       width: { type: Number },
       height: { type: Number },
@@ -34,7 +39,8 @@ const productsSchema = new Schema(
     },
     thumbnail: String,
     images: [String],
-    seller: { type: Schema.Types.ObjectId, ref: "Seller" },
+    // seller: { type: Schema.Types.ObjectId, ref: "Seller" },
+    seller: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
