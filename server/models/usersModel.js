@@ -11,7 +11,6 @@ const usersSchema = Schema(
         validator: function (v) {
           return v.length > 2;
         },
-        //! Why error doesn't show anymore in the console? (just in Postman)
         message: `User name {VALUE} should be longer than 2 characters!`,
       },
     },
@@ -36,6 +35,7 @@ const usersSchema = Schema(
       default: "buyer",
       require: true,
     }, // Role-based access
+    productsList: Array,
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

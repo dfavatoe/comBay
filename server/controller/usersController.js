@@ -60,17 +60,19 @@ const registerNewUser = async (req, res) => {
   const { userName, email, password, image, role } = req.body;
   console.log("req.body :>> ", req.body);
 
-  if (password < 6) {
+  // user name validation in the controller:
+  if (userName.length < 3) {
+    return res.status(400).json({
+      error: "User name should be at least 3 characters.",
+    });
+  }
+
+  // email validation in the controller:
+  if (password.length < 6) {
     return res.status(400).json({
       error: "Password should be at least 6 characters.",
     });
   }
-
-  //example of validation in the controller:
-  // if (userName.length < 100) {
-  //   return res.status(400).json({
-  //     error: "Username too short",
-  //   });
 
   //Check if user exists in database
   try {
@@ -98,6 +100,7 @@ const registerNewUser = async (req, res) => {
           userName: userName,
           email: email,
           password: hashedPassword,
+          //! Generic image is not working. Check possible problem in the form field in the frontend. Works just with Postman
           image: image
             ? image
             : "https://img.freepik.com/vecteurs-libre/homme-affaires-caractere-avatar-isole_24877-60111.jpg",
@@ -106,11 +109,11 @@ const registerNewUser = async (req, res) => {
 
         console.log("newUserObject :>> ", newUserObject);
         //Model.prototype.save()
-        //Saves this document by inserting a new document into the database
+        //Saves this new document by inserting it into the database
         const newUser = await newUserObject.save();
         console.log("newUser :>> ", newUser);
 
-        //! Why I cannot create the token during register?
+        //! The token generation was happening just in the login. I created this token generation in the register, because the user was still not identified in the context after signing up. Check if this will still be necessary after the last spike.
         if (newUser) {
           //Generate JWT token
           const token = generateToken(newUser._id, newUser.role);
@@ -134,19 +137,6 @@ const registerNewUser = async (req, res) => {
             });
           }
         }
-
-        // if (newUser) {
-        //   return res.status(201).json({
-        //     message: "User registered successfully",
-        //     user: {
-        //       id: newUser._id,
-        //       userName: newUser.userName,
-        //       email: newUser.email,
-        //       image: newUser.image,
-        //       role: newUser.role,
-        //     },
-        //   });
-        // }
       }
     }
   } catch (error) {
@@ -213,4 +203,29 @@ const login = async (req, res) => {
   }
 };
 
-export { registerNewUser, imageUpload, getAllUsers, login };
+const getProfile = async (req, res) => {
+  console.log("get profile");
+  console.log("req.user :>> ", req.user);
+  if (!req.user) {
+    return res.status(404).json({
+      error: console.log("User has to log in again"),
+    });
+  }
+  if (req.user) {
+    return res.status(200).json({
+      message: "User profile",
+      user: {
+        id: req.user._id,
+        userName: req.user.userName,
+        email: req.user.email,
+        role: req.user.role,
+        image: req.user.image,
+        createdAt: req.user.created_at,
+        product: req.user.product,
+        productsList: req.user.productsList,
+      },
+    });
+  }
+};
+
+export { registerNewUser, imageUpload, getAllUsers, login, getProfile };

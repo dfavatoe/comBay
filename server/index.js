@@ -8,6 +8,8 @@ import productsRouter from "./routes/productsRoute.js";
 import sellersRouter from "./routes/sellersRoute.js";
 import userRouter from "./routes/usersRoutes.js";
 import cloudinaryConfig from "./config/cloudinaryConfig.js";
+import passportStrategy from "./config/passportConfig.js";
+import passport from "passport";
 
 // loading .env file
 dotenv.config();
@@ -25,6 +27,8 @@ function addMiddleWares() {
   );
   app.use(cors());
   cloudinaryConfig();
+  passport.initialize();
+  passport.use(passportStrategy);
 }
 
 function startServer() {

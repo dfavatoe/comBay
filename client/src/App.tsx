@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import AboutBlank from "./pages/AboutBlank";
 import { AuthContextProvider } from "./context/AuthContext";
 import SingleProductPage from "./pages/SingleProductPage";
+import Account from "./pages/Account";
 
 const Root = () => {
   return (
@@ -34,6 +35,7 @@ function App() {
               />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<SignUp />} />
+              <Route path="account" element={<Account />} />
               <Route path="*" element={<AboutBlank />} />
             </Route>
           </Routes>

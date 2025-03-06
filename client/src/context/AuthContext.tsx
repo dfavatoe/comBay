@@ -7,6 +7,7 @@ import {
   User,
 } from "../types/customTypes";
 import { baseUrl } from "../utils/urls";
+import useUserStatus from "../hooks/useUserStatus";
 
 //3. Define Provider's props types
 type AuthContextProviderProps = {
@@ -51,8 +52,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     if (credentials) {
       urlencoded.append("userName", credentials.userName);
       urlencoded.append("email", credentials.email);
-      if (credentials.password.length < 4) {
-        alert("Password should be at least 4 characters.");
+      if (credentials.password.length < 6) {
+        alert("Password should be at least 6 characters.");
       } else {
         urlencoded.append("password", credentials.password);
       }
@@ -87,12 +88,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       }
 
       //check in the local storage if there's a token.
-      const token = localStorage.getItem("token");
-      if (token) {
-        console.log("%c User is logged in", "color: green");
-      } else {
-        console.log("%c User is logged out", "color: red");
-      }
+      // const token = localStorage.getItem("token");
+      // if (token) {
+      //   console.log("%c User is logged in", "color: green");
+      // } else {
+      //   console.log("%c User is logged out", "color: red");
+      // }
 
       setUser(result.user);
     } catch (error) {

@@ -3,20 +3,32 @@ import {
   FormEvent,
   MouseEvent,
   useContext,
+  useEffect,
   useState,
 } from "react";
-import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  Image,
+  InputGroup,
+  Spinner,
+} from "react-bootstrap";
 import {
   ImageUploadOkResponse,
   RegisterCredentials,
 } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
+import useUserStatus from "../hooks/useUserStatus";
 
 function SignUp() {
   const { user, register } = useContext(AuthContext);
   const [newUser, setNewUser] = useState<RegisterCredentials | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // const { token, userStatusMessage } = useUserStatus();
+  // const [loading, setLoading] = useState(false);
 
   // const navigateTo = useNavigate();
 
@@ -120,11 +132,32 @@ function SignUp() {
     // }
   };
 
+  //! fix loading/loader Spinner
+  // useEffect(() => {
+  //   if (token) {
+  //     console.log("%c user is logged in", "color:green");
+  //     setLoading(true);
+  //     alert(userStatusMessage);
+  //     setLoading(false);
+  //   } else {
+  //     console.log("%c user logget out", "color:red");
+  //     setLoading(true);
+  //     alert(userStatusMessage);
+  //     setLoading(false);
+  //   }
+  // }, [token]);
+
   return (
     <>
       <Container className="justify-content-center">
         <h1>Sign Up</h1>
         <br />
+        {/* {loading && (
+          <div>
+            <Spinner animation="border" variant="warning" />
+            <p>Loading...</p>
+          </div>
+        )} */}
         {user ? (
           <div>
             <h2>Welcome {user.userName}!</h2>

@@ -1,14 +1,18 @@
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
 import { LoginCredentials } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
+import useUserStatus from "../hooks/useUserStatus";
 
 function Login() {
   const { user, login } = useContext(AuthContext);
 
   const [loginCredentials, setLoginCredentials] =
     useState<LoginCredentials | null>(null);
+
+  // const { token, userStatusMessage } = useUserStatus();
+  // const [loading, setLoading] = useState(false);
 
   const navigateTo = useNavigate();
 
@@ -27,6 +31,21 @@ function Login() {
 
     login(loginCredentials);
   };
+
+  //! Fix loading/spinner
+  // useEffect(() => {
+  //   if (token) {
+  //     console.log("%c user is logged in", "color:green");
+  //     setLoading(true);
+  //     alert(userStatusMessage);
+  //     setLoading(false);
+  //   } else {
+  //     console.log("%c user logget out", "color:red");
+  //     setLoading(true);
+  //     alert(userStatusMessage);
+  //     setLoading(false);
+  //   }
+  // }, [token]);
 
   return (
     <>

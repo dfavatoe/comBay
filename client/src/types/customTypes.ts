@@ -32,7 +32,7 @@ export interface ProductT {
   thumbnail: string;
   images: string[];
   price: number;
-  seller: User;
+  seller: UserSeller;
   reservation: boolean;
   reservationTime: number;
   minReservationQty: number;
@@ -122,8 +122,15 @@ export type User = {
   email: string;
   image: string;
   role: string;
-  productsList: ProductT[];
 };
+
+export interface UserSeller extends User {
+  productsList: ProductT[];
+}
+
+// export interface UserBuyer extends User {
+//   personalId: string;
+// }
 
 // using Pick and Omit
 export type LoginCredentials = Pick<
@@ -165,4 +172,11 @@ export interface LoginOkResponse {
   message: string;
   user: User;
   token: string;
+}
+
+export interface GetProfileOfResponse {
+  message: string;
+  user: User;
+  //! Maybe here the type of user could be divided in UserSeller or UserBuyer?
+  // user: UserSeller | UserBuyer;
 }
