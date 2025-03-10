@@ -177,6 +177,10 @@ export interface LoginOkResponse {
 export interface GetProfileOfResponse {
   message: string;
   user: User;
-  //! Maybe here the type of user could be divided in UserSeller or UserBuyer?
-  // user: UserSeller | UserBuyer;
+}
+
+export interface PutUpdateResponse {
+  message: string;
+  user: User;
+  error: string;
 }

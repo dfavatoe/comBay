@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, SetStateAction, useState } from "react";
 import {
   LoginCredentials,
   LoginOkResponse,
@@ -17,14 +17,18 @@ type AuthContextProviderProps = {
 //5. Define the Context's type
 type AuthContextType = {
   user: User | null;
+  loading: Boolean;
   register: (credentials: RegisterCredentials | null) => {};
   login: (credentials: LoginCredentials | null) => Promise<void>;
   logout: () => void;
+  setUser: (value: SetStateAction<User | null>) => void;
+  setLoading: (value: SetStateAction<boolean>) => void;
 };
 
 //6. Define initial value of contents shared by the Context
 const contextInitialValue: AuthContextType = {
   user: null,
+  loading: true,
   login: () => {
     throw new Error("Context not initialized");
   },
@@ -32,6 +36,13 @@ const contextInitialValue: AuthContextType = {
     throw new Error("Context not initialized");
   },
   register: () => {
+    throw new Error("Context not initialized");
+  },
+  setUser: () => {
+    throw new Error("Context not initialized");
+  },
+
+  setLoading: () => {
     throw new Error("Context not initialized");
   },
 };
@@ -43,6 +54,7 @@ export const AuthContext = createContext<AuthContextType>(contextInitialValue);
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   //4. Move useStates and Functions to the Provider
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const register = async (credentials: RegisterCredentials | null) => {
     const myHeaders = new Headers();
@@ -84,7 +96,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       if (result.token) {
         //store the token in the local storage
         localStorage.setItem("token", result.token);
-        console.log("%c User is logged in", "color: green");
+        console.log("%c User is logged in", "color: blue");
       }
 
       //check in the local storage if there's a token.
@@ -101,6 +113,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   };
 
+  // login
   const login = async (credentials: LoginCredentials | null) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -111,7 +124,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       urlencoded.append("password", credentials.password);
     } else {
       console.log("No empty forms allowed.");
-      alert("Please, complete the form.");
+      alert("Please, complete the login form.");
     }
 
     const requestOptions = {
@@ -135,13 +148,14 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       if (result.token) {
         //store the token in local storage
         localStorage.setItem("token", result.token);
-        console.log("%c User is logged in", "color: green");
+        // console.log("%c User is logged in", "color: blue");
       }
 
       //check in the local storage if there's a token.
       const token = localStorage.getItem("token");
       if (token) {
         console.log("%c User is logged in", "color: green");
+        alert("You are logged in.");
       } else {
         console.log("%c User is logged out", "color: red");
       }
@@ -162,9 +176,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         login,
         logout,
         register,
+        loading,
+        setLoading,
       }}
     >
       {children}

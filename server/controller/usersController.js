@@ -228,4 +228,42 @@ const getProfile = async (req, res) => {
   }
 };
 
-export { registerNewUser, imageUpload, getAllUsers, login, getProfile };
+const putUpdateName = async (req, res) => {
+  console.log("update user name");
+  console.log("req.user :>> ", req.user);
+  const { userName } = req.body;
+  if (!userName) return res.status(400).json({ error: "Name is required" });
+
+  try {
+    const user = await UserModel.findByIdAndUpdate(
+      req.user._id,
+      { userName },
+      { new: true }
+    );
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({
+      message: "Name updated successfully",
+      user: {
+        id: req.user._id,
+        userName: req.user.userName,
+        email: req.user.email,
+        role: req.user.role,
+        image: req.user.image,
+        createdAt: req.user.created_at,
+        product: req.user.product,
+        productsList: req.user.productsList,
+      },
+    });
+  } catch (error) {
+    registerNewUser.status(500).json({ error: "Server error" });
+  }
+};
+
+export {
+  registerNewUser,
+  imageUpload,
+  getAllUsers,
+  login,
+  getProfile,
+  putUpdateName,
+};

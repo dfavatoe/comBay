@@ -6,15 +6,29 @@ import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import AboutBlank from "./pages/AboutBlank";
-import { AuthContextProvider } from "./context/AuthContext";
+import { AuthContext, AuthContextProvider } from "./context/AuthContext";
 import SingleProductPage from "./pages/SingleProductPage";
 import Account from "./pages/Account";
+import { useContext } from "react";
+import { Spinner } from "react-bootstrap";
 
 const Root = () => {
+  const { loading, setLoading } = useContext(AuthContext);
+  setLoading(false);
+
   return (
     <>
-      <NavBar />
-      <Outlet />
+      {loading ? (
+        <div>
+          <Spinner animation="border" variant="warning" />
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <>
+          <NavBar />
+          <Outlet />
+        </>
+      )}
     </>
   );
 };

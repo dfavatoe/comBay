@@ -1,6 +1,8 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
+import useUserStatus from "../hooks/useUserStatus";
+import { Link } from "react-router";
 
 function NavBar() {
   const { user, logout } = useContext(AuthContext);
@@ -18,13 +20,26 @@ function NavBar() {
                 style={{ maxHeight: "200px" }}
                 navbarScroll
               >
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="/products">Products</Nav.Link>
-                <Nav.Link href="/reviews">Reviews</Nav.Link>
-                <Nav.Link href="/account">Account</Nav.Link>
+                {/* as={Link} is used so that the Bootstrap link behaves as a React Link. Like this it won't refresh the page as normal <a> html link.  */}
+                <Nav.Link to="/" as={Link}>
+                  Home
+                </Nav.Link>
+                <Nav.Link to="/products" as={Link}>
+                  Products
+                </Nav.Link>
+                <Nav.Link to="/reviews" as={Link}>
+                  Reviews
+                </Nav.Link>
+                <Nav.Link to="/account" as={Link}>
+                  Account
+                </Nav.Link>
                 <NavDropdown title="Register" id="navbarScrollingDropdown">
-                  <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-                  <NavDropdown.Item href="/signup">Sign up</NavDropdown.Item>
+                  <NavDropdown.Item to="/login" as={Link}>
+                    Login
+                  </NavDropdown.Item>
+                  <NavDropdown.Item to="/signup" as={Link}>
+                    Sign up
+                  </NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <div className="d-lg-flex justify-content-end align-items-center">

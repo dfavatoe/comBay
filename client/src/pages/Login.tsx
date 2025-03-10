@@ -11,9 +11,6 @@ function Login() {
   const [loginCredentials, setLoginCredentials] =
     useState<LoginCredentials | null>(null);
 
-  // const { token, userStatusMessage } = useUserStatus();
-  // const [loading, setLoading] = useState(false);
-
   const navigateTo = useNavigate();
 
   const handleLoginInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,21 +28,6 @@ function Login() {
 
     login(loginCredentials);
   };
-
-  //! Fix loading/spinner
-  // useEffect(() => {
-  //   if (token) {
-  //     console.log("%c user is logged in", "color:green");
-  //     setLoading(true);
-  //     alert(userStatusMessage);
-  //     setLoading(false);
-  //   } else {
-  //     console.log("%c user logget out", "color:red");
-  //     setLoading(true);
-  //     alert(userStatusMessage);
-  //     setLoading(false);
-  //   }
-  // }, [token]);
 
   return (
     <>
