@@ -122,6 +122,7 @@ export type User = {
   email: string;
   image: string;
   role: string;
+  address: string;
 };
 
 export interface UserSeller extends User {

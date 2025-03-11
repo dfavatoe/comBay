@@ -6,6 +6,7 @@ import {
   login,
   getProfile,
   putUpdateName,
+  putUpdateAddress,
 } from "../controller/usersController.js";
 import multerUpload from "../middleware/multer.js";
 import multerWithCustomErrors from "../middleware/multer.js";
@@ -21,5 +22,6 @@ userRouter.post("/register", registerNewUser);
 userRouter.post("/login", login);
 userRouter.get("/profile", jwtAuth, getProfile); //in order to get the profile, authorize with the token
 userRouter.put("/update-name", jwtAuth, putUpdateName);
+userRouter.put("/update-address", jwtAuth, putUpdateAddress);
 
 export default userRouter;

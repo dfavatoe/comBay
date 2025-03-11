@@ -223,6 +223,7 @@ const getProfile = async (req, res) => {
         createdAt: req.user.created_at,
         product: req.user.product,
         productsList: req.user.productsList,
+        address: req.user.address,
       },
     });
   }
@@ -252,10 +253,44 @@ const putUpdateName = async (req, res) => {
         createdAt: req.user.created_at,
         product: req.user.product,
         productsList: req.user.productsList,
+        address: req.user.address,
       },
     });
   } catch (error) {
-    registerNewUser.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const putUpdateAddress = async (req, res) => {
+  console.log("update user address");
+  console.log("req.user :>> ", req.user);
+  const { address } = req.body;
+  if (!address) return res.status(400).json({ error: "Address is required" });
+
+  try {
+    const user = await UserModel.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    //Update or create the address field
+    user.address = address;
+    await user.save(); //Saves this new document by inserting it into the database
+
+    res.json({
+      message: "Address updated successfully",
+      user: {
+        id: req.user._id,
+        userName: req.user.userName,
+        email: req.user.email,
+        role: req.user.role,
+        image: req.user.image,
+        createdAt: req.user.created_at,
+        product: req.user.product,
+        productsList: req.user.productsList,
+        address: req.user.address,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
   }
 };
 
@@ -266,4 +301,5 @@ export {
   login,
   getProfile,
   putUpdateName,
+  putUpdateAddress,
 };

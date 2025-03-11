@@ -20,6 +20,7 @@ const usersSchema = Schema(
       require: true,
       // minLength: [6, "Must be at least 6"],
     },
+    address: { type: String, defaul: "" },
 
     image: {
       type: String,
