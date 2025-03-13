@@ -154,14 +154,14 @@ function SingleProductPage() {
                 <h5>Dimensions:</h5>
                 <ul>
                   <li>
-                    <b>Width:</b> {productSpecs.productById.dimensions.width} cm
+                    <b>Width:</b> {productSpecs.productById.dimensions.width} mm
                   </li>
                   <li>
                     <b>Height:</b> {productSpecs.productById.dimensions.height}{" "}
-                    cm
+                    mm
                   </li>
                   <li>
-                    <b>Depth:</b> {productSpecs.productById.dimensions.depth} cm
+                    <b>Depth:</b> {productSpecs.productById.dimensions.depth} mm
                   </li>
                 </ul>
                 <Button variant="warning">Add to cart</Button>

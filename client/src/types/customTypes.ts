@@ -32,13 +32,18 @@ export interface ProductT {
   thumbnail: string;
   images: string[];
   price: number;
-  seller: UserSeller;
+  seller: User;
   reservation: boolean;
   reservationTime: number;
   minReservationQty: number;
   warranty: string;
   returnPolicy: string;
 }
+
+export type addProductT = Pick<
+  ProductT,
+  "title" | "description" | "category" | "price" | "stock" | "seller" | "images"
+>;
 
 // export interface Record {
 //   dimensions: Dimensions;

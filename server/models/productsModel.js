@@ -38,6 +38,7 @@ const productsSchema = new Schema(
       qrcode: { type: String },
     },
     thumbnail: String,
+    //! Bring images back to [String]
     images: [String],
     // seller: { type: Schema.Types.ObjectId, ref: "Seller" },
     seller: { type: Schema.Types.ObjectId, ref: "User" },

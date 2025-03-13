@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
-import useUserStatus from "../hooks/useUserStatus";
 import { Link } from "react-router";
 
 function NavBar() {

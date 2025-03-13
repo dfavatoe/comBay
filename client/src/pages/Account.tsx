@@ -2,11 +2,13 @@
 
 import { ChangeEvent, FormEvent, MouseEvent, useEffect, useState } from "react";
 import {
+  addProductT,
   GetProfileOfResponse,
+  ImageUploadOkResponse,
   PutUpdateResponse,
   User,
 } from "../types/customTypes";
-import { Button, Col, Form, Image, Row } from "react-bootstrap";
+import { Button, Col, Form, Image, InputGroup, Row } from "react-bootstrap";
 import useUserStatus from "../hooks/useUserStatus";
 import { Link } from "react-router";
 import { baseUrl } from "../utils/urls";
@@ -18,6 +20,14 @@ function Account() {
   const [newAddress, setNewAddress] = useState("");
   const [messageName, setMessageName] = useState("");
   const [messageAddress, setMessageAddress] = useState("");
+
+  //?===========================================================
+
+  const [newProduct, setNewProduct] = useState<addProductT | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | string>("");
+
+  //?===========================================================
 
   const handleGetUserProfile = async () => {
     // console.log("working");
@@ -106,6 +116,7 @@ function Account() {
     if (response.ok) {
       setUser(result.user);
       setMessageName("Name updated successfully!");
+      setNewUserName("");
     } else {
       setMessageName(result.error || "Failed to update name.");
     }
@@ -125,7 +136,7 @@ function Account() {
 
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/x-www-form-urlencode");
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
     const urlencode = new URLSearchParams();
     if (newAddress !== "") {
@@ -147,23 +158,167 @@ function Account() {
     );
 
     const result = (await response.json()) as PutUpdateResponse;
-    console.log("Addresult :>> ", result);
+    console.log("update address result :>> ", result);
 
     if (response.ok) {
       setUser(result.user);
-      setMessageName("Name updated successfully!");
+      setMessageAddress("Address updated successfully!");
+      setNewAddress("");
     } else {
-      setMessageName(result.error || "Failed to update name.");
+      setMessageAddress(result.error || "Failed to update address.");
     }
     handleGetUserProfile();
   };
 
   //======================================================================
 
+  const deleteUserAddress = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (!token) {
+      console.log("User has to log in first");
+      alert("You have to log in first");
+    }
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    };
+
+    const response = await fetch(
+      `${baseUrl}/api/users/delete-address`,
+      requestOptions
+    );
+
+    const result = (await response.json()) as PutUpdateResponse;
+
+    if (response.ok) {
+      console.log("delete address result :>> ", result);
+      setUser(result.user);
+      setMessageAddress("Address deleted successfully!");
+    } else {
+      setMessageAddress(result.error || "Failed to delete address.");
+    }
+    handleGetUserProfile();
+  };
+
+  //?======================================================================
+  //?======================================================================
+
+  const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.name :>> ", e.target.name);
+    console.log("e.target.value :>> ", e.target.value);
+    const { name, value, type } = e.target;
+
+    setNewProduct((prev) => ({
+      ...prev!,
+      [name]: type === "number" ? Number(value) : value, // Convert price to number
+    }));
+    // setNewProduct({ ...newProduct!, [e.target.name]: e.target.value });
+  };
+
+  const submitNewProduct = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!token) {
+      console.log("user has to log in first");
+      alert("You have to log in first");
+      return;
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    //! Probably Json Stringify would be better
+    const urlencode = new URLSearchParams();
+    if (newProduct) {
+      urlencode.append("title", newProduct.title);
+      urlencode.append("description", newProduct.description);
+      urlencode.append("category", newProduct.category);
+      urlencode.append("price", String(newProduct.price));
+      urlencode.append("stock", String(newProduct.stock));
+      urlencode.append("seller", String(user!.id));
+      urlencode.append("images", String(newProduct.images));
+    } else {
+      console.log("No empty forms allowed");
+      alert("Complete the address field");
+    }
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: urlencode,
+    };
+
+    const response = await fetch(
+      `${baseUrl}/api/products/add-product`,
+      requestOptions
+    );
+
+    const result = (await response.json()) as PutUpdateResponse;
+    console.log("add product result :>> ", result);
+
+    if (response.ok) {
+      // setUser(result.user);
+      console.log("Product added successfully!");
+      setNewProduct(null);
+    } else {
+      // setMessageProduct(result.error || "Failed to update address.");
+      console.log(result.error || "Failed to update address.");
+    }
+  };
+
+  //?======================================================================
+
+  const handleAttachFile = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    console.log("e.target :>> ", e);
+    const file = e.target.files?.[0];
+    if (file instanceof File) {
+      console.log("selected file set");
+      setSelectedFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleImageUpload = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log("selectedFile :>> ", selectedFile);
+    const formdata = new FormData();
+    formdata.append("image", selectedFile);
+
+    const requestOptions = {
+      method: "POST",
+      body: formdata,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5100/api/users/uploadimage",
+        requestOptions
+      );
+
+      const result = (await response.json()) as ImageUploadOkResponse;
+
+      setNewProduct({ ...newProduct!, images: Array(result.imageURL) }); //!check if this works
+
+      console.log("result :>> ", result);
+      console.log("newProduct :>> ", newProduct);
+    } catch (error) {
+      console.log("error :>> ", error);
+    } finally {
+      //delete the image preview
+      if (typeof imagePreview === "string") {
+        URL.revokeObjectURL(imagePreview);
+        setImagePreview(null);
+      }
+    }
+  };
+
   return (
     <>
-      <h1>Account</h1>
-
+      <h1 className="mb-4">Account</h1>
       {user ? (
         <div>
           <Row>
@@ -188,11 +343,11 @@ function Account() {
                   onChange={handleUserNameChange}
                   required
                 />
+                {messageName && <p>{messageName}</p>}
                 <Button type="submit" className="d-block ml-2 mb-3">
                   Update
                 </Button>
               </Form>
-              {messageName && <p>{messageName}</p>}
               <div className="mb-4">
                 <b>Email: </b> {user.email}
               </div>
@@ -206,16 +361,25 @@ function Account() {
                 </Form.Label>
                 <Form.Control
                   style={{ maxWidth: "300px" }}
-                  className="mb-2 d-blockinline"
+                  className="mb-2 d-block"
                   type="text"
                   placeholder="Enter new address"
                   value={newAddress}
                   onChange={handleAddressChange}
                   required
                 />
-                <Button type="submit" className="d-block ml-2 mb-3">
+                {messageAddress && <p>{messageAddress}</p>}
+
+                <Button type="submit" className="d-inline mb-3">
                   Update
                 </Button>
+                <Button
+                  onClick={deleteUserAddress}
+                  className="d-inline mx-2 mb-3"
+                >
+                  Delete
+                </Button>
+                <div></div>
               </Form>
             </Col>
             <Col>
@@ -230,11 +394,135 @@ function Account() {
               </div>
             </Col>
           </Row>
+          <hr />
 
-          <Button active onClick={handleGetUserProfile}>
-            User Profile
-          </Button>
-          {/* //!complete with other user's fields */}
+          {/* Seller - Products */}
+          {user.role === "seller" && (
+            <>
+              <h1>Your Products</h1>
+              <Row>
+                <Col className="mx-0 px-0 g-0" style={{ textAlign: "left" }}>
+                  <h5>Add Product:</h5>
+                  <Form onSubmit={submitNewProduct}>
+                    <Form.Group className="mb-3 justify-content-center">
+                      <Form.Label>Title</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="title"
+                        id="product-title"
+                        placeholder="Enter the product's title"
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3 justify-content-center">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="description"
+                        id="product-description"
+                        // value={email}
+                        // onChange={handleEmailChange}
+                        placeholder="Describe the product"
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Category</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="category"
+                        id="product-category"
+                        // value={password}
+                        // onChange={handlePasswordChange}
+                        placeholder="Set the product's category"
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Price</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="price"
+                        id="product-price"
+                        // value={password}
+                        // onChange={handlePasswordChange}
+                        placeholder="Set a price"
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Stock</Form.Label>
+                      <Form.Control
+                        type="number"
+                        name="stock"
+                        id="product-stock"
+                        // value={password}
+                        // onChange={handlePasswordChange}
+                        placeholder="Number of product's in stock"
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Form.Group>
+
+                    {/* <Form.Group className="mb-3">
+                      <Form.Label>Image</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="images"
+                        id="product-image"
+                        // value={password}
+                        // onChange={handlePasswordChange}
+                        placeholder="Place image's URL"
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Form.Group> */}
+
+                    <Button type="submit" className="d-block ml-2 mb-3">
+                      Add
+                    </Button>
+                  </Form>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Upload the product's picture</Form.Label>
+                    <Form.Group controlId="formFile" className="mb-3">
+                      <InputGroup className="mb-4">
+                        <Form.Control
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAttachFile}
+                        />
+                        <Button
+                          type="submit"
+                          variant="outline-secondary"
+                          id="button-addon2"
+                          onClick={handleImageUpload}
+                        >
+                          Upload
+                        </Button>
+                      </InputGroup>
+                      <div>
+                        {imagePreview && (
+                          <img
+                            src={imagePreview}
+                            alt="image preview"
+                            style={{
+                              width: "70px",
+                              height: "auto",
+                              border: "solid",
+                            }}
+                          />
+                        )}
+                      </div>
+                    </Form.Group>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </>
+          )}
         </div>
       ) : (
         <>

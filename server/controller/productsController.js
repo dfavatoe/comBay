@@ -44,7 +44,11 @@ const getAllProducts = getAllRecords(ProductModel, {
   select: ["userName", "email"],
 });
 
+//========================================================
+
 const getCategoriesList = getAllRecords(CategoryListModel);
+
+//========================================================
 
 const getProductsByCategory = async (req, res) => {
   console.log("controller function running"); // Try in Postman and check the CLI
@@ -107,6 +111,8 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
+//========================================================
+
 const getProductById = async (req, res) => {
   console.log("controller function running");
 
@@ -139,9 +145,74 @@ const getProductById = async (req, res) => {
   }
 };
 
+//========================================================
+
+const addProduct = async (req, res) => {
+  // console.log("addProduct working");
+  // console.log("req :>> ", req);
+
+  const { title, description, category, price, stock, seller, images } =
+    req.body;
+  console.log("req.body :>> ", req.body);
+
+  try {
+    //product cannot exist already by this seller
+    const existingProduct = await ProductModel.findOne({
+      title: title,
+      seller: seller,
+    });
+
+    if (existingProduct) {
+      return res.status(400).json({
+        message: "Seller already has this product in the database",
+      });
+    }
+    if (!existingProduct) {
+      const newProductObject = new ProductModel({
+        title: title,
+        description: description,
+        category: category,
+        price: price,
+        stock: stock,
+        seller: seller,
+        images: images,
+      });
+
+      console.log("newProductObject :>> ", newProductObject);
+
+      const newProduct = await newProductObject.save();
+      console.log("newProduct :>> ", newProduct);
+
+      if (newProduct) {
+        return res.status(200).json({
+          message: "Product registered successfully",
+          product: {
+            id: newProduct._id,
+            title: newProduct.title,
+            description: newProduct.description,
+            category: newProduct.category,
+            price: newProduct.price,
+            stock: newProduct.stock,
+            seller: newProduct.seller,
+            images: newProduct.images,
+          },
+        });
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Something went wrong during register.",
+      errorStack: error.message,
+    });
+  }
+};
+
+//========================================================
+
 export {
   getAllProducts,
   getProductsByCategory,
   getCategoriesList,
   getProductById,
+  addProduct,
 };

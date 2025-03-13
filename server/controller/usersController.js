@@ -23,6 +23,8 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+//==========================================================
+
 const imageUpload = async (req, res) => {
   console.log("imageUpload working");
   console.log("req file :>> ", req.file);
@@ -54,6 +56,8 @@ const imageUpload = async (req, res) => {
   }
 };
 
+//=========================================================
+
 const registerNewUser = async (req, res) => {
   // console.log("user's register working");
   // console.log("req :>> ", req);
@@ -74,8 +78,8 @@ const registerNewUser = async (req, res) => {
     });
   }
 
-  //Check if user exists in database
   try {
+    //Check if user exists in database
     const existingUser = await UserModel.findOne({ emai: email });
 
     if (existingUser) {
@@ -147,6 +151,8 @@ const registerNewUser = async (req, res) => {
   }
 };
 
+//=========================================================
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -203,6 +209,8 @@ const login = async (req, res) => {
   }
 };
 
+//=========================================================
+
 const getProfile = async (req, res) => {
   console.log("get profile");
   console.log("req.user :>> ", req.user);
@@ -228,6 +236,8 @@ const getProfile = async (req, res) => {
     });
   }
 };
+
+//=========================================================
 
 const putUpdateName = async (req, res) => {
   console.log("update user name");
@@ -261,9 +271,12 @@ const putUpdateName = async (req, res) => {
   }
 };
 
+//=========================================================
+
 const putUpdateAddress = async (req, res) => {
   console.log("update user address");
   console.log("req.user :>> ", req.user);
+  console.log("req.body :>> ", req.body);
   const { address } = req.body;
   if (!address) return res.status(400).json({ error: "Address is required" });
 
@@ -272,11 +285,44 @@ const putUpdateAddress = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
 
     //Update or create the address field
-    user.address = address;
-    await user.save(); //Saves this new document by inserting it into the database
+    user.address = address; //add or update the address field with the value of the req.body
+    await user.save(); //Saves this document by inserting it into the database
 
     res.json({
       message: "Address updated successfully",
+      user: {
+        id: req.user._id,
+        userName: req.user.userName,
+        email: req.user.email,
+        role: req.user.role,
+        image: req.user.image,
+        createdAt: req.user.created_at,
+        product: req.user.product,
+        productsList: req.user.productsList,
+        address: req.user.address,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+};
+
+//=========================================================
+
+const deleteAddress = async (req, res) => {
+  console.log("delete user address");
+  console.log("req.user :>> ", req.user);
+
+  try {
+    const user = await UserModel.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    //Delete the address field setting as undefined
+    user.address = undefined;
+    await user.save(); //Saves this document by inserting it into the database
+
+    res.json({
+      message: "Address deleted successfully",
       user: {
         id: req.user._id,
         userName: req.user.userName,
@@ -302,4 +348,5 @@ export {
   getProfile,
   putUpdateName,
   putUpdateAddress,
+  deleteAddress,
 };
