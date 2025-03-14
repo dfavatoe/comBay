@@ -154,17 +154,16 @@ function SingleProductPage() {
                 <h5>Dimensions:</h5>
                 <ul>
                   <li>
-                    <b>Width:</b> {productSpecs.productById.dimensions.width} mm
+                    <b>Width:</b> {productSpecs.productById.width} mm
                   </li>
                   <li>
-                    <b>Height:</b> {productSpecs.productById.dimensions.height}{" "}
-                    mm
+                    <b>Height:</b> {productSpecs.productById.height} mm
                   </li>
                   <li>
-                    <b>Depth:</b> {productSpecs.productById.dimensions.depth} mm
+                    <b>Depth:</b> {productSpecs.productById.depth} mm
                   </li>
                 </ul>
-                <Button variant="warning">Add to cart</Button>
+                <Button variant="warning">Add to list</Button>
               </Col>
             </>
           )}

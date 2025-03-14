@@ -151,8 +151,26 @@ const addProduct = async (req, res) => {
   // console.log("addProduct working");
   // console.log("req :>> ", req);
 
-  const { title, description, category, price, stock, seller, images } =
-    req.body;
+  const {
+    title,
+    brand,
+    description,
+    category,
+    price,
+    stock,
+    seller,
+    images,
+    warranty,
+    returnPolicy,
+    reservation,
+    minReservationQty,
+    reservationTime,
+    discountPercentage,
+    width,
+    height,
+    depth,
+    rating,
+  } = req.body;
   console.log("req.body :>> ", req.body);
 
   try {
@@ -170,12 +188,23 @@ const addProduct = async (req, res) => {
     if (!existingProduct) {
       const newProductObject = new ProductModel({
         title: title,
+        brand: brand,
         description: description,
         category: category,
         price: price,
         stock: stock,
         seller: seller,
         images: images,
+        warranty: warranty,
+        returnPolicy: returnPolicy,
+        reservation: reservation,
+        minReservationQty: minReservationQty,
+        reservationTime: reservationTime,
+        discountPercentage: discountPercentage,
+        rating: rating,
+        width: width,
+        height: height,
+        depth: depth,
       });
 
       console.log("newProductObject :>> ", newProductObject);
@@ -189,12 +218,23 @@ const addProduct = async (req, res) => {
           product: {
             id: newProduct._id,
             title: newProduct.title,
+            brand: newProduct.brand,
             description: newProduct.description,
             category: newProduct.category,
             price: newProduct.price,
             stock: newProduct.stock,
             seller: newProduct.seller,
             images: newProduct.images,
+            warranty: newProduct.warranty,
+            returnPolicy: newProduct.returnPolicy,
+            reservation: newProduct.reservation,
+            minReservationQty: newProduct.minReservationQty,
+            reservationTime: newProduct.reservationTime,
+            discountPercentage: newProduct.discountPercentage,
+            rating: newProduct.rating,
+            width: newProduct.width,
+            height: newProduct.height,
+            depth: newProduct.depth,
           },
         });
       }

@@ -21,11 +21,9 @@ const productsSchema = new Schema(
     minReservationQty: Number,
     warranty: String,
     returnPolicy: String,
-    dimensions: {
-      width: { type: Number },
-      height: { type: Number },
-      depth: { type: Number },
-    },
+    width: Number,
+    height: Number,
+    depth: Number,
     reviews: {
       rating: { type: Number },
       comment: { type: Number },
@@ -38,7 +36,6 @@ const productsSchema = new Schema(
       qrcode: { type: String },
     },
     thumbnail: String,
-    //! Bring images back to [String]
     images: [String],
     // seller: { type: Schema.Types.ObjectId, ref: "Seller" },
     seller: { type: Schema.Types.ObjectId, ref: "User" },

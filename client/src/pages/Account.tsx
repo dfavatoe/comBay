@@ -8,7 +8,15 @@ import {
   PutUpdateResponse,
   User,
 } from "../types/customTypes";
-import { Button, Col, Form, Image, InputGroup, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Image,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
 import useUserStatus from "../hooks/useUserStatus";
 import { Link } from "react-router";
 import { baseUrl } from "../utils/urls";
@@ -205,17 +213,70 @@ function Account() {
   //?======================================================================
   //?======================================================================
 
+  // const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value, type } = e.target;
+
+  //   setNewProduct((prev) => {
+  //     if (!prev) return null; // Ensure `prev` is not null
+
+  //     let updatedValue: string | number | boolean = value;
+
+  //     // Convert types accordingly
+  //     if (type === "number") {
+  //       updatedValue = value ? Number(value) : 0; // Ensure a valid number
+  //     } else if (type === "switch") {
+  //       updatedValue = e.target.checked; // Handle switch inputs
+  //     }
+
+  //     // // Handle nested dimensions object
+  //     // if (name.startsWith("dimensions.")) {
+  //     //   const dimensionKey = name.split(".")[1]; // Extract "width", "height", or "depth"
+  //     //   return {
+  //     //     ...prev,
+  //     //     dimensions: {
+  //     //       ...prev.dimensions,
+  //     //       [dimensionKey]: updatedValue as number, // Ensure it's a number
+  //     //     },
+  //     //   };
+  //     // }
+
+  //     return {
+  //       ...prev,
+  //       [name]: updatedValue,
+  //     };
+  //   });
+  // };
+
+  // const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   console.log("e.target.name :>> ", e.target.name);
+  //   console.log("e.target.value :>> ", e.target.value);
+  //   const { name, value, type } = e.target;
+  //   const parsedValue = type === "number" ? String(value) : value;
+
+  //   setNewProduct((prev) => ({
+  //     ...prev!,
+  //     dimensions: {
+  //       ...prev?.dimensions,
+  //       [name]: parsedValue, // Correctly update width, height, or depth
+  //     },
+  //   }));
+  // };
+
+  //converting price to number
   const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("e.target.name :>> ", e.target.name);
-    console.log("e.target.value :>> ", e.target.value);
     const { name, value, type } = e.target;
 
     setNewProduct((prev) => ({
       ...prev!,
       [name]: type === "number" ? Number(value) : value, // Convert price to number
     }));
-    // setNewProduct({ ...newProduct!, [e.target.name]: e.target.value });
   };
+
+  // const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   console.log("e.target.name :>> ", e.target.name);
+  //   console.log("e.target.value :>> ", e.target.value);
+  //   setNewProduct({ ...newProduct!, [e.target.name]: e.target.value });
+  // };
 
   const submitNewProduct = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -226,29 +287,55 @@ function Account() {
       return;
     }
 
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    // const myHeaders = new Headers();
+    // myHeaders.append("Authorization", `Bearer ${token}`);
+    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-    //! Probably Json Stringify would be better
-    const urlencode = new URLSearchParams();
-    if (newProduct) {
-      urlencode.append("title", newProduct.title);
-      urlencode.append("description", newProduct.description);
-      urlencode.append("category", newProduct.category);
-      urlencode.append("price", String(newProduct.price));
-      urlencode.append("stock", String(newProduct.stock));
-      urlencode.append("seller", String(user!.id));
-      urlencode.append("images", String(newProduct.images));
-    } else {
-      console.log("No empty forms allowed");
-      alert("Complete the address field");
-    }
+    // //! Probably Json Stringify would be better
+    // const urlencode = new URLSearchParams();
+    // if (newProduct) {
+    //   urlencode.append("title", newProduct.title);
+    //   urlencode.append("brand", newProduct.brand);
+    //   urlencode.append("description", newProduct.description);
+    //   urlencode.append("category", newProduct.category);
+    //   urlencode.append("price", String(newProduct.price));
+    //   urlencode.append("stock", String(newProduct.stock));
+    //   urlencode.append("seller", String(user!.id));
+    //   urlencode.append("images", String(newProduct.images));
+    //   urlencode.append("warranty", newProduct.warranty);
+    //   urlencode.append("returnPolicy", newProduct.returnPolicy);
+    //   urlencode.append("reservation", String(newProduct.reservation));
+    //   urlencode.append(
+    //     "minReservationQty",
+    //     String(newProduct.minReservationQty)
+    //   );
+    //   urlencode.append("reservationTime", String(newProduct.reservationTime));
+    //   urlencode.append(
+    //     "discountPercentage",
+    //     String(newProduct.discountPercentage)
+    //   );
+    //   urlencode.append("rating", String(newProduct.rating));
+    //   urlencode.append("dimensions", String(newProduct.dimensions.width));
+    //   urlencode.append("dimensions", String(newProduct.dimensions.height));
+    //   urlencode.append("dimensions", String(newProduct.dimensions.depth));
+    // } else {
+    //   console.log("No empty forms allowed");
+    //   alert("Complete the address field");
+    // }
+
+    // const requestOptions = {
+    //   method: "PUT",
+    //   headers: myHeaders,
+    //   body: urlencode,
+    // };
 
     const requestOptions = {
       method: "PUT",
-      headers: myHeaders,
-      body: urlencode,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct), // Send as JSON
     };
 
     const response = await fetch(
@@ -314,6 +401,13 @@ function Account() {
         setImagePreview(null);
       }
     }
+  };
+
+  //?====================================================================
+
+  const handleReserveButtonChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.checked :>> ", e.target.checked);
+    setNewProduct({ ...newProduct!, reservation: e.target.checked });
   };
 
   return (
@@ -404,16 +498,32 @@ function Account() {
                 <Col className="mx-0 px-0 g-0" style={{ textAlign: "left" }}>
                   <h5>Add Product:</h5>
                   <Form onSubmit={submitNewProduct}>
-                    <Form.Group className="mb-3 justify-content-center">
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="title"
-                        id="product-title"
-                        placeholder="Enter the product's title"
-                        onChange={handleNewProductInputChange}
-                      />
-                    </Form.Group>
+                    <Row>
+                      <Col>
+                        <Form.Group className="mb-3 justify-content-center">
+                          <Form.Label>Title</Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="title"
+                            id="product-title"
+                            placeholder="Enter the product's title"
+                            onChange={handleNewProductInputChange}
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group className="mb-3 justify-content-center">
+                          <Form.Label>Brand</Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="brand"
+                            id="product-brand"
+                            placeholder="Enter the product's brand"
+                            onChange={handleNewProductInputChange}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
 
                     <Form.Group className="mb-3 justify-content-center">
                       <Form.Label>Description</Form.Label>
@@ -467,18 +577,39 @@ function Account() {
                       />
                     </Form.Group>
 
-                    {/* <Form.Group className="mb-3">
+                    <Form.Group>
                       <Form.Label>Image</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="images"
-                        id="product-image"
-                        // value={password}
-                        // onChange={handlePasswordChange}
-                        placeholder="Place image's URL"
-                        onChange={handleNewProductInputChange}
-                      />
-                    </Form.Group> */}
+                      <Form.Group controlId="formFile" className="mb-3">
+                        <InputGroup className="mb-4">
+                          <Form.Control
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAttachFile}
+                          />
+                          <Button
+                            type="submit"
+                            variant="outline-secondary"
+                            id="button-addon2"
+                            onClick={handleImageUpload}
+                          >
+                            Upload
+                          </Button>
+                        </InputGroup>
+                        <div>
+                          {imagePreview && (
+                            <img
+                              src={imagePreview}
+                              alt="image preview"
+                              style={{
+                                width: "70px",
+                                height: "auto",
+                                border: "solid",
+                              }}
+                            />
+                          )}
+                        </div>
+                      </Form.Group>
+                    </Form.Group>
 
                     <Button type="submit" className="d-block ml-2 mb-3">
                       Add
@@ -486,38 +617,133 @@ function Account() {
                   </Form>
                 </Col>
                 <Col>
-                  <Form.Group>
-                    <Form.Label>Upload the product's picture</Form.Label>
-                    <Form.Group controlId="formFile" className="mb-3">
-                      <InputGroup className="mb-4">
-                        <Form.Control
-                          type="file"
-                          accept="image/*"
-                          onChange={handleAttachFile}
+                  <h5>Product Details:</h5>
+                  <Form.Group
+                    className="mx-0 mb-3 px-0 g-0"
+                    style={{ textAlign: "left" }}
+                  >
+                    <Form.Label>Warranty</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="warranty"
+                      id="product-warranty"
+                      // value={password}
+                      // onChange={handlePasswordChange}
+                      placeholder="Warranty conditions"
+                      onChange={handleNewProductInputChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    className="mx-0 mb-3 px-0 g-0"
+                    style={{ textAlign: "left" }}
+                  >
+                    <Form.Label>Return policy</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="returnPolicy"
+                      id="product-return"
+                      placeholder="Return conditions"
+                      onChange={handleNewProductInputChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    className="mx-0 mb-3 px-0 g-0"
+                    style={{ textAlign: "left" }}
+                  >
+                    <Form.Label>Minimum Reservation Amount</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="minReservationQty"
+                      id="product-minorder"
+                      // value={password}
+                      // onChange={handlePasswordChange}
+                      placeholder="Minimum ammount of items for reservation"
+                      onChange={handleNewProductInputChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    className="mx-0 mb-3 px-0 g-0"
+                    style={{ textAlign: "left" }}
+                  >
+                    <Form.Label className="d-block">Dimensions</Form.Label>
+                    <Form.Control
+                      className="d-inline mx-2"
+                      style={{ maxWidth: "30%" }}
+                      type="text"
+                      name="width"
+                      id="product-width"
+                      placeholder="Width"
+                      onChange={handleNewProductInputChange}
+                    />
+                    <Form.Control
+                      className="d-inline"
+                      style={{ maxWidth: "30%" }}
+                      type="text"
+                      name="height"
+                      id="product-height"
+                      placeholder="Height"
+                      onChange={handleNewProductInputChange}
+                    />
+                    <Form.Control
+                      className="d-inline mx-2"
+                      style={{ maxWidth: "30%" }}
+                      type="text"
+                      name="depth"
+                      id="product-depth"
+                      placeholder="Depth"
+                      onChange={handleNewProductInputChange}
+                    />
+                  </Form.Group>
+                  <Row className="mb-3" style={{ textAlign: "left" }}>
+                    <Col style={{ maxWidth: "50%" }}>
+                      <Form.Label>Discount</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="discountPercentage"
+                        id="product-discount"
+                        placeholder="Discount percentage"
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Col>
+                    <Col style={{ maxWidth: "50%" }}>
+                      <Form.Label>Rating</Form.Label>
+                      <Form.Control
+                        type="number"
+                        name="rating"
+                        id="product-rating"
+                        placeholder="Self-Rating"
+                        max={5}
+                        onChange={handleNewProductInputChange}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Form.Group className="mb-4" style={{ textAlign: "left" }}>
+                    <Row className="mb-3" style={{ textAlign: "left" }}>
+                      <Form.Label className="d-block">Reservation</Form.Label>
+                      <Col style={{ maxWidth: "20%" }}>
+                        <Form.Check
+                          // prettier-ignore
+                          type="switch"
+                          id="custom-switch"
+                          label="Enable"
+                          onChange={handleReserveButtonChange}
                         />
-                        <Button
-                          type="submit"
-                          variant="outline-secondary"
-                          id="button-addon2"
-                          onClick={handleImageUpload}
-                        >
-                          Upload
-                        </Button>
-                      </InputGroup>
-                      <div>
-                        {imagePreview && (
-                          <img
-                            src={imagePreview}
-                            alt="image preview"
-                            style={{
-                              width: "70px",
-                              height: "auto",
-                              border: "solid",
-                            }}
-                          />
-                        )}
-                      </div>
-                    </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Control
+                          className="mx-2"
+                          type="number"
+                          name="reservationTime"
+                          id="product-rating"
+                          placeholder="Reservation time in minutes"
+                          onChange={handleNewProductInputChange}
+                        />
+                      </Col>
+                    </Row>
                   </Form.Group>
                 </Col>
               </Row>

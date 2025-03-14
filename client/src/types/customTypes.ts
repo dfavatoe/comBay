@@ -15,7 +15,10 @@ export interface ProductSpecs {
   productById: ProductT;
 }
 export interface ProductT {
-  dimensions: Dimensions;
+  // dimensions: Dimensions;
+  width: number;
+  height: number;
+  depth: number;
   reviews: Reviews;
   meta: Meta;
   _id: string;
@@ -42,7 +45,24 @@ export interface ProductT {
 
 export type addProductT = Pick<
   ProductT,
-  "title" | "description" | "category" | "price" | "stock" | "seller" | "images"
+  | "title"
+  | "brand"
+  | "description"
+  | "category"
+  | "price"
+  | "stock"
+  | "seller"
+  | "images"
+  | "warranty"
+  | "returnPolicy"
+  | "reservation"
+  | "minReservationQty"
+  | "reservationTime"
+  | "discountPercentage"
+  | "rating"
+  | "width"
+  | "height"
+  | "depth"
 >;
 
 // export interface Record {
