@@ -32,6 +32,9 @@ function NavBar() {
                 <Nav.Link to="/account" as={Link}>
                   Account
                 </Nav.Link>
+                <Nav.Link to="/productsList" as={Link}>
+                  List
+                </Nav.Link>
                 <NavDropdown title="Register" id="navbarScrollingDropdown">
                   <NavDropdown.Item to="/login" as={Link}>
                     Login

@@ -228,8 +228,6 @@ const getProfile = async (req, res) => {
         email: req.user.email,
         role: req.user.role,
         image: req.user.image,
-        createdAt: req.user.created_at,
-        product: req.user.product,
         productsList: req.user.productsList,
         address: req.user.address,
       },
@@ -260,8 +258,6 @@ const putUpdateName = async (req, res) => {
         email: req.user.email,
         role: req.user.role,
         image: req.user.image,
-        createdAt: req.user.created_at,
-        product: req.user.product,
         productsList: req.user.productsList,
         address: req.user.address,
       },
@@ -296,8 +292,6 @@ const putUpdateAddress = async (req, res) => {
         email: req.user.email,
         role: req.user.role,
         image: req.user.image,
-        createdAt: req.user.created_at,
-        product: req.user.product,
         productsList: req.user.productsList,
         address: req.user.address,
       },
@@ -329,8 +323,6 @@ const deleteAddress = async (req, res) => {
         email: req.user.email,
         role: req.user.role,
         image: req.user.image,
-        createdAt: req.user.created_at,
-        product: req.user.product,
         productsList: req.user.productsList,
         address: req.user.address,
       },
@@ -339,6 +331,94 @@ const deleteAddress = async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 };
+
+//=========================================================
+
+const addProductInList = async (req, res) => {
+  console.log("addProductInList working");
+
+  try {
+    const user = await UserModel.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const { productsList } = req.body;
+    // console.log("req.body :>> ", req.body);
+
+    //check if product is already in the user's list
+    const existingProductInList = await UserModel.findOne({
+      _id: req.user._id, // Find the user first
+      productsList: productsList, // Check if they have the product
+    });
+
+    if (existingProductInList) {
+      return res.status(400).json({
+        message: "User already has this product in the shopping list.",
+      });
+    }
+
+    user.productsList.push(productsList); //push the new product ID to the array
+    await user.save();
+
+    return res.status(200).json({
+      message: "Product successfully added to the shopping list",
+      user: {
+        id: user._id,
+        userName: user.userName,
+        email: user.email,
+        role: user.role,
+        image: user.image,
+        productsList: user.productsList,
+        address: user.address,
+      },
+    });
+  } catch (error) {
+    console.error("Error adding product to list", error);
+    res.status(500).json({ error: error.message || "Server Error" });
+  }
+};
+
+//=========================================================
+
+const getProductsShoppingList = async (req, res) => {
+  console.log("get products from shopping list running");
+
+  try {
+    const user = await UserModel.findById(req.user._id).populate({
+      path: "productsList",
+      populate: {
+        path: "seller", // Populating the seller inside each product
+        select: ["userName", "address"], // Selecting only the seller's userName
+      },
+      select: ["title", "price", "rating", "seller"], // include seller
+    });
+
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+    //! productsList :>>  []
+    //Error fetching products list:  Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers  after they are sent to the client
+    if (user.productsList.length === 0) {
+      res.status(200).json({
+        message: "The list is empty.",
+        amount: user.productsList.length,
+      });
+    } else {
+      res.status(200).json({
+        message: "All products in the list.",
+        amount: user.productsList.length,
+        records: user.productsList,
+      });
+    }
+
+    console.log("productsList :>> ", user.productsList);
+  } catch (error) {
+    console.error("Error fetching products list: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+//=========================================================
 
 export {
   registerNewUser,
@@ -349,4 +429,6 @@ export {
   putUpdateName,
   putUpdateAddress,
   deleteAddress,
+  addProductInList,
+  getProductsShoppingList,
 };

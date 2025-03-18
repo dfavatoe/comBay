@@ -11,24 +11,16 @@ import SingleProductPage from "./pages/SingleProductPage";
 import Account from "./pages/Account";
 import { useContext } from "react";
 import { Spinner } from "react-bootstrap";
+import List from "./pages/List";
 
 const Root = () => {
-  const { loading, setLoading } = useContext(AuthContext);
-  setLoading(false);
+  // const { loading, setLoading } = useContext(AuthContext);
+  // setLoading(false);
 
   return (
     <>
-      {loading ? (
-        <div>
-          <Spinner animation="border" variant="warning" />
-          <p>Loading...</p>
-        </div>
-      ) : (
-        <>
-          <NavBar />
-          <Outlet />
-        </>
-      )}
+      <NavBar />
+      <Outlet />
     </>
   );
 };
@@ -50,6 +42,7 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<SignUp />} />
               <Route path="account" element={<Account />} />
+              <Route path="productsList" element={<List />} />
               <Route path="*" element={<AboutBlank />} />
             </Route>
           </Routes>

@@ -2,71 +2,70 @@ import { SetStateAction, useContext, useEffect, useState } from "react";
 import { GetProfileOfResponse, User } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
 
-//check if there is a token and set a user status message
 function useUserStatus(): {
-  token: String | null;
+  token: string | null;
   userStatusMessage: string;
   user: User | null;
-  loading: Boolean;
+  loading: boolean;
   setLoading: (value: SetStateAction<boolean>) => void;
   setUser: (value: SetStateAction<User | null>) => void;
+  error: string | null;
 } {
-  const [token, setToken] = useState<String | null>("");
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem("token")
+  ); // Initialize from localStorage
   const [userStatusMessage, setUserStatusMessage] = useState("");
   const { user, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const getToken = () => {
-    const token = localStorage.getItem("token");
+  // Update user status when token changes
+  useEffect(() => {
     if (token) {
-      setToken(token);
-      setUserStatusMessage("user is logged in");
-      console.log("%c user is logged in", "color:green");
+      setUserStatusMessage("User is logged in");
+      console.log("%c User is logged in", "color:green");
     } else {
-      setToken(null);
-      setUserStatusMessage("user is logged out");
-      console.log("%c user is logged out", "color:red");
+      setUserStatusMessage("User is logged out");
+      console.log("%c User is logged out", "color:red");
     }
-  };
+  }, [token]);
 
   const getUserProfile = async () => {
-    if (token) {
-      const myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
+    if (!token) return; // Prevent API call if token is missing
 
-      const requestOptions = {
+    try {
+      const response = await fetch("http://localhost:5100/api/users/profile/", {
         method: "GET",
-        headers: myHeaders,
-      };
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      try {
-        const response = await fetch(
-          "http://localhost:5100/api/users/profile/",
-          requestOptions
-        );
-        console.log("response :>> ", response);
-        if (!response.ok) {
-          console.error("Something went wrong");
-        }
-        const result = (await response.json()) as GetProfileOfResponse;
-        setUser(result.user);
-      } catch (error) {
-        console.log("error :>> ", error);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user profile");
       }
-    } else {
-      setUser(null);
-      // setLoading(false);
+
+      const result = (await response.json()) as GetProfileOfResponse;
+      setUser(result.user);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      setError("Failed to fetch user profile");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    getToken();
     getUserProfile();
-  }, [token]);
+  }, [token]); // Runs once when token changes
 
-  return { token, userStatusMessage, user, loading, setLoading, setUser };
+  return {
+    token,
+    userStatusMessage,
+    user,
+    loading,
+    setLoading,
+    setUser,
+    error,
+  };
 }
 
 export default useUserStatus;

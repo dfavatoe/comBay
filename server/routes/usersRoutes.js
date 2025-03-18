@@ -8,6 +8,8 @@ import {
   putUpdateName,
   putUpdateAddress,
   deleteAddress,
+  addProductInList,
+  getProductsShoppingList,
 } from "../controller/usersController.js";
 import multerUpload from "../middleware/multer.js";
 import multerWithCustomErrors from "../middleware/multer.js";
@@ -25,5 +27,7 @@ userRouter.get("/profile", jwtAuth, getProfile); //in order to get the profile, 
 userRouter.put("/update-name", jwtAuth, putUpdateName);
 userRouter.put("/update-address", jwtAuth, putUpdateAddress);
 userRouter.delete("/delete-address", jwtAuth, deleteAddress);
+userRouter.post("/add-productToList", jwtAuth, addProductInList);
+userRouter.get("/productsList", jwtAuth, getProductsShoppingList);
 
 export default userRouter;

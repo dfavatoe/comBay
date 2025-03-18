@@ -14,6 +14,11 @@ export interface ProductsRoot {
 export interface ProductSpecs {
   productById: ProductT;
 }
+
+export interface ProductsList {
+  listItem: ProductT;
+}
+
 export interface ProductT {
   // dimensions: Dimensions;
   width: number;
@@ -51,7 +56,6 @@ export type addProductT = Pick<
   | "category"
   | "price"
   | "stock"
-  | "seller"
   | "images"
   | "warranty"
   | "returnPolicy"
@@ -63,34 +67,13 @@ export type addProductT = Pick<
   | "width"
   | "height"
   | "depth"
->;
+> & { seller: string };
 
-// export interface Record {
-//   dimensions: Dimensions;
-//   reviews: Reviews;
-//   meta: Meta;
-//   _id: string;
-//   title: string;
-//   description: string;
-//   category: string;
-//   discountPercentage: number;
-//   rating: number;
-//   stock: number;
-//   tags: string[];
-//   brand: string;
-//   sku: string;
-//   weight: number;
-//   thumbnail: string;
-//   images: string[];
-//   price: number;
-//   seller: Seller;
+// export interface Dimensions {
+//   width: number;
+//   height: number;
+//   depth: number;
 // }
-
-export interface Dimensions {
-  width: number;
-  height: number;
-  depth: number;
-}
 
 export interface Reviews {
   rating: number;
@@ -122,15 +105,6 @@ export interface UpdatedAt {
   $timestamp: string;
 }
 
-//!maybe has to be changed after users roles are established
-export interface Seller extends User {
-  telephone: string;
-  address: string;
-  productsList: ProductT[];
-}
-
-export interface ProductsList {}
-
 export type UserFull = {
   id: string;
   userName: string;
@@ -140,7 +114,6 @@ export type UserFull = {
   role: string;
 };
 
-//!maybe has to be changed after users roles are established
 export type User = {
   id: string;
   userName: string;
@@ -148,15 +121,8 @@ export type User = {
   image: string;
   role: string;
   address: string;
-};
-
-export interface UserSeller extends User {
   productsList: ProductT[];
-}
-
-// export interface UserBuyer extends User {
-//   personalId: string;
-// }
+};
 
 // using Pick and Omit
 export type LoginCredentials = Pick<
@@ -182,7 +148,6 @@ export type ModalAlertProps = {
   alertText: string;
 };
 
-// This is the necessary type accordinglly to the positive response of the uploaded image in Cloudinary (Check imageUpload function in usersController)
 export type ImageUploadOkResponse = {
   message: string;
   imageURL: string;
@@ -209,4 +174,31 @@ export interface PutUpdateResponse {
   message: string;
   user: User;
   error: string;
+}
+
+export interface GetProfileOfResponse {
+  message: string;
+  user: User;
+}
+
+//For getShoppingList
+
+export interface GetProductsListResponse {
+  message: string;
+  amount: number;
+  records: ProductsList[];
+}
+
+export interface ProductsList {
+  _id: string;
+  title: string;
+  price: number;
+  rating?: number;
+  seller: Seller;
+}
+
+export interface Seller {
+  _id: string;
+  userName: string;
+  address: string;
 }

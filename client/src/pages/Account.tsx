@@ -5,6 +5,7 @@ import {
   addProductT,
   GetProfileOfResponse,
   ImageUploadOkResponse,
+  ProductT,
   PutUpdateResponse,
   User,
 } from "../types/customTypes";
@@ -228,17 +229,17 @@ function Account() {
   //       updatedValue = e.target.checked; // Handle switch inputs
   //     }
 
-  //     // // Handle nested dimensions object
-  //     // if (name.startsWith("dimensions.")) {
-  //     //   const dimensionKey = name.split(".")[1]; // Extract "width", "height", or "depth"
-  //     //   return {
-  //     //     ...prev,
-  //     //     dimensions: {
-  //     //       ...prev.dimensions,
-  //     //       [dimensionKey]: updatedValue as number, // Ensure it's a number
-  //     //     },
-  //     //   };
-  //     // }
+  //     // Handle nested dimensions object
+  //     if (name.startsWith("dimensions.")) {
+  //       const dimensionKey = name.split(".")[1]; // Extract "width", "height", or "depth"
+  //       return {
+  //         ...prev,
+  //         dimensions: {
+  //           ...prev.dimensions,
+  //           [dimensionKey]: updatedValue as number, // Ensure it's a number
+  //         },
+  //       };
+  //     }
 
   //     return {
   //       ...prev,
@@ -269,6 +270,7 @@ function Account() {
     setNewProduct((prev) => ({
       ...prev!,
       [name]: type === "number" ? Number(value) : value, // Convert price to number
+      seller: user!.id, // Assign the entire user object instead of just user.id
     }));
   };
 
@@ -276,6 +278,10 @@ function Account() {
   //   console.log("e.target.name :>> ", e.target.name);
   //   console.log("e.target.value :>> ", e.target.value);
   //   setNewProduct({ ...newProduct!, [e.target.name]: e.target.value });
+  // };
+
+  // const handleAddSeller = () => {
+  //   setNewProduct({ ...newProduct!.seller = user });
   // };
 
   const submitNewProduct = async (e: FormEvent<HTMLFormElement>) => {

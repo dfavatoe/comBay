@@ -36,7 +36,7 @@ const usersSchema = Schema(
       default: "buyer",
       require: true,
     }, // Role-based access
-    productsList: Array,
+    productsList: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

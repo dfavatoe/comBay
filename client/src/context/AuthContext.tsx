@@ -99,14 +99,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         console.log("%c User is logged in", "color: blue");
       }
 
-      //check in the local storage if there's a token.
-      // const token = localStorage.getItem("token");
-      // if (token) {
-      //   console.log("%c User is logged in", "color: green");
-      // } else {
-      //   console.log("%c User is logged out", "color: red");
-      // }
-
       setUser(result.user);
     } catch (error) {
       console.log("error :>> ", error);

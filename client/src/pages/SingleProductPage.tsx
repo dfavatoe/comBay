@@ -1,15 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ProductSpecs, ProductT } from "../types/customTypes";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import ProductReviews from "../components/ProductReviews";
 import { baseUrl } from "../utils/urls";
 import { fetchData } from "../hooks/useFetch";
+import { addProductToList } from "../utils/addProductToList";
+import useUserStatus from "../hooks/useUserStatus";
 // import { Timestamp } from "firebase/firestore";
 
 function SingleProductPage() {
   //State Hooks
   const [productSpecs, setProductSpecs] = useState<ProductSpecs | null>(null);
+
+  const { token, setUser } = useUserStatus();
 
   const navigateTo = useNavigate();
 
@@ -84,6 +88,17 @@ function SingleProductPage() {
     ) : (
       unchecked
     );
+  };
+
+  const handleAddProductToList = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    await addProductToList({
+      productId: productSpecs!.productById._id,
+      token,
+      baseUrl,
+      setUser,
+    });
   };
 
   useEffect(() => {
@@ -163,7 +178,9 @@ function SingleProductPage() {
                     <b>Depth:</b> {productSpecs.productById.depth} mm
                   </li>
                 </ul>
-                <Button variant="warning">Add to list</Button>
+                <Button onClick={handleAddProductToList} variant="warning">
+                  Add to list
+                </Button>
               </Col>
             </>
           )}
