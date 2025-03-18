@@ -1,5 +1,5 @@
 import { Button, Card, Stack } from "react-bootstrap";
-import { ProductT } from "../types/customTypes";
+import { ProductsList, ProductT } from "../types/customTypes";
 import "../style/ProductCard.css";
 import { Link } from "react-router";
 import { MouseEvent } from "react";
@@ -8,7 +8,7 @@ import { baseUrl } from "../utils/urls";
 import { addProductToList } from "../utils/addProductToList";
 
 type ProductCardProps = {
-  product: ProductT;
+  product: ProductsList;
 };
 
 function ProductCard({ product }: ProductCardProps) {

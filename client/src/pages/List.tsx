@@ -3,9 +3,10 @@ import useUserStatus from "../hooks/useUserStatus";
 import { baseUrl } from "../utils/urls";
 import { GetProductsListResponse, ProductsList } from "../types/customTypes";
 
-import { Button, Row } from "react-bootstrap";
+import { Button, Container, Row } from "react-bootstrap";
 
 import { useNavigate } from "react-router";
+import ProductCardList from "../components/ProductCardList";
 
 function List() {
   const { token, error } = useUserStatus();
@@ -53,38 +54,37 @@ function List() {
 
   return (
     <>
-      <h1>List</h1>
-      {error ? (
-        <p>Error: {error}</p>
-      ) : productsList ? (
-        productsList!.map((product) => {
-          return (
-            <Row className="d-flex justify-content-center" key={product._id}>
-              <ul>
-                <li>{product.title}</li>
-              </ul>
-
-              {/* <ProductCard key={product._id} product={product} /> */}
-            </Row>
-          );
-        })
-      ) : (
-        <>
-          <h5 className="mb-4">Your list is empty</h5>
-          <Button
-            onClick={() => {
-              navigateTo("/products");
-            }}
-            type="button"
-            className="mb-4"
-            variant="warning"
-          >
-            Continue shopping
-          </Button>
-        </>
-      )}
+      <h1>Shopping List</h1>
+      {/* {productsList &&
+        productsList.map((item) => {
+          return <p>{item.title}</p>;
+        })} */}
+      <Container className="justify-content-center">
+        {productsList &&
+          productsList.map((item) => {
+            return (
+              <Row className="d-flex justify-content-center" key={item._id}>
+                <ProductCardList key={item._id} product={item} />
+              </Row>
+            );
+          })}
+      </Container>
     </>
   );
 }
 
 export default List;
+
+// ) : (
+//   <>
+//     <h5 className="mb-4">Your list is empty</h5>
+//     <Button
+//       onClick={() => {
+//         navigateTo("/products");
+//       }}
+//       type="button"
+//       className="mb-4"
+//       variant="warning"
+//     >
+//       Continue shopping
+//     </Button>

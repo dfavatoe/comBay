@@ -117,7 +117,6 @@ const registerNewUser = async (req, res) => {
         const newUser = await newUserObject.save();
         console.log("newUser :>> ", newUser);
 
-        //! The token generation was happening just in the login. I created this token generation in the register, because the user was still not identified in the context after signing up. Check if this will still be necessary after the last spike.
         if (newUser) {
           //Generate JWT token
           const token = generateToken(newUser._id, newUser.role);
@@ -389,7 +388,7 @@ const getProductsShoppingList = async (req, res) => {
         path: "seller", // Populating the seller inside each product
         select: ["userName", "address"], // Selecting only the seller's userName
       },
-      select: ["title", "price", "rating", "seller"], // include seller
+      select: ["title", "price", "rating", "images", "seller"], // include seller
     });
 
     if (!user) {

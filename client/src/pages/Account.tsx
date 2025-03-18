@@ -1,23 +1,11 @@
-//to have an account page as a dashboard with icons, the page has to be refreshed each time the user click on a icon/ option. Ex.: UserProfile, list of Products, Contacts, etc.
-
-import { ChangeEvent, FormEvent, MouseEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 import {
   addProductT,
   GetProfileOfResponse,
   ImageUploadOkResponse,
-  ProductT,
   PutUpdateResponse,
-  User,
 } from "../types/customTypes";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Image,
-  InputGroup,
-  Row,
-} from "react-bootstrap";
+import { Button, Col, Form, Image, InputGroup, Row } from "react-bootstrap";
 import useUserStatus from "../hooks/useUserStatus";
 import { Link } from "react-router";
 import { baseUrl } from "../utils/urls";

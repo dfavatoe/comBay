@@ -2,9 +2,11 @@ import { useContext, useEffect } from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router";
+import useUserStatus from "../hooks/useUserStatus";
 
 function NavBar() {
-  const { user, logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
+  const { loading } = useUserStatus();
 
   return (
     <>
@@ -45,7 +47,9 @@ function NavBar() {
                 </NavDropdown>
               </Nav>
               <div className="d-lg-flex justify-content-end align-items-center">
-                {user ? (
+                {loading ? (
+                  <p>...LOADING...</p>
+                ) : user ? (
                   <>
                     <div className="d-lg-inline-block">
                       Hello {user.userName}!

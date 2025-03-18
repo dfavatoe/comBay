@@ -15,9 +15,9 @@ export interface ProductSpecs {
   productById: ProductT;
 }
 
-export interface ProductsList {
-  listItem: ProductT;
-}
+// export interface ProductsList {
+//   listItem: ProductT;
+// }
 
 export interface ProductT {
   // dimensions: Dimensions;
@@ -195,6 +195,7 @@ export interface ProductsList {
   price: number;
   rating?: number;
   seller: Seller;
+  images: string[];
 }
 
 export interface Seller {

@@ -1,6 +1,5 @@
-import { SetStateAction, useContext, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { GetProfileOfResponse, User } from "../types/customTypes";
-import { AuthContext } from "../context/AuthContext";
 
 function useUserStatus(): {
   token: string | null;
@@ -11,28 +10,26 @@ function useUserStatus(): {
   setUser: (value: SetStateAction<User | null>) => void;
   error: string | null;
 } {
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem("token")
-  ); // Initialize from localStorage
+  const [user, setUser] = useState<User | null>(null);
+  const getToken = () => {
+    console.log(
+      'localStorage.getItem("token") :>> ',
+      localStorage.getItem("token")
+    );
+    const myToken =
+      localStorage.getItem("token") === undefined
+        ? null
+        : localStorage.getItem("token");
+    // console.log("myToken :>> ", myToken);
+    return myToken;
+  };
+  const storedToken = getToken();
+  const [token, setToken] = useState<string | null>(storedToken); // Initialize from localStorage
   const [userStatusMessage, setUserStatusMessage] = useState("");
-  const { user, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Update user status when token changes
-  useEffect(() => {
-    if (token) {
-      setUserStatusMessage("User is logged in");
-      console.log("%c User is logged in", "color:green");
-    } else {
-      setUserStatusMessage("User is logged out");
-      console.log("%c User is logged out", "color:red");
-    }
-  }, [token]);
-
   const getUserProfile = async () => {
-    if (!token) return; // Prevent API call if token is missing
-
     try {
       const response = await fetch("http://localhost:5100/api/users/profile/", {
         method: "GET",
@@ -45,6 +42,7 @@ function useUserStatus(): {
 
       const result = (await response.json()) as GetProfileOfResponse;
       setUser(result.user);
+      setUserStatusMessage("User is logged in");
     } catch (error) {
       console.error("Error fetching user profile:", error);
       setError("Failed to fetch user profile");
@@ -54,7 +52,18 @@ function useUserStatus(): {
   };
 
   useEffect(() => {
-    getUserProfile();
+    console.log("token useEffect :>> ", token);
+    if (!token) {
+      setLoading(false);
+      setUser(null);
+      setUserStatusMessage("User is logged out");
+      console.log("%c User is logged out", "color:red");
+    }
+    if (token) {
+      getUserProfile();
+      // setUserStatusMessage("User is logged in");
+      console.log("%c User is logged in", "color:green");
+    }
   }, [token]); // Runs once when token changes
 
   return {

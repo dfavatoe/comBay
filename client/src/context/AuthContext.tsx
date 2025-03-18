@@ -53,9 +53,11 @@ export const AuthContext = createContext<AuthContextType>(contextInitialValue);
 //2. Create Provider
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   //4. Move useStates and Functions to the Provider
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, setUser } = useUserStatus();
+  console.log("user authcontext :>> ", user);
+  const [loading, setLoading] = useState(true); //? use this or bring loading from context?
 
+  // register ===================================================
   const register = async (credentials: RegisterCredentials | null) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -91,21 +93,21 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       console.log(result.message);
       // alert successful registration
       if (!result.token) {
-        throw new Error("Unable to retrieve the token");
+        throw new Error("Try to register again later");
       }
       if (result.token) {
         //store the token in the local storage
         localStorage.setItem("token", result.token);
-        console.log("%c User is logged in", "color: blue");
+        console.log("%c User is logged in", "color: green");
+        setUser(result.user);
       }
-
-      setUser(result.user);
     } catch (error) {
       console.log("error :>> ", error);
+      setUser(null);
     }
   };
 
-  // login
+  // login ====================================================
   const login = async (credentials: LoginCredentials | null) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -135,29 +137,20 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       // alert successful login
       console.log(result.message);
       if (!result.token) {
-        throw new Error("Unable to retrieve the token");
+        throw new Error("Unable to retrieve the token"); //! Try to be more specific, handling credentials,etc
       }
       if (result.token) {
         //store the token in local storage
         localStorage.setItem("token", result.token);
-        // console.log("%c User is logged in", "color: blue");
+        setUser(result.user);
+        console.log("%c User is logged in", "color: blue");
       }
-
-      //check in the local storage if there's a token.
-      const token = localStorage.getItem("token");
-      if (token) {
-        console.log("%c User is logged in", "color: green");
-        alert("You are logged in.");
-      } else {
-        console.log("%c User is logged out", "color: red");
-      }
-
-      setUser(result.user);
     } catch (error) {
       console.log("error :>> ", error);
     }
   };
 
+  // logout ====================================================
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
