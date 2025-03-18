@@ -55,10 +55,6 @@ function List() {
   return (
     <>
       <h1>Shopping List</h1>
-      {/* {productsList &&
-        productsList.map((item) => {
-          return <p>{item.title}</p>;
-        })} */}
       <Container className="justify-content-center">
         {productsList &&
           productsList.map((item) => {

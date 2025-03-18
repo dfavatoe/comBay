@@ -196,6 +196,8 @@ export interface ProductsList {
   rating?: number;
   seller: Seller;
   images: string[];
+  reservation: boolean;
+  reservationTime: number;
 }
 
 export interface Seller {

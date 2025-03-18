@@ -1,70 +1,39 @@
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Image,
-  Row,
-  Stack,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Stack } from "react-bootstrap";
 import { ProductsList, ProductT } from "../types/customTypes";
 import "../style/ProductCard.css";
 import { Link } from "react-router";
-import { MouseEvent } from "react";
-import useUserStatus from "../hooks/useUserStatus";
-import { baseUrl } from "../utils/urls";
-import { addProductToList } from "../utils/addProductToList";
+import { useCountdown } from "../hooks/useCountdown";
 
 type ProductCardProps = {
   product: ProductsList;
 };
 
 function ProductCardList({ product }: ProductCardProps) {
+  const { formattedTime, start, reset, isActive } = useCountdown(
+    product.reservationTime
+  );
+
   return (
-    // <Card className="d-flex flex-inline zoom" style={{ width: "80vw" }}>
-    //   <Col>
-    //     <Card.Img
-    //       className="image"
-    //       variant="top"
-    //       style={{ width: "100px" }}
-    //       src={product.images[0]}
-    //     />
-    //   </Col>
-    //   <Col className="d-inline">
-    //     <Card.Body className="d-flex flex-column">
-    //       <Card.Title>{product.title}</Card.Title>
-    //       <Card.Subtitle className="mb-2 text-muted">
-    //         {product.price} €
-    //       </Card.Subtitle>
-    //       <Stack gap={3}>
-    //         <Link className="mb-2" to={`${product._id}`}>
-    //           Learn more
-    //         </Link>
-    //       </Stack>
-    //       <Button
-    //         className="mt-auto mx-auto"
-    //         style={{ maxWidth: "130px" }}
-    //         variant="warning"
-    //         // onClick={handleAddProductToList}
-    //       >
-    //         Reserve
-    //       </Button>
-    //     </Card.Body>
-    //   </Col>
-    // </Card>
     <Container className="mt-0">
-      <Card className="p-0" style={{ height: "200px" }}>
+      <Card
+        className="p-0"
+        style={{ width: "auto", height: "auto", textAlign: "center" }}
+      >
         <Card.Body className="m-2">
           <Row>
-            <Col md={2} className="border-end">
+            <Col
+              md={2}
+              sm={6}
+              className="d-flex justify-content-center border-end"
+            >
               <Card.Img
                 className="image"
-                // variant="top"
-                style={{ maxWidth: "150px" }}
+                variant="top"
+                style={{ objectFit: "cover" }}
                 src={product.images[0]}
               />
             </Col>
-            <Col md={5} className="border-end">
+            <Col md={5} sm={6} className="border-end">
               <Card.Body className="d-flex flex-column">
                 <Card.Title>{product.title}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
@@ -75,17 +44,23 @@ function ProductCardList({ product }: ProductCardProps) {
                     See details
                   </Link>
                 </Stack>
-                <Button
-                  className="mt-auto mx-auto"
-                  style={{ maxWidth: "130px" }}
-                  variant="warning"
-                  // onClick={handleAddProductToList}
-                >
-                  Reserve
-                </Button>
+                {product.reservation ? (
+                  <Button
+                    className="mt-auto mx-auto"
+                    style={{ maxWidth: "130px" }}
+                    variant="warning"
+                    // onClick={handleAddProductToList}
+                    onClick={start}
+                    disabled={isActive}
+                  >
+                    Reserve
+                  </Button>
+                ) : (
+                  <p>❌ No Reservations</p>
+                )}
               </Card.Body>
             </Col>
-            <Col md={4}>
+            <Col sm={6} className="d-flex-column justify-content-center" md={4}>
               <Card.Title className="mt-3">Seller</Card.Title>
               <div>{product.seller.userName}</div>
               <Link
@@ -94,7 +69,28 @@ function ProductCardList({ product }: ProductCardProps) {
               >
                 {product.seller.address}
               </Link>
-              <div></div>
+              {product.reservation && (
+                <Container className="d-inline-flex justify-content-center">
+                  <Card.Subtitle
+                    className="text-xl mt-4 mx-2"
+                    style={{ fontSize: "1.2rem", fontWeight: "bold" }}
+                  >
+                    {formattedTime}
+                  </Card.Subtitle>
+
+                  <div className="mt-3 flex space-x-2">
+                    <Button
+                      className="mt-auto mx-auto"
+                      style={{ maxWidth: "130px" }}
+                      variant="primary"
+                      // onClick={handleAddProductToList}
+                      onClick={reset}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </Container>
+              )}
             </Col>
           </Row>
         </Card.Body>

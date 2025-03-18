@@ -388,15 +388,22 @@ const getProductsShoppingList = async (req, res) => {
         path: "seller", // Populating the seller inside each product
         select: ["userName", "address"], // Selecting only the seller's userName
       },
-      select: ["title", "price", "rating", "images", "seller"], // include seller
+      select: [
+        "title",
+        "price",
+        "rating",
+        "images",
+        "reservation",
+        "reservationTime",
+        "seller",
+      ], // include seller
     });
 
     if (!user) {
       console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
-    //! productsList :>>  []
-    //Error fetching products list:  Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers  after they are sent to the client
+
     if (user.productsList.length === 0) {
       res.status(200).json({
         message: "The list is empty.",
