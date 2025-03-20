@@ -5,7 +5,7 @@ import { GetProductsListResponse, ProductsList } from "../types/customTypes";
 
 import { Button, Container, Row } from "react-bootstrap";
 
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import ProductCardList from "../components/ProductCardList";
 
 function List() {
@@ -56,31 +56,40 @@ function List() {
     <>
       <h1>Shopping List</h1>
       <Container className="justify-content-center">
-        {productsList &&
+        {productsList ? (
           productsList.map((item) => {
             return (
               <Row className="d-flex justify-content-center" key={item._id}>
                 <ProductCardList key={item._id} product={item} />
               </Row>
             );
-          })}
+          })
+        ) : (
+          <>
+            <Container className="d-block">
+              <h5 className="mb-4">Your list is empty</h5>
+              <Button
+                onClick={() => {
+                  navigateTo("/products");
+                }}
+                type="button"
+                className="mb-4"
+                variant="warning"
+              >
+                Continue shopping
+              </Button>
+              <div className="d-block">
+                <span>or </span>
+                <Link className="d-inline" to={"/login"}>
+                  Login
+                </Link>
+              </div>
+            </Container>
+          </>
+        )}
       </Container>
     </>
   );
 }
 
 export default List;
-
-// ) : (
-//   <>
-//     <h5 className="mb-4">Your list is empty</h5>
-//     <Button
-//       onClick={() => {
-//         navigateTo("/products");
-//       }}
-//       type="button"
-//       className="mb-4"
-//       variant="warning"
-//     >
-//       Continue shopping
-//     </Button>

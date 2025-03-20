@@ -12,6 +12,7 @@ import Account from "./pages/Account";
 import { useContext } from "react";
 import { Spinner } from "react-bootstrap";
 import List from "./pages/List";
+import Seller from "./pages/Seller";
 
 const Root = () => {
   // const { loading, setLoading } = useContext(AuthContext);
@@ -43,6 +44,7 @@ function App() {
               <Route path="signup" element={<SignUp />} />
               <Route path="account" element={<Account />} />
               <Route path="productsList" element={<List />} />
+              <Route path="seller/:sellerId" element={<Seller />} />
               <Route path="*" element={<AboutBlank />} />
             </Route>
           </Routes>

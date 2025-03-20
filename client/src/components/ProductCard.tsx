@@ -8,7 +8,7 @@ import { baseUrl } from "../utils/urls";
 import { addProductToList } from "../utils/addProductToList";
 
 type ProductCardProps = {
-  product: ProductsList;
+  product: ProductT;
 };
 
 function ProductCard({ product }: ProductCardProps) {

@@ -5,6 +5,7 @@ import {
   getCategoriesList,
   getProductById,
   getProductsByCategory,
+  getProductsBySeller,
 } from "../controller/productsController.js";
 import jwtAuth from "../middleware/jwtAuth.js";
 
@@ -15,5 +16,6 @@ productsRouter.get("/categories/:category", getProductsByCategory);
 productsRouter.get("/categories-list", getCategoriesList);
 productsRouter.get("/productId/:id", getProductById);
 productsRouter.put("/add-product", jwtAuth, addProduct);
+productsRouter.get("/seller/:seller_id", getProductsBySeller);
 
 export default productsRouter;

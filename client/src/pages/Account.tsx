@@ -258,7 +258,7 @@ function Account() {
     setNewProduct((prev) => ({
       ...prev!,
       [name]: type === "number" ? Number(value) : value, // Convert price to number
-      seller: user!.id, // Assign the entire user object instead of just user.id
+      seller: user!._id, // Assign the entire user object instead of just user.id
     }));
   };
 
@@ -478,7 +478,7 @@ function Account() {
                 rounded
               />
               <div className="mt-2">
-                <b>ID: </b> {user.id}
+                <b>ID: </b> {user._id}
               </div>
             </Col>
           </Row>

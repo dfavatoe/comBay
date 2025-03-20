@@ -1,5 +1,6 @@
 import CategoryListModel from "../models/categoriesModel.js";
 import ProductModel from "../models/productsModel.js";
+import UserModel from "../models/usersModel.js";
 import { getAllRecords } from "./getAllRecords.js";
 
 // const getAllProducts = async (req, res) => {
@@ -249,10 +250,52 @@ const addProduct = async (req, res) => {
 
 //========================================================
 
+const getProductsBySeller = async (req, res) => {
+  console.log("getSellersProducts running");
+
+  console.log("params :>> ", req.params);
+
+  const { seller_id } = req.params;
+
+  try {
+    const productsBySeller = await ProductModel.find({
+      seller: seller_id,
+    });
+
+    const sellerInfo = await UserModel.findById(seller_id);
+    if (productsBySeller.length === 0) {
+      res.status(400).json({
+        message: `No products by seller ${req.params.seller_id} found in the database.`,
+      });
+      return; //If no products are found stop other responses
+    }
+
+    res.status(200).json({
+      message: `All products from seller ${req.params.seller} in the database.`,
+      amount: productsBySeller.length,
+      sellerInfo: {
+        id: sellerInfo._id,
+        userName: sellerInfo.userName,
+        email: sellerInfo.email,
+        image: sellerInfo.image,
+        address: sellerInfo.address,
+        created_at: sellerInfo.created_at,
+      },
+      productsBySeller,
+    });
+  } catch (error) {
+    console.log("error :>> ", error);
+    res.status(500).json({
+      error: "Something went wrong",
+    });
+  }
+};
+
 export {
   getAllProducts,
   getProductsByCategory,
   getCategoriesList,
   getProductById,
   addProduct,
+  getProductsBySeller,
 };

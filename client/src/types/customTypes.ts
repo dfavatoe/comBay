@@ -106,7 +106,7 @@ export interface UpdatedAt {
 }
 
 export type UserFull = {
-  id: string;
+  _id: string;
   userName: string;
   email: string;
   password: string;
@@ -115,7 +115,7 @@ export type UserFull = {
 };
 
 export type User = {
-  id: string;
+  _id: string;
   userName: string;
   email: string;
   image: string;
@@ -179,6 +179,14 @@ export interface PutUpdateResponse {
 export interface GetProfileOfResponse {
   message: string;
   user: User;
+}
+
+export interface GetShopInfo {
+  message: string;
+  amount: number;
+  sellerInfo: User;
+  productsBySeller: ProductT[];
+  error: string;
 }
 
 //For getShoppingList

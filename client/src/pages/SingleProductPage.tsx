@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { ProductSpecs, ProductT } from "../types/customTypes";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import ProductReviews from "../components/ProductReviews";
@@ -138,7 +138,12 @@ function SingleProductPage() {
                 <ul>
                   <li>
                     Seller:{" "}
-                    <a href="#">{productSpecs.productById.seller.userName}</a>{" "}
+                    <Link
+                      className="mb-2"
+                      to={`/seller/${productSpecs.productById.seller._id}`}
+                    >
+                      {productSpecs.productById.seller.userName}
+                    </Link>
                   </li>
                   <li>
                     See more from
