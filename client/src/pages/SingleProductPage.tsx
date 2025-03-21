@@ -2,11 +2,11 @@ import { MouseEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { ProductSpecs, ProductT } from "../types/customTypes";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
-import ProductReviews from "../components/ProductReviews";
 import { baseUrl } from "../utils/urls";
 import { fetchData } from "../hooks/useFetch";
 import { addProductToList } from "../utils/addProductToList";
 import useUserStatus from "../hooks/useUserStatus";
+import Reviews from "../components/Reviews";
 // import { Timestamp } from "firebase/firestore";
 
 function SingleProductPage() {
@@ -27,26 +27,8 @@ function SingleProductPage() {
 
   // useParams extracts the ID from the URL
   const { productId } = useParams();
-  console.log("productId :>> ", productId);
-  console.log("productSpecs :>> ", productSpecs);
-
-  // const productIdNumb = parseInt(productId!); //"!" forces the variable to be string, like casting
-  // console.log("productIdNumb :>> ", productIdNumb);
-
-  //!stopped here
-  // const url = `${baseUrl}/api/products/productId/${productId}`;
-
-  // const getSingleProduct = async () => {
-  //   const response = await fetch(url);
-  //   console.log("response :>> ", response);
-  //   if (!response.ok) {
-  //     navigateTo("/aboutblank");
-  //   } else {
-  //     const result = (await response.json()) as ProductT;
-  //     console.log("single Product :>> ", result);
-  //     setProductSpecs(result);
-  //   }
-  // };
+  // console.log("productId :>> ", productId);
+  // console.log("productSpecs :>> ", productSpecs);
 
   const countStars = (productRating: number | null) => {
     if (productRating) {
@@ -140,7 +122,7 @@ function SingleProductPage() {
                     Seller:{" "}
                     <Link
                       className="mb-2"
-                      to={`/seller/${productSpecs.productById.seller._id}`}
+                      to={`/seller/${productSpecs.productById.seller.id}`}
                     >
                       {productSpecs.productById.seller.userName}
                     </Link>
@@ -192,14 +174,8 @@ function SingleProductPage() {
           <hr />
         </Row>
         <h4 ref={topReviewsRef}>Top Reviews:</h4>
-        {/* <ProductReviews
-          pid={productIdNumb}
-          author={""}
-          text={""}
-          rating={null}
-          id={""}
-          date={new Timestamp(0, 0)}
-        /> */}
+
+        <Reviews productId={productId!} />
       </Container>
     </div>
   );

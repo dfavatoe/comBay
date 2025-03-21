@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+const reviewSchema = new Schema({
+  rating: { type: Number, require: true },
+  comment: { type: String, require: true },
+  date: { type: Date, default: Date.now },
+  author: { type: String },
+  email: { type: String },
+});
+
 // create the Schema for the collection
 const productsSchema = new Schema(
   {
@@ -24,13 +32,7 @@ const productsSchema = new Schema(
     width: Number,
     height: Number,
     depth: Number,
-    reviews: {
-      rating: { type: Number },
-      comment: { type: Number },
-      date: { type: Date, default: Date.now },
-      reviewerName: { type: String },
-      reviewerEmail: { type: String },
-    },
+    reviews: [reviewSchema],
     meta: {
       barcode: { type: String },
       qrcode: { type: String },

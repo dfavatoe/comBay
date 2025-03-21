@@ -112,16 +112,30 @@ export type UserFull = {
   password: string;
   image: string;
   role: string;
+  productsList: ProductT[];
+  address: string;
+  streetName: string;
+  streetNumber: string;
+  city: string;
+  country: string;
+  postalcode: string;
 };
 
 export type User = {
-  _id: string;
+  id: string;
   userName: string;
   email: string;
   image: string;
   role: string;
-  address: string;
   productsList: ProductT[];
+  address: string;
+  streetName: string;
+  streetNumber: string;
+  city: string;
+  country: string;
+  postalcode: string;
+  latitude: number;
+  longitude: number;
 };
 
 // using Pick and Omit
@@ -147,6 +161,8 @@ export type ModalAlertProps = {
   setShowAlert: Dispatch<React.SetStateAction<boolean>>;
   alertText: string;
 };
+
+// Responses
 
 export type ImageUploadOkResponse = {
   message: string;
@@ -176,9 +192,27 @@ export interface PutUpdateResponse {
   error: string;
 }
 
+export interface PostNewReviewResponse {
+  message: string;
+  product: ProductT;
+  error: string;
+}
+
+export interface GetReviewsResponse {
+  message: string;
+  reviews: ReviewT[];
+  error: string;
+}
+
 export interface GetProfileOfResponse {
   message: string;
   user: User;
+}
+
+export interface CompleteAddressOkResponse {
+  message: string;
+  user: User;
+  error: string;
 }
 
 export interface GetShopInfo {
@@ -213,3 +247,25 @@ export interface Seller {
   userName: string;
   address: string;
 }
+
+//For Complete Address submission
+
+export type CompleteAddress = {
+  streetName: string;
+  streetNumber: string;
+  city: string;
+  state?: string;
+  country?: string;
+  postalcode: string;
+};
+
+// Reviews
+
+export type ReviewT = {
+  author: string;
+  email: string;
+  rating: number | null;
+  comment: string;
+  date: Date;
+  id: string;
+};

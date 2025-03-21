@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router";
 import { GetShopInfo, ProductT, User } from "../types/customTypes";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import ProductCardStore from "../components/ProductCardStore";
+import { TileLayer, MapContainer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 function Seller() {
   const [seller, setSeller] = useState<User | null>(null);
@@ -10,6 +12,17 @@ function Seller() {
 
   const { sellerId } = useParams();
   console.log("sellerId :>> ", sellerId);
+
+  // const position = [seller?.latitude, seller?.longitude];
+  // console.log("geo :>> ", seller!.latitude, seller!.latitude);
+
+  // const position: [number | undefined, number | undefined] = [
+  //   seller?.latitude,
+  //   seller?.longitude,
+  // ];
+
+  // const position = {seller!.latitude, seller!.longitude}
+  // console.log("geo :>> ", seller!.latitude, seller!.latitude);
 
   const handleGetSellerShopInfo = async () => {
     // console.log("shop working");
@@ -35,12 +48,19 @@ function Seller() {
     }
   };
 
+  // const position: [number, number] | undefined =
+  //   seller?.latitude && seller?.longitude
+  //     ? [seller.latitude, seller.longitude]
+  //     : undefined;
+  // console.log("geolocalion :>> ", seller!.latitude, seller!.longitude);
+
   useEffect(() => {
     handleGetSellerShopInfo();
   }, []);
 
   return (
     <>
+      {console.log("seller>>>>>", seller)}
       {seller && (
         <>
           <Container>
@@ -64,14 +84,27 @@ function Seller() {
                 <Link
                   className="mb-2"
                   to={`https://maps.google.com/?q=${seller.address}`}
+                  target="_blank"
                 >
                   {seller.address}
                 </Link>
               </Col>
               <Col>
-                <div style={{ backgroundColor: "orange", height: "200px" }}>
-                  I want my map here
-                </div>
+                <MapContainer
+                  center={[seller.latitude, seller.longitude]}
+                  zoom={15}
+                  scrollWheelZoom={false}
+                  style={{ height: "200px" }}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+
+                  <Marker position={[seller.latitude, seller.longitude]}>
+                    <Popup>{seller.userName}</Popup>
+                  </Marker>
+                </MapContainer>
               </Col>
             </Row>
             <hr />

@@ -20,7 +20,17 @@ const usersSchema = Schema(
       require: true,
       // minLength: [6, "Must be at least 6"],
     },
-    address: { type: String, defaul: "" },
+    address: { type: String, default: "" },
+
+    streetName: { type: String, default: "", require: true },
+    streetNumber: { type: String, default: "", require: true },
+    city: { type: String, default: "", require: true },
+    state: { type: String, default: "", require: false },
+    country: { type: String, default: "", require: false },
+    postalcode: { type: String, default: "", require: true },
+
+    latitude: Number,
+    longitude: Number,
 
     image: {
       type: String,

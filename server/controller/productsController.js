@@ -271,7 +271,7 @@ const getProductsBySeller = async (req, res) => {
     }
 
     res.status(200).json({
-      message: `All products from seller ${req.params.seller} in the database.`,
+      message: `All products from seller ${req.params.seller} in the database and additional seller's info.`,
       amount: productsBySeller.length,
       sellerInfo: {
         id: sellerInfo._id,
@@ -279,6 +279,8 @@ const getProductsBySeller = async (req, res) => {
         email: sellerInfo.email,
         image: sellerInfo.image,
         address: sellerInfo.address,
+        latitude: sellerInfo.latitude,
+        longitude: sellerInfo.longitude,
         created_at: sellerInfo.created_at,
       },
       productsBySeller,
@@ -291,6 +293,88 @@ const getProductsBySeller = async (req, res) => {
   }
 };
 
+//====================================================================
+
+const addProductReview = async (req, res) => {
+  console.log("add review working");
+
+  const { product_id } = req.params;
+
+  const { rating, comment, author, email } = req.body;
+
+  if (!rating || !comment) {
+    return res.status(400).json({
+      error: "Rating and comments are required",
+    });
+  }
+
+  try {
+    const newReview = {
+      author,
+      rating,
+      comment,
+      email,
+      date: new Date(),
+    };
+
+    const product = await ProductModel.findByIdAndUpdate(
+      product_id,
+      { $push: { reviews: newReview } },
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    return res.status(200).json({
+      message: "Review added successfully",
+      product,
+    });
+  } catch (error) {
+    console.error("Error adding review", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      errorStack: error.message,
+    });
+  }
+};
+
+//==================================================================
+
+const getProductReviews = async (req, res) => {
+  console.log("get reviews running");
+
+  const { product_id } = req.params;
+
+  try {
+    const product = await ProductModel.findById(product_id);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: `Product ${product_id} not found.` });
+    }
+
+    //Sort the reviews array in descending order by date
+    const sortedReviews = product.reviews.sort((a, b) => b.date - a.date);
+
+    if (sortedReviews.length === 0) {
+      return res
+        .status(400)
+        .json({ message: `No reviews yet for product ${product_id}.` });
+    }
+
+    return res.status(200).json({
+      message: "Successfully fetched reviews.",
+      reviews: sortedReviews,
+    });
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export {
   getAllProducts,
   getProductsByCategory,
@@ -298,4 +382,6 @@ export {
   getProductById,
   addProduct,
   getProductsBySeller,
+  addProductReview,
+  getProductReviews,
 };

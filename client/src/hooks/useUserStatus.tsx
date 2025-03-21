@@ -12,10 +12,10 @@ function useUserStatus(): {
 } {
   const [user, setUser] = useState<User | null>(null);
   const getToken = () => {
-    console.log(
-      'localStorage.getItem("token") :>> ',
-      localStorage.getItem("token")
-    );
+    // console.log(
+    //   'localStorage.getItem("token") :>> ',
+    //   localStorage.getItem("token")
+    // );
     const myToken =
       localStorage.getItem("token") === undefined
         ? null
@@ -52,7 +52,7 @@ function useUserStatus(): {
   };
 
   useEffect(() => {
-    console.log("token useEffect :>> ", token);
+    // console.log("token useEffect :>> ", token);
     if (!token) {
       setLoading(false);
       setUser(null);

@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 import {
   addProductT,
+  CompleteAddress,
+  CompleteAddressOkResponse,
   GetProfileOfResponse,
   ImageUploadOkResponse,
   PutUpdateResponse,
@@ -15,8 +17,11 @@ function Account() {
     useUserStatus();
   const [newUserName, setNewUserName] = useState("");
   const [newAddress, setNewAddress] = useState("");
+  const [completeAddress, setCompleteAddress] =
+    useState<CompleteAddress | null>(null);
   const [messageName, setMessageName] = useState("");
   const [messageAddress, setMessageAddress] = useState("");
+  const [messageCompleteAddress, setMessageCompleteAddress] = useState("");
 
   //?===========================================================
 
@@ -199,6 +204,68 @@ function Account() {
     handleGetUserProfile();
   };
 
+  //======================================================================
+
+  const handleCompleteAddress = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.name :>> ", e.target.name);
+    console.log("e.target.value :>> ", e.target.value);
+    setCompleteAddress({
+      ...completeAddress!,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  //======================================================================
+
+  const submitCompleteAddress = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!token) {
+      console.log("user has to log in first");
+      alert("You have to log in first");
+      return;
+    }
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const urlencoded = new URLSearchParams();
+    if (completeAddress) {
+      urlencoded.append("streetName", completeAddress.streetName);
+      urlencoded.append("streetNumber", completeAddress.streetNumber);
+      urlencoded.append("city", completeAddress.city);
+      urlencoded.append("country", completeAddress.country!);
+      urlencoded.append("state", completeAddress.state!);
+      urlencoded.append("postalcode", completeAddress.postalcode);
+    } else {
+      console.log("Complete the mandatory fields");
+      alert("Complete the mandatory fields");
+    }
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: urlencoded,
+    };
+
+    const response = await fetch(
+      `${baseUrl}/api/users/updateCompleteAddress`,
+      requestOptions
+    );
+    console.log("response comp address :>> ", response);
+
+    const result = (await response.json()) as CompleteAddressOkResponse;
+    console.log(result);
+
+    if (response.ok) {
+      setUser(result.user);
+      setMessageCompleteAddress("Address updated successfully!");
+      setCompleteAddress(null);
+    } else {
+      setMessageCompleteAddress(result.error || "Failed to update address.");
+    }
+    handleGetUserProfile();
+  };
+
   //?======================================================================
   //?======================================================================
 
@@ -258,7 +325,7 @@ function Account() {
     setNewProduct((prev) => ({
       ...prev!,
       [name]: type === "number" ? Number(value) : value, // Convert price to number
-      seller: user!._id, // Assign the entire user object instead of just user.id
+      seller: user!.id, // Assign the entire user object instead of just user.id
     }));
   };
 
@@ -281,48 +348,6 @@ function Account() {
       return;
     }
 
-    // const myHeaders = new Headers();
-    // myHeaders.append("Authorization", `Bearer ${token}`);
-    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    // //! Probably Json Stringify would be better
-    // const urlencode = new URLSearchParams();
-    // if (newProduct) {
-    //   urlencode.append("title", newProduct.title);
-    //   urlencode.append("brand", newProduct.brand);
-    //   urlencode.append("description", newProduct.description);
-    //   urlencode.append("category", newProduct.category);
-    //   urlencode.append("price", String(newProduct.price));
-    //   urlencode.append("stock", String(newProduct.stock));
-    //   urlencode.append("seller", String(user!.id));
-    //   urlencode.append("images", String(newProduct.images));
-    //   urlencode.append("warranty", newProduct.warranty);
-    //   urlencode.append("returnPolicy", newProduct.returnPolicy);
-    //   urlencode.append("reservation", String(newProduct.reservation));
-    //   urlencode.append(
-    //     "minReservationQty",
-    //     String(newProduct.minReservationQty)
-    //   );
-    //   urlencode.append("reservationTime", String(newProduct.reservationTime));
-    //   urlencode.append(
-    //     "discountPercentage",
-    //     String(newProduct.discountPercentage)
-    //   );
-    //   urlencode.append("rating", String(newProduct.rating));
-    //   urlencode.append("dimensions", String(newProduct.dimensions.width));
-    //   urlencode.append("dimensions", String(newProduct.dimensions.height));
-    //   urlencode.append("dimensions", String(newProduct.dimensions.depth));
-    // } else {
-    //   console.log("No empty forms allowed");
-    //   alert("Complete the address field");
-    // }
-
-    // const requestOptions = {
-    //   method: "PUT",
-    //   headers: myHeaders,
-    //   body: urlencode,
-    // };
-
     const requestOptions = {
       method: "PUT",
       headers: {
@@ -343,6 +368,7 @@ function Account() {
     if (response.ok) {
       // setUser(result.user);
       console.log("Product added successfully!");
+      alert("Product successfully added!");
       setNewProduct(null);
     } else {
       // setMessageProduct(result.error || "Failed to update address.");
@@ -382,7 +408,7 @@ function Account() {
 
       const result = (await response.json()) as ImageUploadOkResponse;
 
-      setNewProduct({ ...newProduct!, images: Array(result.imageURL) }); //!check if this works
+      setNewProduct({ ...newProduct!, images: Array(result.imageURL) });
 
       console.log("result :>> ", result);
       console.log("newProduct :>> ", newProduct);
@@ -469,6 +495,82 @@ function Account() {
                 </Button>
                 <div></div>
               </Form>
+
+              {/* Complete Address */}
+              <Form onSubmit={submitCompleteAddress} className="mb-4">
+                <Form.Label className="d-block">
+                  <b>Address for Map: </b>
+                </Form.Label>
+                <Form.Label className="d-inline">Street Name:</Form.Label>{" "}
+                <Form.Control
+                  style={{ maxWidth: "300px" }}
+                  className="mb-2 d-inline"
+                  type="text"
+                  name="streetName"
+                  placeholder="Enter street name"
+                  onChange={handleCompleteAddress}
+                  required
+                />{" "}
+                <Form.Label className="d-inline">Number:</Form.Label>{" "}
+                <Form.Control
+                  style={{ maxWidth: "50px" }}
+                  className="mb-2 d-inline"
+                  type="text"
+                  name="streetNumber"
+                  onChange={handleCompleteAddress}
+                  required
+                />
+                <div>
+                  <Form.Label className="d-inline">City:</Form.Label>{" "}
+                  <Form.Control
+                    style={{ maxWidth: "300px" }}
+                    className="mb-2 d-inline"
+                    type="text"
+                    name="city"
+                    placeholder="Enter city name"
+                    onChange={handleCompleteAddress}
+                    required
+                  />{" "}
+                  <Form.Label className="d-inline">State:</Form.Label>{" "}
+                  <Form.Control
+                    style={{ maxWidth: "100px" }}
+                    className="mb-2 d-inline"
+                    type="text"
+                    name="state"
+                    onChange={handleCompleteAddress}
+                  />{" "}
+                </div>
+                <div>
+                  <Form.Label className="d-inline">Country:</Form.Label>{" "}
+                  <Form.Control
+                    style={{ maxWidth: "300px" }}
+                    className="mb-2 d-inline"
+                    type="text"
+                    name="country"
+                    placeholder="Enter country name"
+                    onChange={handleCompleteAddress}
+                  />{" "}
+                  <Form.Label className="d-inline">Zipcode:</Form.Label>{" "}
+                  <Form.Control
+                    style={{ maxWidth: "100px" }}
+                    className="mb-2 d-inline"
+                    type="text"
+                    name="postalcode"
+                    onChange={handleCompleteAddress}
+                    required
+                  />{" "}
+                  {messageCompleteAddress && <p>{messageCompleteAddress}</p>}
+                </div>
+                <Button type="submit" className="d-inline mb-3">
+                  Update
+                </Button>
+                {/* <Button
+                  onClick={deleteUserAddress}
+                  className="d-inline mx-2 mb-3"
+                >
+                  Delete
+                </Button> */}
+              </Form>
             </Col>
             <Col>
               <Image
@@ -477,9 +579,9 @@ function Account() {
                 alt="user profile pic"
                 rounded
               />
-              <div className="mt-2">
+              {/* <div className="mt-2">
                 <b>ID: </b> {user._id}
-              </div>
+              </div> */}
             </Col>
           </Row>
           <hr />
@@ -487,10 +589,10 @@ function Account() {
           {/* Seller - Products */}
           {user.role === "seller" && (
             <>
-              <h1>Your Products</h1>
+              <h1>Add Products</h1>
               <Row>
                 <Col className="mx-0 px-0 g-0" style={{ textAlign: "left" }}>
-                  <h5>Add Product:</h5>
+                  <h5>Specifications:</h5>
                   <Form onSubmit={submitNewProduct}>
                     <Row>
                       <Col>
@@ -662,7 +764,7 @@ function Account() {
                     className="mx-0 mb-3 px-0 g-0"
                     style={{ textAlign: "left" }}
                   >
-                    <Form.Label className="d-block">Dimensions</Form.Label>
+                    <Form.Label className="d-block">Dimensions (mm)</Form.Label>
                     <Form.Control
                       className="d-inline mx-2"
                       style={{ maxWidth: "30%" }}
@@ -717,7 +819,9 @@ function Account() {
 
                   <Form.Group className="mb-4" style={{ textAlign: "left" }}>
                     <Row className="mb-3" style={{ textAlign: "left" }}>
-                      <Form.Label className="d-block">Reservation</Form.Label>
+                      <Form.Label className="d-block">
+                        Reservation (in minutes)
+                      </Form.Label>
                       <Col style={{ maxWidth: "20%" }}>
                         <Form.Check
                           // prettier-ignore
