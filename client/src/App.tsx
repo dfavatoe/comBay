@@ -1,4 +1,4 @@
-import "./App.css";
+import "../src/style/App.css";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
@@ -20,8 +20,10 @@ const Root = () => {
 
   return (
     <>
-      <NavBar />
-      <Outlet />
+      <div className="content-container">
+        <NavBar />
+        <Outlet />
+      </div>
     </>
   );
 };

@@ -7,7 +7,15 @@ import {
   ImageUploadOkResponse,
   PutUpdateResponse,
 } from "../types/customTypes";
-import { Button, Col, Form, Image, InputGroup, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Image,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
 import useUserStatus from "../hooks/useUserStatus";
 import { Link } from "react-router";
 import { baseUrl } from "../utils/urls";
@@ -325,7 +333,7 @@ function Account() {
     setNewProduct((prev) => ({
       ...prev!,
       [name]: type === "number" ? Number(value) : value, // Convert price to number
-      seller: user!.id, // Assign the entire user object instead of just user.id
+      seller: user!._id, // Assign the entire user object instead of just user.id
     }));
   };
 
@@ -432,9 +440,9 @@ function Account() {
 
   return (
     <>
-      <h1 className="mb-4">Account</h1>
       {user ? (
-        <div>
+        <Container>
+          <h1 className="mb-4">Account</h1>
           <Row>
             <Col
               className="d-block"
@@ -847,7 +855,7 @@ function Account() {
               </Row>
             </>
           )}
-        </div>
+        </Container>
       ) : (
         <>
           <div>

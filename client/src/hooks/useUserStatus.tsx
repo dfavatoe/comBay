@@ -41,6 +41,7 @@ function useUserStatus(): {
       }
 
       const result = (await response.json()) as GetProfileOfResponse;
+      console.log("result getUserProfile :>> ", result);
       setUser(result.user);
       setUserStatusMessage("User is logged in");
     } catch (error) {

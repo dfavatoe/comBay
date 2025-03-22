@@ -122,7 +122,7 @@ export type UserFull = {
 };
 
 export type User = {
-  id: string;
+  _id: string;
   userName: string;
   email: string;
   image: string;

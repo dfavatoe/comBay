@@ -1,5 +1,12 @@
 import { useContext, useEffect } from "react";
-import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Nav,
+  Navbar,
+  NavDropdown,
+  Spinner,
+} from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router";
 import useUserStatus from "../hooks/useUserStatus";
@@ -28,9 +35,7 @@ function NavBar() {
                 <Nav.Link to="/products" as={Link}>
                   Products
                 </Nav.Link>
-                <Nav.Link to="/reviews" as={Link}>
-                  Reviews
-                </Nav.Link>
+
                 <Nav.Link to="/account" as={Link}>
                   Account
                 </Nav.Link>
@@ -48,7 +53,10 @@ function NavBar() {
               </Nav>
               <div className="d-lg-flex justify-content-end align-items-center">
                 {loading ? (
-                  <p>...LOADING...</p>
+                  <>
+                    <Spinner animation="border" variant="warning" />
+                    <p>...LOADING...</p>
+                  </>
                 ) : user ? (
                   <>
                     <div className="d-lg-inline-block">

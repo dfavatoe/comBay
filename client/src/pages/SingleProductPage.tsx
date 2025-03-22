@@ -86,6 +86,7 @@ function SingleProductPage() {
   useEffect(() => {
     // getSingleProduct();
     fetchData(`products/productId/${productId}`, setProductSpecs);
+    console.log("productSpecs :>> ", productSpecs);
   }, []);
 
   return (
@@ -122,7 +123,7 @@ function SingleProductPage() {
                     Seller:{" "}
                     <Link
                       className="mb-2"
-                      to={`/seller/${productSpecs.productById.seller.id}`}
+                      to={`/seller/${productSpecs.productById.seller._id}`}
                     >
                       {productSpecs.productById.seller.userName}
                     </Link>

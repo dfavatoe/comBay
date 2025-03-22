@@ -231,11 +231,11 @@ function Reviews({ productId }: ReviewsProp) {
         </Form>
 
         <Stack>
-          {reviews &&
-            reviews.map((review) => {
+          {reviews ? (
+            reviews.map((review, index) => {
               return (
                 <Card
-                  key={review.id}
+                  key={index}
                   style={{
                     width: "auto",
                     height: "auto",
@@ -256,7 +256,10 @@ function Reviews({ productId }: ReviewsProp) {
                   </Card.Body>
                 </Card>
               );
-            })}
+            })
+          ) : (
+            <p>Be the first one to make a review</p>
+          )}
         </Stack>
       </Container>
     </>

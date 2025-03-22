@@ -7,7 +7,12 @@ const fileFilter = (req, file, cb) => {
   console.log("file :>> ", file);
   //check the file extension to decide if we allow upload or not
   let extension = path.extname(file.originalname);
-  if (extension !== ".png" && extension !== ".jpg" && extension !== ".jpeg") {
+  if (
+    extension !== ".png" &&
+    extension !== ".jpg" &&
+    extension !== ".jpeg" &&
+    extension !== ".webp"
+  ) {
     console.log("File extension not supported.".bgRed);
     // To reject this file pass `false`, like so:
     // cb(null, false);

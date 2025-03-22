@@ -226,7 +226,7 @@ const getProfile = async (req, res) => {
     return res.status(200).json({
       message: "User profile",
       user: {
-        id: req.user._id,
+        _id: req.user._id,
         userName: req.user.userName,
         email: req.user.email,
         role: req.user.role,
