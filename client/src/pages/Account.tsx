@@ -442,14 +442,20 @@ function Account() {
     <>
       {user ? (
         <Container>
-          <h1 className="mb-4">Account</h1>
+          <h1 className="mb-4" style={{ textAlign: "center" }}>
+            Account
+          </h1>
+          <hr />
           <Row>
-            <Col
-              className="d-block"
-              style={{
-                textAlign: "left",
-              }}
-            >
+            <Col sm={6} style={{ textAlign: "left" }}>
+              <Image
+                className="mb-4"
+                style={{ width: "200px" }}
+                src={user.image}
+                alt="user profile pic"
+                rounded
+              />
+
               {/* NewName Form */}
               <Form onSubmit={submitNewName} className="mb-4">
                 <h5>User Profile:</h5>
@@ -473,8 +479,22 @@ function Account() {
               <div className="mb-4">
                 <b>Email: </b> {user.email}
               </div>
-
-              <hr />
+              {user.role === "seller" && (
+                <div className="mb-4">
+                  <b>comBay Store: </b>
+                  <Link className="mb-2" to={`/seller/${user._id}`}>
+                    My Store
+                  </Link>
+                </div>
+              )}
+            </Col>
+            <Col
+              sm={6}
+              className="d-block"
+              style={{
+                textAlign: "left",
+              }}
+            >
               {/* NewAddress Form */}
               <Form onSubmit={submitNewAddress} className="mb-4">
                 <h5>User Contacts:</h5>
@@ -501,7 +521,6 @@ function Account() {
                 >
                   Delete
                 </Button>
-                <div></div>
               </Form>
 
               {/* Complete Address */}
@@ -580,26 +599,24 @@ function Account() {
                 </Button> */}
               </Form>
             </Col>
-            <Col>
-              <Image
-                style={{ width: "200px" }}
-                src={user.image}
-                alt="user profile pic"
-                rounded
-              />
-              {/* <div className="mt-2">
-                <b>ID: </b> {user._id}
-              </div> */}
-            </Col>
           </Row>
           <hr />
 
           {/* Seller - Products */}
           {user.role === "seller" && (
-            <>
-              <h1>Add Products</h1>
+            <Container>
+              <div
+                className="second-header mb-4"
+                style={{ textAlign: "center" }}
+              >
+                Add Products
+              </div>
               <Row>
-                <Col className="mx-0 px-0 g-0" style={{ textAlign: "left" }}>
+                <Col
+                  sm={6}
+                  className="mx-0 px-0 g-0"
+                  style={{ textAlign: "left" }}
+                >
                   <h5>Specifications:</h5>
                   <Form onSubmit={submitNewProduct}>
                     <Row>
@@ -714,13 +731,9 @@ function Account() {
                         </div>
                       </Form.Group>
                     </Form.Group>
-
-                    <Button type="submit" className="d-block ml-2 mb-3">
-                      Add
-                    </Button>
                   </Form>
                 </Col>
-                <Col>
+                <Col sm={6} style={{ textAlign: "left" }}>
                   <h5>Product Details:</h5>
                   <Form.Group
                     className="mx-0 mb-3 px-0 g-0"
@@ -830,8 +843,9 @@ function Account() {
                       <Form.Label className="d-block">
                         Reservation (in minutes)
                       </Form.Label>
-                      <Col style={{ maxWidth: "20%" }}>
+                      <Col style={{ maxWidth: "150px" }}>
                         <Form.Check
+                          style={{ width: "50px" }}
                           // prettier-ignore
                           type="switch"
                           id="custom-switch"
@@ -845,15 +859,18 @@ function Account() {
                           type="number"
                           name="reservationTime"
                           id="product-rating"
-                          placeholder="Reservation time in minutes"
+                          placeholder="Reservation time"
                           onChange={handleNewProductInputChange}
                         />
                       </Col>
                     </Row>
                   </Form.Group>
+                  <Button type="submit" className="d-block ml-2 mb-3">
+                    Add
+                  </Button>
                 </Col>
               </Row>
-            </>
+            </Container>
           )}
         </Container>
       ) : (

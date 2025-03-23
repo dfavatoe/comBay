@@ -1,18 +1,36 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useUserStatus from "../hooks/useUserStatus";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
 import video from "../assets/comBay_hero.mp4";
 import "../style/Home.css";
+import { ProductsRoot, ProductT } from "../types/customTypes";
+import { fetchData } from "../hooks/useFetch";
+import ProductCard from "../components/ProductCard";
+import "../style/Products.css";
 
 function Home() {
   const { token, user, loading, setLoading } = useUserStatus();
 
-  const navigateTo = useNavigate();
-
   //!try to create this in a form of a component. We need to return something in the page to set the loader off. Like a response of a fetch.
   function loader() {
-    if (!user) {
+    const [products, setProducts] = useState<ProductsRoot | null>({
+      message: "",
+      amount: 0,
+      records: [],
+    });
+
+    const productsRecords = products!.records as ProductT[];
+
+    const navigateTo = useNavigate();
+
+    useEffect(() => {
+      fetchData("products", setProducts);
+      // setLoading(false);
+      // fetchAllProducts();
+      // fetchCategoriesList();
+    }, []);
+    if (!productsRecords) {
       return (
         <div>
           <Spinner animation="border" variant="warning" />
@@ -38,7 +56,7 @@ function Home() {
               <Container id="title-container" fluid>
                 <h1 aria-label="allBuy has">comBay</h1>
                 <p>
-                  Find everything, everywhere, <br /> every time.
+                  Find everything, everywhere, <br /> anytime.
                 </p>
               </Container>
 
@@ -59,13 +77,16 @@ function Home() {
             {user ? (
               <>
                 <h6>Hello {user.userName}!</h6>
-                <p>{user._id}</p>
+                {/* <p>{user._id}</p> */}
               </>
             ) : (
-              <h6>Sign in for the full experience.</h6>
+              <>
+                <h6>Sign in for the full experience.</h6>
+                <Link to={"/login"}>Login</Link>
+                <br />
+              </>
             )}
-            <Link to={"/login"}>Login</Link>
-            <br />
+
             <Button
               className="mt-2 mb-2"
               variant="warning"
@@ -76,6 +97,18 @@ function Home() {
               Products
             </Button>
           </Container>
+          <div className="second-header m-4" style={{ textAlign: "center" }}>
+            Featured Products
+          </div>
+          {/* Scroll Menu */}
+          <div className="scrollmenu my-4">
+            <div className="scroll-container" style={{ textWrap: "wrap" }}>
+              {productsRecords &&
+                productsRecords.map((product) => {
+                  return <ProductCard key={product._id} product={product} />;
+                })}
+            </div>
+          </div>
         </>
       );
     }
@@ -90,28 +123,10 @@ function Home() {
       }
     } catch (error) {
       console.log("error :>> ", error);
-    } finally {
-      setLoading(false);
     }
   }, [token]);
 
-  return (
-    <>
-      {loader()}
-      {/* <div>Home</div>
-      {loading && (
-        <div>
-          <Spinner animation="border" variant="warning" />
-          <p>Loading...</p>
-        </div>
-      )}
-      {user ? (
-        <h2>Hello {user.userName}</h2>
-      ) : (
-        <h2>Log in for the full experience</h2>
-      )} */}
-    </>
-  );
+  return <>{loader()}</>;
 }
 
 export default Home;

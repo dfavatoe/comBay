@@ -19,6 +19,7 @@ import {
   RegisterCredentials,
 } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
+import imagePlaceholder from "../assets/avatar_placeholder.jpg";
 import useUserStatus from "../hooks/useUserStatus";
 
 function SignUp() {
@@ -150,7 +151,9 @@ function SignUp() {
   return (
     <>
       <Container className="justify-content-center">
-        <h1>Sign Up</h1>
+        <h1 className="mb-4" style={{ textAlign: "center" }}>
+          Sign Up
+        </h1>
         <br />
         {/* {loading && (
           <div>
@@ -176,7 +179,7 @@ function SignUp() {
           <Image
             className="mb-4"
             width={200}
-            src={newUser ? newUser.image : ""}
+            src={newUser ? newUser.image : undefined}
             rounded
           />
           <Form.Group className="mb-3 justify-content-center">

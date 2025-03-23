@@ -48,8 +48,10 @@ function Products() {
   }, []);
 
   return (
-    <div>
-      <h1>Products</h1>
+    <Container>
+      <h1 className="mb-4" style={{ textAlign: "center" }}>
+        Products
+      </h1>
       <Container className="justify-content-center">
         <>
           {productsRecords ? (
@@ -75,7 +77,7 @@ function Products() {
           )}
         </> */}
       </Container>
-    </div>
+    </Container>
   );
 }
 

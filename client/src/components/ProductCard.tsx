@@ -31,7 +31,7 @@ function ProductCard({ product }: ProductCardProps) {
           {product.price} €
         </Card.Subtitle>
         <Stack gap={3}>
-          <Link className="mb-2" to={`${product._id}`}>
+          <Link className="mb-2" to={`/products/${product._id}`}>
             Learn more
           </Link>
         </Stack>

@@ -13,6 +13,7 @@ import { useContext } from "react";
 import { Spinner } from "react-bootstrap";
 import List from "./pages/List";
 import Seller from "./pages/Seller";
+import Footer from "./components/Footer";
 
 const Root = () => {
   // const { loading, setLoading } = useContext(AuthContext);
@@ -23,6 +24,9 @@ const Root = () => {
       <div className="content-container">
         <NavBar />
         <Outlet />
+      </div>
+      <div className="footer-container">
+        <Footer />
       </div>
     </>
   );

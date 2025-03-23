@@ -49,6 +49,20 @@ h1 {
   position: relative; /* Ensure it respects z-index */
 }
 
+.second-header {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: 6vmin;
+  text-align: center;
+  color: rgb(242, 161, 10);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  text-align: right; /* Center horizontally */
+  font-family: Lato, sans-serif;
+  font-weight: 700;
+  margin: 0;
+  z-index: 5;
+  position: relative; /* Ensure it respects z-index */
+}
+
 #title-container > p {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 3vmin;

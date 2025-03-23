@@ -54,8 +54,10 @@ function List() {
 
   return (
     <>
-      <h1>Shopping List</h1>
       <Container className="justify-content-center">
+        <h1 className="mb-4" style={{ textAlign: "center" }}>
+          Shopping List
+        </h1>
         {productsList ? (
           productsList.map((item) => {
             return (
@@ -68,6 +70,16 @@ function List() {
           <>
             <Container className="d-block">
               <h5 className="mb-4">Your list is empty</h5>
+              <div className="d-block mb-4">
+                <Link className="d-inline" to={"/signup"}>
+                  Sign up{" "}
+                </Link>
+                <span>or </span>
+                <Link className="d-inline" to={"/login"}>
+                  log in{" "}
+                </Link>
+                to
+              </div>
               <Button
                 onClick={() => {
                   navigateTo("/products");
@@ -78,12 +90,6 @@ function List() {
               >
                 Continue shopping
               </Button>
-              <div className="d-block">
-                <span>or </span>
-                <Link className="d-inline" to={"/login"}>
-                  Login
-                </Link>
-              </div>
             </Container>
           </>
         )}

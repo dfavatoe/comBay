@@ -11,7 +11,18 @@ div.scrollmenu::-webkit-scrollbar {
   display: none;
 }
 
-div.scrollmenu button {
+/* Inner flex container */
+div.scroll-container {
+  display: flex;
+  gap: 16px; /* Adds spacing between items */
+}
+
+/* Ensure product cards don't shrink */
+div.scroll-container > * {
+  flex: 0 0 auto;
+}
+
+/* div.scrollmenu button {
   display: inline-block;
   color: black;
   text-align: center;
@@ -26,4 +37,4 @@ div.scrollmenu button {
 
 div.scrollmenu button:hover {
   background-color: #e5e5e5;
-}
+} */

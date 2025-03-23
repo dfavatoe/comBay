@@ -36,8 +36,8 @@ const usersSchema = Schema(
       type: String,
       require: false,
       //Other possibility for providing default image
-      // default:
-      //   "https://img.freepik.com/vecteurs-libre/homme-affaires-caractere-avatar-isole_24877-60111.jpg",
+      default:
+        "https://img.freepik.com/vecteurs-libre/homme-affaires-caractere-avatar-isole_24877-60111.jpg",
     },
     // cart: { type: Schema.Types.ObjectId, ref: "Cart" },
     role: {
