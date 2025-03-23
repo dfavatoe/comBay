@@ -7,7 +7,7 @@ import { fetchData } from "../hooks/useFetch";
 import { addProductToList } from "../utils/addProductToList";
 import useUserStatus from "../hooks/useUserStatus";
 import Reviews from "../components/Reviews";
-// import { Timestamp } from "firebase/firestore";
+import "../style/styles.css";
 
 function SingleProductPage() {
   //State Hooks
@@ -91,7 +91,9 @@ function SingleProductPage() {
 
   return (
     <div>
-      <h1>comBay Products</h1>
+      <h1 className="m-4" style={{ textAlign: "center" }}>
+        comBay Products
+      </h1>
       {/* <p>Product ID: {productId} </p> */}
       {/* {console.log("productSpecs", productSpecs)} */}
       <Container style={{ width: "auto", height: "auto", textAlign: "left" }}>

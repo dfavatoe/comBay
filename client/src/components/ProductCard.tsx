@@ -23,7 +23,13 @@ function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="zoom" style={{ width: "18rem" }}>
+    <Card
+      className="zoom"
+      style={{
+        width: "18rem",
+        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+      }}
+    >
       <Card.Img className="image" variant="top" src={product.images[0]} />
       <Card.Body className="d-flex flex-column">
         <Card.Title>{product.title}</Card.Title>

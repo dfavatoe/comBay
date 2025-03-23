@@ -13,16 +13,9 @@ function Seller() {
   const { sellerId } = useParams();
   console.log("sellerId :>> ", sellerId);
 
-  // const position = [seller?.latitude, seller?.longitude];
-  // console.log("geo :>> ", seller!.latitude, seller!.latitude);
-
-  // const position: [number | undefined, number | undefined] = [
-  //   seller?.latitude,
-  //   seller?.longitude,
-  // ];
-
-  // const position = {seller!.latitude, seller!.longitude}
-  // console.log("geo :>> ", seller!.latitude, seller!.latitude);
+  const sellerAddress = seller?.address
+    ? `${seller.address.streetName} ${seller.address.streetNumber}, ${seller.address.postalcode} ${seller.address.city}`
+    : "";
 
   const handleGetSellerShopInfo = async () => {
     // console.log("shop working");
@@ -48,12 +41,6 @@ function Seller() {
     }
   };
 
-  // const position: [number, number] | undefined =
-  //   seller?.latitude && seller?.longitude
-  //     ? [seller.latitude, seller.longitude]
-  //     : undefined;
-  // console.log("geolocalion :>> ", seller!.latitude, seller!.longitude);
-
   useEffect(() => {
     handleGetSellerShopInfo();
   }, []);
@@ -73,43 +60,81 @@ function Seller() {
                 src={seller.image}
                 style={{ height: "300px", objectFit: "cover" }}
               />
-              <h2>{seller.userName}</h2>
-              <h3>Store</h3>
+              <div className="second-header" style={{ textAlign: "center" }}>
+                {seller.userName}
+              </div>
+              <div className="third-header" style={{ textAlign: "center" }}>
+                Store
+              </div>
             </Row>
             <hr />
             <Row>
-              <Col className="d-block" style={{ textAlign: "left" }}>
+              <Col
+                sm={6}
+                className="d-block mb-2"
+                style={{ textAlign: "left" }}
+              >
                 <h4>Contacts</h4>
                 <h5>{seller.email}</h5>
-                <Link
-                  className="mb-2"
-                  to={`https://maps.google.com/?q=${seller.address}`}
-                  target="_blank"
-                >
-                  {seller.address}
-                </Link>
+                {sellerAddress && (
+                  <Link
+                    className="mb-2"
+                    to={`https://maps.google.com/?q=${sellerAddress}`}
+                    target="_blank"
+                  >
+                    {sellerAddress}
+                  </Link>
+                )}
               </Col>
               <Col>
-                <MapContainer
-                  center={[seller.latitude, seller.longitude]}
-                  zoom={15}
-                  scrollWheelZoom={false}
-                  style={{ height: "200px" }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
+                {seller.address ? (
+                  <MapContainer
+                    center={[seller.address.latitude, seller.address.longitude]}
+                    zoom={15}
+                    scrollWheelZoom={false}
+                    style={{ height: "200px" }}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
 
-                  <Marker position={[seller.latitude, seller.longitude]}>
-                    <Popup>{seller.userName}</Popup>
-                  </Marker>
-                </MapContainer>
+                    <Marker
+                      position={[
+                        seller.address.latitude,
+                        seller.address.longitude,
+                      ]}
+                    >
+                      <Popup>{seller.userName}</Popup>
+                    </Marker>
+                  </MapContainer>
+                ) : (
+                  <MapContainer
+                    center={[52.5200066, 13.404954]}
+                    zoom={15}
+                    scrollWheelZoom={false}
+                    style={{ height: "200px" }}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+
+                    <Marker position={[52.5200066, 13.404954]}>
+                      <Popup>
+                        No location shared <br />
+                        by seller
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                )}
               </Col>
             </Row>
             <hr />
-            <h2>Products</h2>
-            {products &&
+            <div className="second-header mb-4" style={{ textAlign: "center" }}>
+              Products
+            </div>
+            {products ? (
               products.map((product) => {
                 return (
                   <Row
@@ -119,7 +144,10 @@ function Seller() {
                     <ProductCardStore key={product._id} product={product} />
                   </Row>
                 );
-              })}
+              })
+            ) : (
+              <h2>Seller still didn't share the products</h2>
+            )}
           </Container>
         </>
       )}

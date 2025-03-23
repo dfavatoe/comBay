@@ -11,6 +11,7 @@ import {
   addProductInList,
   getProductsShoppingList,
   updateCompleteAddress,
+  updateAddress,
 } from "../controller/usersController.js";
 import multerWithCustomErrors from "../middleware/multer.js";
 import jwtAuth from "../middleware/jwtAuth.js";
@@ -25,7 +26,7 @@ userRouter.post("/register", registerNewUser);
 userRouter.post("/login", login);
 userRouter.get("/profile", jwtAuth, getProfile); //in order to get the profile, authorize with the token
 userRouter.put("/update-name", jwtAuth, putUpdateName);
-userRouter.put("/update-address", jwtAuth, putUpdateAddress);
+userRouter.put("/update-address", jwtAuth, updateAddress);
 userRouter.put("/updateCompleteAddress", jwtAuth, updateCompleteAddress);
 userRouter.delete("/delete-address", jwtAuth, deleteAddress);
 userRouter.post("/add-productToList", jwtAuth, addProductInList);

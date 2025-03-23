@@ -49,8 +49,8 @@ function Products() {
 
   return (
     <Container>
-      <h1 className="mb-4" style={{ textAlign: "center" }}>
-        Products
+      <h1 className="m-4" style={{ textAlign: "center" }}>
+        comBay Products
       </h1>
       <Container className="justify-content-center">
         <>

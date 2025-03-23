@@ -32,7 +32,9 @@ function Login() {
   return (
     <>
       <Container>
-        <h1>Login</h1>
+        <h1 className="m-4" style={{ textAlign: "center" }}>
+          Login
+        </h1>
         {user ? (
           <div>
             <h3>You are logged in. 🔌</h3>

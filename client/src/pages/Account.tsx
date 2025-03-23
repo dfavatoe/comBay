@@ -135,85 +135,6 @@ function Account() {
 
   //======================================================================
 
-  const submitNewAddress = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!token) {
-      console.log("user has to log in first");
-      alert("You have to log in first");
-      return;
-    }
-
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    const urlencode = new URLSearchParams();
-    if (newAddress !== "") {
-      urlencode.append("address", newAddress);
-    } else {
-      console.log("No empty forms allowed");
-      alert("Complete the address field");
-    }
-
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: urlencode,
-    };
-
-    const response = await fetch(
-      `${baseUrl}/api/users/update-address`,
-      requestOptions
-    );
-
-    const result = (await response.json()) as PutUpdateResponse;
-    console.log("update address result :>> ", result);
-
-    if (response.ok) {
-      setUser(result.user);
-      setMessageAddress("Address updated successfully!");
-      setNewAddress("");
-    } else {
-      setMessageAddress(result.error || "Failed to update address.");
-    }
-    handleGetUserProfile();
-  };
-
-  //======================================================================
-
-  const deleteUserAddress = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (!token) {
-      console.log("User has to log in first");
-      alert("You have to log in first");
-    }
-
-    const requestOptions = {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    };
-
-    const response = await fetch(
-      `${baseUrl}/api/users/delete-address`,
-      requestOptions
-    );
-
-    const result = (await response.json()) as PutUpdateResponse;
-
-    if (response.ok) {
-      console.log("delete address result :>> ", result);
-      setUser(result.user);
-      setMessageAddress("Address deleted successfully!");
-    } else {
-      setMessageAddress(result.error || "Failed to delete address.");
-    }
-    handleGetUserProfile();
-  };
-
-  //======================================================================
-
   const handleCompleteAddress = (e: ChangeEvent<HTMLInputElement>) => {
     console.log("e.target.name :>> ", e.target.name);
     console.log("e.target.value :>> ", e.target.value);
@@ -256,7 +177,7 @@ function Account() {
     };
 
     const response = await fetch(
-      `${baseUrl}/api/users/updateCompleteAddress`,
+      `${baseUrl}/api/users/update-address`,
       requestOptions
     );
     console.log("response comp address :>> ", response);
@@ -270,6 +191,39 @@ function Account() {
       setCompleteAddress(null);
     } else {
       setMessageCompleteAddress(result.error || "Failed to update address.");
+    }
+    handleGetUserProfile();
+  };
+
+  //======================================================================
+
+  const deleteUserAddress = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (!token) {
+      console.log("User has to log in first");
+      alert("You have to log in first");
+    }
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    };
+
+    const response = await fetch(
+      `${baseUrl}/api/users/delete-address`,
+      requestOptions
+    );
+
+    const result = (await response.json()) as PutUpdateResponse;
+
+    if (response.ok) {
+      console.log("delete address result :>> ", result);
+      setUser(result.user);
+      setMessageCompleteAddress("Address deleted successfully!");
+      setCompleteAddress(null);
+    } else {
+      setMessageCompleteAddress(result.error || "Failed to delete address.");
     }
     handleGetUserProfile();
   };
@@ -482,9 +436,15 @@ function Account() {
               {user.role === "seller" && (
                 <div className="mb-4">
                   <b>comBay Store: </b>
-                  <Link className="mb-2" to={`/seller/${user._id}`}>
-                    My Store
-                  </Link>
+                  {user.address ? (
+                    <Link className="mb-2" to={`/seller/${user._id}`}>
+                      My Store
+                    </Link>
+                  ) : (
+                    <p>
+                      Complete the address and add products to build your store.
+                    </p>
+                  )}
                 </div>
               )}
             </Col>
@@ -496,37 +456,17 @@ function Account() {
               }}
             >
               {/* NewAddress Form */}
-              <Form onSubmit={submitNewAddress} className="mb-4">
-                <h5>User Contacts:</h5>
-                <Form.Label>
-                  <b>Address: </b> {user.address}
-                </Form.Label>
-                <Form.Control
-                  style={{ maxWidth: "300px" }}
-                  className="mb-2 d-block"
-                  type="text"
-                  placeholder="Enter new address"
-                  value={newAddress}
-                  onChange={handleAddressChange}
-                  required
-                />
-                {messageAddress && <p>{messageAddress}</p>}
-
-                <Button type="submit" className="d-inline mb-3">
-                  Update
-                </Button>
-                <Button
-                  onClick={deleteUserAddress}
-                  className="d-inline mx-2 mb-3"
-                >
-                  Delete
-                </Button>
-              </Form>
-
-              {/* Complete Address */}
               <Form onSubmit={submitCompleteAddress} className="mb-4">
+                <h5 className="mb-4">User Contacts:</h5>
                 <Form.Label className="d-block">
-                  <b>Address for Map: </b>
+                  <b>Address: </b>{" "}
+                  {user.address && (
+                    <>
+                      {user.address.streetName} {user.address.streetNumber}
+                      {", "}
+                      {user.address.postalcode} {user.address.city}
+                    </>
+                  )}
                 </Form.Label>
                 <Form.Label className="d-inline">Street Name:</Form.Label>{" "}
                 <Form.Control
@@ -591,12 +531,12 @@ function Account() {
                 <Button type="submit" className="d-inline mb-3">
                   Update
                 </Button>
-                {/* <Button
+                <Button
                   onClick={deleteUserAddress}
                   className="d-inline mx-2 mb-3"
                 >
                   Delete
-                </Button> */}
+                </Button>
               </Form>
             </Col>
           </Row>
@@ -731,6 +671,12 @@ function Account() {
                         </div>
                       </Form.Group>
                     </Form.Group>
+                    <Button
+                      type="submit"
+                      className="d-flex ml-2 mb-3 justify-content-end"
+                    >
+                      Add Product
+                    </Button>
                   </Form>
                 </Col>
                 <Col sm={6} style={{ textAlign: "left" }}>
@@ -865,9 +811,6 @@ function Account() {
                       </Col>
                     </Row>
                   </Form.Group>
-                  <Button type="submit" className="d-block ml-2 mb-3">
-                    Add
-                  </Button>
                 </Col>
               </Row>
             </Container>

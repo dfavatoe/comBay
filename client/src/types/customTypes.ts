@@ -24,7 +24,7 @@ export interface ProductT {
   width: number;
   height: number;
   depth: number;
-  reviews: Reviews;
+  reviews: ReviewT[];
   meta: Meta;
   _id: string;
   title: string;
@@ -75,13 +75,6 @@ export type addProductT = Pick<
 //   depth: number;
 // }
 
-export interface Reviews {
-  rating: number;
-  date: string;
-  reviewerName: string;
-  reviewerEmail: string;
-}
-
 export interface Meta {
   barcode: string;
   qrcode: string;
@@ -128,7 +121,10 @@ export type User = {
   image: string;
   role: string;
   productsList: ProductT[];
-  address: string;
+  address: Address;
+};
+
+export interface Address {
   streetName: string;
   streetNumber: string;
   city: string;
@@ -136,7 +132,7 @@ export type User = {
   postalcode: string;
   latitude: number;
   longitude: number;
-};
+}
 
 // using Pick and Omit
 export type LoginCredentials = Pick<
@@ -236,7 +232,7 @@ export interface ProductsList {
   title: string;
   price: number;
   rating?: number;
-  seller: Seller;
+  seller: User;
   images: string[];
   reservation: boolean;
   reservationTime: number;

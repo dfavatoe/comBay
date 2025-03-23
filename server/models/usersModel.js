@@ -2,6 +2,17 @@ import mongoose, { mongo } from "mongoose";
 
 const { Schema } = mongoose;
 
+const addressSchema = new Schema({
+  streetName: { type: String, default: "", require: true },
+  streetNumber: { type: String, default: "", require: true },
+  city: { type: String, default: "", require: true },
+  state: { type: String, default: "", require: false },
+  country: { type: String, default: "", require: false },
+  postalcode: { type: String, default: "", require: true },
+  latitude: Number,
+  longitude: Number,
+});
+
 const usersSchema = Schema(
   {
     userName: {
@@ -20,17 +31,19 @@ const usersSchema = Schema(
       require: true,
       // minLength: [6, "Must be at least 6"],
     },
-    address: { type: String, default: "" },
 
-    streetName: { type: String, default: "", require: true },
-    streetNumber: { type: String, default: "", require: true },
-    city: { type: String, default: "", require: true },
-    state: { type: String, default: "", require: false },
-    country: { type: String, default: "", require: false },
-    postalcode: { type: String, default: "", require: true },
+    address: addressSchema,
+    // address: { type: String, default: "" },
 
-    latitude: Number,
-    longitude: Number,
+    // streetName: { type: String, default: "", require: true },
+    // streetNumber: { type: String, default: "", require: true },
+    // city: { type: String, default: "", require: true },
+    // state: { type: String, default: "", require: false },
+    // country: { type: String, default: "", require: false },
+    // postalcode: { type: String, default: "", require: true },
+
+    // latitude: Number,
+    // longitude: Number,
 
     image: {
       type: String,

@@ -6,6 +6,7 @@ import { MouseEvent } from "react";
 import { addProductToList } from "../utils/addProductToList";
 import { baseUrl } from "../utils/urls";
 import useUserStatus from "../hooks/useUserStatus";
+import "../style/styles.css";
 
 type ProductCardProps = {
   product: ProductT;
@@ -40,7 +41,12 @@ function ProductCardStore({ product }: ProductCardProps) {
     <Container className="mt-0">
       <Card
         className="p-0"
-        style={{ width: "auto", height: "auto", textAlign: "left" }}
+        style={{
+          width: "auto",
+          height: "auto",
+          textAlign: "left",
+          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+        }}
       >
         <Card.Body className="m-2">
           <Row>

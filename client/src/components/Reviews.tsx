@@ -29,7 +29,7 @@ function Reviews({ productId }: ReviewsProp) {
 
   const [reviews, setReviews] = useState<ReviewT[] | null>(null);
 
-  const [reviewText, setReviewText] = useState<string>(" ");
+  const [reviewText, setReviewText] = useState<string>("");
   const [reviewRating, setReviewRating] = useState<number>(0);
   const [reviewStars, setReviewStars] = useState<string>("");
 
@@ -258,7 +258,7 @@ function Reviews({ productId }: ReviewsProp) {
               );
             })
           ) : (
-            <p>Be the first one to make a review</p>
+            <p>Be the first one to make a review.</p>
           )}
         </Stack>
       </Container>

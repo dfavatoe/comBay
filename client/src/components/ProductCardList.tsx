@@ -13,11 +13,20 @@ function ProductCardList({ product }: ProductCardProps) {
     product.reservationTime
   );
 
+  const sellerAddress = product.seller?.address
+    ? `${product.seller.address.streetName} ${product.seller.address.streetNumber}, ${product.seller.address.postalcode} ${product.seller.address.city}`
+    : "";
+
   return (
     <Container className="mt-0">
       <Card
         className="p-0"
-        style={{ width: "auto", height: "auto", textAlign: "center" }}
+        style={{
+          width: "auto",
+          height: "auto",
+          textAlign: "center",
+          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+        }}
       >
         <Card.Body className="m-2">
           <Row>
@@ -63,12 +72,16 @@ function ProductCardList({ product }: ProductCardProps) {
             <Col sm={6} className="d-flex-column justify-content-center" md={4}>
               <Card.Title className="mt-3">Seller</Card.Title>
               <div>{product.seller.userName}</div>
-              <Link
-                className="mb-2"
-                to={`https://maps.google.com/?q=${product.seller.address}`}
-              >
-                {product.seller.address}
-              </Link>
+              {sellerAddress && (
+                <Link
+                  className="mb-2"
+                  to={`https://maps.google.com/?q=${sellerAddress}`}
+                  target="_blank"
+                >
+                  {sellerAddress}
+                </Link>
+              )}
+
               {product.reservation && (
                 <Container className="d-inline-flex justify-content-center">
                   <Card.Subtitle

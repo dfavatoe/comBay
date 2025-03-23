@@ -306,6 +306,83 @@ const putUpdateAddress = async (req, res) => {
 
 //=========================================================
 
+const updateAddress = async (req, res) => {
+  console.log("update address running");
+
+  const { streetName, streetNumber, city, state, country, postalcode } =
+    req.body;
+
+  const api_key = process.env.GEO_API_KEY;
+
+  if (!streetName || !streetNumber || !city || !postalcode) {
+    return res.status(400).json({
+      error: "street name, street number, city and postal code are required",
+    });
+  }
+
+  // Fetch geolocation
+  const response = await fetch(
+    `https://geocode.maps.co/search?street=${streetNumber}+${streetName}&city=${city}&state=${state}&postalcode=${postalcode}&country=${country}&api_key=${api_key}`
+  );
+
+  const result = await response.json();
+  // const [latitude, longitude]=await getLocation(streetName, streetName, city)
+  console.log("Geolocation API response:", result);
+  if (!result.length) {
+    return res
+      .status(400)
+      .json({ error: "Geolocation API returned no results" });
+  }
+  const lat = result[0].lat; //get the latitude from the first object in the array
+  const lon = result[0].lon;
+  console.log("Geolocation API response:", result);
+
+  try {
+    //Update user fields
+
+    const newAddress = {
+      streetName,
+      streetNumber,
+      city,
+      state,
+      country,
+      postalcode,
+      latitude: lat,
+      longitude: lon,
+    };
+
+    const newUser = await UserModel.findByIdAndUpdate(
+      req.user._id,
+      { address: newAddress },
+      { new: true }
+    );
+    if (!newUser) return res.status(400).json({ error: "User not found" });
+
+    console.log("newUser :>> ", newUser);
+
+    return res.status(200).json({
+      message: "Complete address updated successfully",
+      user: {
+        _id: newUser._id,
+        userName: newUser.userName,
+        email: newUser.email,
+        role: newUser.role,
+        image: newUser.image,
+        productsList: newUser.productsList,
+        address: newUser.address,
+      },
+    });
+  } catch (error) {
+    console.error("Error adding address", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      errorStack: error.message,
+    });
+  }
+};
+
+//=========================================================
+
 const updateCompleteAddress = async (req, res) => {
   console.log("update complete user address");
 
@@ -399,17 +476,20 @@ const deleteAddress = async (req, res) => {
     res.json({
       message: "Address deleted successfully",
       user: {
-        id: req.user._id,
-        userName: req.user.userName,
-        email: req.user.email,
-        role: req.user.role,
-        image: req.user.image,
-        productsList: req.user.productsList,
-        address: req.user.address,
+        id: user._id,
+        userName: user.userName,
+        email: user.email,
+        role: user.role,
+        image: user.image,
+        productsList: user.productsList,
+        address: user.address,
       },
     });
   } catch (error) {
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({
+      error: "Server Error",
+      errorStack: error.message,
+    });
   }
 };
 
@@ -516,6 +596,7 @@ export {
   getProfile,
   putUpdateName,
   putUpdateAddress,
+  updateAddress,
   updateCompleteAddress,
   deleteAddress,
   addProductInList,
