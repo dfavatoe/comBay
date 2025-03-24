@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+// REVIEW great use of a custom hook and geat exercise of your own logic, good job!
 export function useCountdown(initialMinutes: number, storageKey: string) {
   // Retrieve stored time from sessionStorage, if available. If not the timeLeft will be the original reservation time.
   const storedTime = sessionStorage.getItem(storageKey);
@@ -25,7 +25,7 @@ export function useCountdown(initialMinutes: number, storageKey: string) {
       setIsActive(false);
       sessionStorage.removeItem(storageKey); // Clear storage when time runs out
     }
-
+    // REVIEW good that you are using the clean up function from the useEffect :)
     return () => clearInterval(timer);
   }, [isActive, timeLeft, storageKey]);
 
@@ -37,6 +37,7 @@ export function useCountdown(initialMinutes: number, storageKey: string) {
     sessionStorage.setItem(storageKey, (initialMinutes * 60).toString()); // Reset storage
   };
   //format the countdown display, acordinglly to timeLeft
+  //REVIEW this could be a helper function extraceted to another file
   const formatTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);

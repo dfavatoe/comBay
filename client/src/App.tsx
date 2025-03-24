@@ -33,6 +33,7 @@ const Root = () => {
 };
 
 function App() {
+  //REVIEW don't you have any protected routes? Besides the authorizon in the backend with the JWT, you should also match that in the frontend with a protected route
   return (
     <>
       <AuthContextProvider>
