@@ -25,6 +25,8 @@ userRouter.post("/uploadimage", multerWithCustomErrors, imageUpload);
 userRouter.post("/register", registerNewUser);
 userRouter.post("/login", login);
 userRouter.get("/profile", jwtAuth, getProfile); //in order to get the profile, authorize with the token
+// REVIEW check the different HTTP methods to see what is the adecuated one to update some fields: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods
+
 userRouter.put("/update-name", jwtAuth, putUpdateName);
 userRouter.put("/update-address", jwtAuth, updateAddress);
 userRouter.put("/updateCompleteAddress", jwtAuth, updateCompleteAddress);
