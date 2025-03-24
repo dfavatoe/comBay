@@ -10,7 +10,8 @@ type ProductCardProps = {
 
 function ProductCardList({ product }: ProductCardProps) {
   const { formattedTime, start, reset, isActive } = useCountdown(
-    product.reservationTime
+    product.reservationTime,
+    `countdown_${product._id}` // Unique storage key for each product
   );
 
   const sellerAddress = product.seller?.address
