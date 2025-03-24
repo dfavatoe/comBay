@@ -47,7 +47,7 @@ export interface ProductT {
   warranty: string;
   returnPolicy: string;
 }
-
+// REVIEW instead of picking most of the properties, you could use "Omit" and mention only the ones you don't want
 export type addProductT = Pick<
   ProductT,
   | "title"

@@ -188,6 +188,7 @@ const addProduct = async (req, res) => {
     }
     if (!existingProduct) {
       const newProductObject = new ProductModel({
+        //REVIEW the spread operator could help you to do this one line
         title: title,
         brand: brand,
         description: description,
@@ -269,7 +270,7 @@ const getProductsBySeller = async (req, res) => {
       });
       return; //If no products are found stop other responses
     }
-
+    //REVIEW if in the seller model you populate the products that seller have, why would you need to do a different request to the database, wouldn't you get the same information by populating the seller's query?
     res.status(200).json({
       message: `All products from seller ${req.params.seller} in the database and additional seller's info.`,
       amount: productsBySeller.length,
@@ -357,6 +358,7 @@ const getProductReviews = async (req, res) => {
     }
 
     //Sort the reviews array in descending order by date
+    //REVIEW this is fine. You can also get them sorted from the database directly.
     const sortedReviews = product.reviews.sort((a, b) => b.date - a.date);
 
     if (sortedReviews.length === 0) {

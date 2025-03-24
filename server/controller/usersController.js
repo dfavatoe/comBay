@@ -68,6 +68,7 @@ const registerNewUser = async (req, res) => {
   const { userName, email, password, image, role } = req.body;
   console.log("req.body :>> ", req.body);
 
+  //REVIEW thats some validation, but it could and shoudl go further, like checking trimmin blank spaces, or lower/upper case, or check the type (that you allow only strings, or numbers, etc...)
   // user name validation in the controller:
   if (userName.length < 3) {
     return res.status(400).json({
@@ -158,7 +159,7 @@ const registerNewUser = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-
+  //REVIEW inputs validation7sanitazion
   //1. find user in DB
 
   try {
@@ -245,13 +246,14 @@ const putUpdateName = async (req, res) => {
   console.log("req.user :>> ", req.user);
   const { userName } = req.body;
   if (!userName) return res.status(400).json({ error: "Name is required" });
-
+  //REVIEW input validation
   try {
     const user = await UserModel.findByIdAndUpdate(
       req.user._id,
       { userName },
       { new: true }
     );
+    // REVIEW if(!user) it wouldn't be because
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json({
       message: "Name updated successfully",
@@ -319,7 +321,7 @@ const updateAddress = async (req, res) => {
       error: "street name, street number, city and postal code are required",
     });
   }
-
+  //REVIEW the operation of getting the coordinates could be extraced to a helper function to simply this functions
   // Fetch geolocation
   const response = await fetch(
     `https://geocode.maps.co/search?street=${streetNumber}+${streetName}&city=${city}&state=${state}&postalcode=${postalcode}&country=${country}&api_key=${api_key}`

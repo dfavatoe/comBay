@@ -5,6 +5,7 @@ import { ProductsRoot, ProductT } from "../types/customTypes";
 import Grid from "../components/Grid";
 
 function Products() {
+  //REVIEW You type producst with "| null", but you initialise it with a different value. When it is gonna be null then?
   const [products, setProducts] = useState<ProductsRoot | null>({
     message: "",
     amount: 0,
@@ -38,7 +39,7 @@ function Products() {
 
   //     .catch((error) => console.error(error));
   // };
-
+  //REVIEW you could refactor your custom hook fetchData by including there the useEffect, with the url in the dependency array, leaving the component cleaner. then here you would only need to use the custom hook.
   useEffect(() => {
     fetchData("products", setProducts);
     fetchData("products/categories-list", setCategories);

@@ -12,6 +12,7 @@ import "../style/Products.css";
 function Home() {
   const { token, user, loading, setLoading } = useUserStatus();
 
+  //REVIEW This component its a bit confusing and would benefit from a refactoring: when you fecht your data you can also include a loading state, that you return when you use your hook. And then, depending of that you conditionally render the spinner or the data. Without if/else, and without the second useEffect at the bottom.
   //!try to create this in a form of a component. We need to return something in the page to set the loader off. Like a response of a fetch.
   function loader() {
     const [products, setProducts] = useState<ProductsRoot | null>({

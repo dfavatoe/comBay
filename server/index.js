@@ -70,6 +70,7 @@ async function DBConnection() {
 // Create a local scope for variables to prevent them from polluting the global scope.
 //The function is wrapped in parentheses (function() { ... }), followed by () to immediately invoke it.
 //! Why are we using IIFE here? Why it is not the same as calling "controller()"?
+//REVIEW since it doesn't create an identifiyer (we cannot call it later), it prevents polluting the namespace. They are perfect for Perfect for one-time setup code
 (async function controller() {
   await DBConnection();
   addMiddleWares();
