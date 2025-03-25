@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { ProductSpecs, ProductT } from "../types/customTypes";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import { baseUrl } from "../utils/urls";
@@ -14,8 +14,6 @@ function SingleProductPage() {
   const [productSpecs, setProductSpecs] = useState<ProductSpecs | null>(null);
 
   const { token, setUser } = useUserStatus();
-
-  const navigateTo = useNavigate();
 
   // UseRef Hook used to scroll the Page to the Reviews
   const topReviewsRef = useRef<HTMLHeadingElement | null>(null);
@@ -94,8 +92,7 @@ function SingleProductPage() {
       <h1 className="m-4" style={{ textAlign: "center" }}>
         comBay Products
       </h1>
-      {/* <p>Product ID: {productId} </p> */}
-      {/* {console.log("productSpecs", productSpecs)} */}
+
       <Container style={{ width: "auto", height: "auto", textAlign: "left" }}>
         <Row>
           {productSpecs && (

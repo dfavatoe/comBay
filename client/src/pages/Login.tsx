@@ -1,12 +1,12 @@
-import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
 import { LoginCredentials } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
-import useUserStatus from "../hooks/useUserStatus";
 
 function Login() {
-  const { user, login } = useContext(AuthContext);
+  const { user, login, emailMessage, passwordMessage } =
+    useContext(AuthContext);
 
   const [loginCredentials, setLoginCredentials] =
     useState<LoginCredentials | null>(null);
@@ -52,7 +52,9 @@ function Login() {
               id="email"
               onChange={handleLoginInputChange}
               placeholder="Enter email"
+              // required
             />
+            <p style={{ color: "red", marginTop: "2px" }}>{emailMessage}</p>
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -63,7 +65,9 @@ function Login() {
               id="password"
               onChange={handleLoginInputChange}
               placeholder="Password"
+              // required
             />
+            <p style={{ color: "red", marginTop: "2px" }}>{passwordMessage}</p>
           </Form.Group>
           {user ? (
             <>

@@ -1,5 +1,5 @@
 import { Button, Card, Col, Container, Row, Stack } from "react-bootstrap";
-import { ProductsList, ProductT } from "../types/customTypes";
+import { ProductsList } from "../types/customTypes";
 import "../style/ProductCard.css";
 import { Link } from "react-router";
 import { useCountdown } from "../hooks/useCountdown";

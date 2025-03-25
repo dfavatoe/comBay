@@ -6,7 +6,6 @@ import {
   login,
   getProfile,
   putUpdateName,
-  putUpdateAddress,
   deleteAddress,
   addProductInList,
   getProductsShoppingList,
@@ -19,7 +18,6 @@ import jwtAuth from "../middleware/jwtAuth.js";
 const userRouter = express.Router();
 
 userRouter.get("/", getAllUsers);
-// userRouter.post("/uploadimage", multerUpload.single("image"), imageUpload);
 //custom middleare to catch multer errors
 userRouter.post("/uploadimage", multerWithCustomErrors, imageUpload);
 userRouter.post("/register", registerNewUser);

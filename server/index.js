@@ -1,11 +1,9 @@
 import express from "express";
 import colors from "colors";
-import cors from "cors";
-import testRouter from "./routes/testRoute.js";
+import cors from "cors"; //http requests, get, post, put, etc use cors
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import productsRouter from "./routes/productsRoute.js";
-import sellersRouter from "./routes/sellersRoute.js";
 import userRouter from "./routes/usersRoutes.js";
 import cloudinaryConfig from "./config/cloudinaryConfig.js";
 import passportStrategy from "./config/passportConfig.js";
@@ -16,7 +14,7 @@ dotenv.config();
 
 const app = express();
 
-const port = process.env.PORT || 5100; //we use the PORT variable to let our project ready for deployment, because we don't know which PORT will be used in the server. 5100 is our port while developing the project.
+const port = process.env.PORT || 5100; //we use the PORT variable to let our project ready for deployment, because we don't know which PORT will be used in the server. 5100 is our local port while developing the project.
 
 function addMiddleWares() {
   app.use(express.json());
@@ -27,7 +25,7 @@ function addMiddleWares() {
   );
   app.use(cors());
   cloudinaryConfig();
-  passport.initialize();
+  passport.initialize(); //passport-jwt - This module lets you authenticate endpoints using a JSON web token JWT
   passport.use(passportStrategy);
 }
 
@@ -39,13 +37,12 @@ function startServer() {
 }
 
 function loadRoutes() {
-  app.use("/api", testRouter); //whatever arrives in localhost:5100/api, I'll trigger testRouter
+  //whatever arrives in localhost:5100/api, will trigger usersRoute or productsRoute
   app.use("/api/products", productsRouter);
-  app.use("/api/sellers", sellersRouter);
   app.use("/api/users", userRouter);
 }
 
-// use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+// establishes the connection to the database
 async function DBConnection() {
   try {
     const mongoDBConnection = await mongoose.connect(process.env.MONGODB_URI);
@@ -57,19 +54,9 @@ async function DBConnection() {
   }
 }
 
-//The order in which these functions are called is important
-// async function controller() {
-//   await DBConnection();
-//   addMiddleWares();
-//   loadRoutes();
-//   startServer();
-// }
-// controller();
-
 //IIFE Immidiately Invoked Function Expression
 // Create a local scope for variables to prevent them from polluting the global scope.
 //The function is wrapped in parentheses (function() { ... }), followed by () to immediately invoke it.
-//! Why are we using IIFE here? Why it is not the same as calling "controller()"?
 (async function controller() {
   await DBConnection();
   addMiddleWares();

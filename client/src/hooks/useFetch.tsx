@@ -1,4 +1,4 @@
-import { useState } from "react";
+// Generic hook to fetch data and set a useState variable
 
 const fetchData = async <T,>(endpoint: string, setter: (data: T) => void) => {
   try {

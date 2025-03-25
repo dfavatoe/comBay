@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router";
 import ProductCardList from "../components/ProductCardList";
 
 function List() {
-  const { token, error } = useUserStatus();
+  const { token } = useUserStatus();
   const [productsList, setProductsList] = useState<ProductsList[] | null>(null);
 
   const navigateTo = useNavigate();

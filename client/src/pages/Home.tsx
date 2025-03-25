@@ -10,9 +10,8 @@ import ProductCard from "../components/ProductCard";
 import "../style/Products.css";
 
 function Home() {
-  const { token, user, loading, setLoading } = useUserStatus();
+  const { token, user } = useUserStatus();
 
-  //!try to create this in a form of a component. We need to return something in the page to set the loader off. Like a response of a fetch.
   function loader() {
     const [products, setProducts] = useState<ProductsRoot | null>({
       message: "",
@@ -26,9 +25,6 @@ function Home() {
 
     useEffect(() => {
       fetchData("products", setProducts);
-      // setLoading(false);
-      // fetchAllProducts();
-      // fetchCategoriesList();
     }, []);
     if (!productsRecords) {
       return (

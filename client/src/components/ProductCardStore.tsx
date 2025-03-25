@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Row, Stack } from "react-bootstrap";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { ProductT } from "../types/customTypes";
 import "../style/ProductCard.css";
 import { Link } from "react-router";

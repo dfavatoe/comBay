@@ -24,7 +24,7 @@ function useUserStatus(): {
     return myToken;
   };
   const storedToken = getToken();
-  const [token, setToken] = useState<string | null>(storedToken); // Initialize from localStorage
+  const [token] = useState<string | null>(storedToken); // Initialize from localStorage
   const [userStatusMessage, setUserStatusMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

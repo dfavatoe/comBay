@@ -10,7 +10,6 @@ const reviewSchema = new Schema({
   email: { type: String },
 });
 
-// create the Schema for the collection
 const productsSchema = new Schema(
   {
     title: { type: String, require: true },

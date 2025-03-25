@@ -1,5 +1,5 @@
 import { Button, Card, Stack } from "react-bootstrap";
-import { ProductsList, ProductT } from "../types/customTypes";
+import { ProductT } from "../types/customTypes";
 import "../style/ProductCard.css";
 import { Link } from "react-router";
 import { MouseEvent } from "react";

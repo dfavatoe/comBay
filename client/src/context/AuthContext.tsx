@@ -23,12 +23,21 @@ type AuthContextType = {
   logout: () => void;
   setUser: (value: SetStateAction<User | null>) => void;
   setLoading: (value: SetStateAction<boolean>) => void;
+  setEmailMessage: (value: SetStateAction<string | null>) => void;
+  setPasswordMessage: (value: SetStateAction<string | null>) => void;
+  setUserNameMessage: (value: SetStateAction<string | null>) => void;
+  userNameMessage: string | null;
+  emailMessage: string | null;
+  passwordMessage: string | null;
 };
 
 //6. Define initial value of contents shared by the Context
 const contextInitialValue: AuthContextType = {
   user: null,
   loading: true,
+  emailMessage: null,
+  passwordMessage: null,
+  userNameMessage: null,
   login: () => {
     throw new Error("Context not initialized");
   },
@@ -45,6 +54,15 @@ const contextInitialValue: AuthContextType = {
   setLoading: () => {
     throw new Error("Context not initialized");
   },
+  setEmailMessage: () => {
+    throw new Error("Context not initialized");
+  },
+  setPasswordMessage: () => {
+    throw new Error("Context not initialized");
+  },
+  setUserNameMessage: () => {
+    throw new Error("Context not initialized");
+  },
 };
 
 //1. Create Context
@@ -56,27 +74,65 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const { user, setUser } = useUserStatus();
   console.log("user authcontext :>> ", user);
   const [loading, setLoading] = useState(true); //? use this or bring loading from context?
+  const [userNameMessage, setUserNameMessage] = useState<string | null>("");
+  const [emailMessage, setEmailMessage] = useState<string | null>("");
+  const [passwordMessage, setPasswordMessage] = useState<string | null>("");
 
   // register ===================================================
   const register = async (credentials: RegisterCredentials | null) => {
+    if (!credentials) {
+      console.log("No empty forms allowed.");
+      alert("Please complete all required fields.");
+      return;
+    }
+
+    const { userName, email, password, image, role } = credentials;
+    let hasError = false;
+
+    if (!userName) {
+      console.log("Username is required.");
+      setUserNameMessage("Please enter a username.");
+      hasError = true;
+    }
+
+    if (!email) {
+      console.log("Email is required.");
+      setEmailMessage("Please enter an email address.");
+      hasError = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      console.log("Invalid email format.");
+      setEmailMessage("Please enter a valid email.");
+      hasError = true;
+    }
+
+    if (!password) {
+      console.log("Password is required.");
+      setPasswordMessage("Please enter a password.");
+      hasError = true;
+    } else if (password.length < 6) {
+      console.log("Password should be at least 6 characters.");
+      setPasswordMessage("Password should be at least 6 characters.");
+      hasError = true;
+    }
+
+    if (!role) {
+      console.log("Role is required.");
+      alert("Please select a role.");
+      hasError = true;
+    }
+
+    // Stop execution if there are validation errors
+    if (hasError) return;
+
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
     const urlencoded = new URLSearchParams();
-    if (credentials) {
-      urlencoded.append("userName", credentials.userName);
-      urlencoded.append("email", credentials.email);
-      if (credentials.password.length < 6) {
-        alert("Password should be at least 6 characters.");
-      } else {
-        urlencoded.append("password", credentials.password);
-      }
-      urlencoded.append("image", credentials.image);
-      urlencoded.append("role", credentials.role);
-    } else {
-      console.log("No empty forms allowed.");
-      alert("Please, complete the form.");
-    }
+    urlencoded.append("userName", userName);
+    urlencoded.append("email", email);
+    urlencoded.append("password", password);
+    urlencoded.append("image", image);
+    urlencoded.append("role", role);
 
     const requestOptionsUser = {
       method: "POST",
@@ -113,13 +169,34 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
     const urlencoded = new URLSearchParams();
-    if (credentials) {
-      urlencoded.append("email", credentials.email);
-      urlencoded.append("password", credentials.password);
-    } else {
+    if (!credentials) {
       console.log("No empty forms allowed.");
-      alert("Please, complete the login form.");
+      alert("Please complete all required fields.");
+      return;
     }
+
+    const { email, password } = credentials;
+
+    let hasError = false;
+
+    if (!email) {
+      console.log("Email is required.");
+      setEmailMessage("Please, complete the e-mail field.");
+      hasError = true;
+    }
+
+    if (!password) {
+      console.log("Password is required.");
+      setPasswordMessage("Please, complete the password field.");
+      hasError = true;
+    }
+
+    // Stop execution if there are validation errors
+    if (hasError) return;
+
+    // Proceed to append values
+    urlencoded.append("email", email);
+    urlencoded.append("password", password);
 
     const requestOptions = {
       method: "POST",
@@ -167,6 +244,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         register,
         loading,
         setLoading,
+        emailMessage,
+        passwordMessage,
+        setEmailMessage,
+        setPasswordMessage,
+        setUserNameMessage,
+        userNameMessage,
       }}
     >
       {children}

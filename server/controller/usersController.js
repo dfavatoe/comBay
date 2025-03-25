@@ -108,7 +108,7 @@ const registerNewUser = async (req, res) => {
           userName: userName,
           email: email,
           password: hashedPassword,
-          //! Generic image is not working. Check possible problem in the form field in the frontend. Works just with Postman
+          // Generic image is not working. Check possible problem in the form field in the frontend. Works just with Postman
           image: image
             ? image
             : "https://img.freepik.com/vecteurs-libre/homme-affaires-caractere-avatar-isole_24877-60111.jpg",

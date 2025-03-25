@@ -3,35 +3,21 @@ import {
   FormEvent,
   MouseEvent,
   useContext,
-  useEffect,
   useState,
 } from "react";
-import {
-  Button,
-  Container,
-  Form,
-  Image,
-  InputGroup,
-  Spinner,
-} from "react-bootstrap";
+import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
 import {
   ImageUploadOkResponse,
   RegisterCredentials,
 } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
-import imagePlaceholder from "../assets/avatar_placeholder.jpg";
-import useUserStatus from "../hooks/useUserStatus";
 
 function SignUp() {
-  const { user, register } = useContext(AuthContext);
+  const { user, register, userNameMessage, passwordMessage, emailMessage } =
+    useContext(AuthContext);
   const [newUser, setNewUser] = useState<RegisterCredentials | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  // const { token, userStatusMessage } = useUserStatus();
-  // const [loading, setLoading] = useState(false);
-
-  // const navigateTo = useNavigate();
 
   const handleAttachFile = (e: ChangeEvent<HTMLInputElement>) => {
     console.log("e.target :>> ", e);
@@ -93,60 +79,7 @@ function SignUp() {
     console.log("newUser :>> ", newUser);
 
     register(newUser);
-
-    // const myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    // const urlencoded = new URLSearchParams();
-    // if (newUser) {
-    //   urlencoded.append("userName", newUser.userName);
-    //   urlencoded.append("email", newUser.email);
-    //   if (newUser.password.length < 4) {
-    //     alert("Password should be at least 4 characters.");
-    //   } else {
-    //     urlencoded.append("password", newUser.password);
-    //   }
-    //   urlencoded.append("image", newUser.image);
-    //   urlencoded.append("role", newUser.role);
-    // } else {
-    //   console.log("No empty forms allowed.");
-    //   alert("Please, complete the form.");
-    // }
-
-    // const requestOptionsUser = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: urlencoded,
-    // };
-
-    // try {
-    //   const response = await fetch(
-    //     "http://localhost:5100/api/users/register",
-    //     requestOptionsUser
-    //   );
-    //   const result = (await response.json()) as RegisterOkResponse;
-    //   console.log(result.message);
-    //   //insert alert successful login
-    //   setUser(result.user); //bring this user to the userContext
-    // } catch (error) {
-    //   console.log("error :>> ", error);
-    // }
   };
-
-  //! fix loading/loader Spinner
-  // useEffect(() => {
-  //   if (token) {
-  //     console.log("%c user is logged in", "color:green");
-  //     setLoading(true);
-  //     alert(userStatusMessage);
-  //     setLoading(false);
-  //   } else {
-  //     console.log("%c user logget out", "color:red");
-  //     setLoading(true);
-  //     alert(userStatusMessage);
-  //     setLoading(false);
-  //   }
-  // }, [token]);
 
   return (
     <>
@@ -155,12 +88,7 @@ function SignUp() {
           Sign Up
         </h1>
         <br />
-        {/* {loading && (
-          <div>
-            <Spinner animation="border" variant="warning" />
-            <p>Loading...</p>
-          </div>
-        )} */}
+
         {user ? (
           <div>
             <h2>Welcome {user.userName}!</h2>
@@ -193,6 +121,7 @@ function SignUp() {
               placeholder="Enter a user name"
               onChange={handleRegisterInputChange}
             />
+            <p style={{ color: "red", marginTop: "2px" }}>{userNameMessage}</p>
           </Form.Group>
 
           <Form.Group className="mb-3 justify-content-center">
@@ -206,6 +135,7 @@ function SignUp() {
               placeholder="Enter your email"
               onChange={handleRegisterInputChange}
             />
+            <p style={{ color: "red", marginTop: "2px" }}>{emailMessage}</p>
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -219,6 +149,7 @@ function SignUp() {
               placeholder="Choose a password"
               onChange={handleRegisterInputChange}
             />
+            <p style={{ color: "red", marginTop: "2px" }}>{passwordMessage}</p>
           </Form.Group>
 
           <Form.Group>
@@ -271,41 +202,10 @@ function SignUp() {
             />
           </Form.Group>
 
-          {/* {user ? (
-            <>
-              <p>
-                Click on the Products button to start your shopping experience.
-              </p>
-              <Button
-                onClick={() => {
-                  navigateTo("/products");
-                }}
-                type="button"
-                className="mb-4"
-                variant="warning"
-              >
-                Products
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button type="submit" className="mb-4" variant="warning">
-                Register
-              </Button>
-              <div>Do you already have an account? Click here to login.</div>
-              <Link to={"/login"}>Login</Link>
-            </>
-          )} */}
           <Button type="submit" className="mb-4" variant="warning">
             Register
           </Button>
         </Form>
-
-        {/* <ModalAlert
-          showAlert={showAlert}
-          alertText={alertText}
-          setShowAlert={setShowAlert}
-        /> */}
       </Container>
     </>
   );

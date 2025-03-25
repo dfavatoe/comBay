@@ -21,23 +21,21 @@ import { Link } from "react-router";
 import { baseUrl } from "../utils/urls";
 
 function Account() {
-  const { token, userStatusMessage, user, loading, setLoading, setUser } =
-    useUserStatus();
+  const { token, user, setLoading, setUser } = useUserStatus();
   const [newUserName, setNewUserName] = useState("");
-  const [newAddress, setNewAddress] = useState("");
   const [completeAddress, setCompleteAddress] =
     useState<CompleteAddress | null>(null);
   const [messageName, setMessageName] = useState("");
-  const [messageAddress, setMessageAddress] = useState("");
   const [messageCompleteAddress, setMessageCompleteAddress] = useState("");
 
-  //?===========================================================
+  //===========================================================
 
   const [newProduct, setNewProduct] = useState<addProductT | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | string>("");
 
   //?===========================================================
+  //============================================================
 
   const handleGetUserProfile = async () => {
     // console.log("working");
@@ -78,12 +76,6 @@ function Account() {
     console.log(e.target.value);
     setNewUserName(e.target.value);
     console.log("newUserName :>> ", newUserName);
-  };
-
-  const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    setNewAddress(e.target.value);
-    console.log("newAddress :>> ", newAddress);
   };
 
   //======================================================================
@@ -231,75 +223,18 @@ function Account() {
   //?======================================================================
   //?======================================================================
 
-  // const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value, type } = e.target;
-
-  //   setNewProduct((prev) => {
-  //     if (!prev) return null; // Ensure `prev` is not null
-
-  //     let updatedValue: string | number | boolean = value;
-
-  //     // Convert types accordingly
-  //     if (type === "number") {
-  //       updatedValue = value ? Number(value) : 0; // Ensure a valid number
-  //     } else if (type === "switch") {
-  //       updatedValue = e.target.checked; // Handle switch inputs
-  //     }
-
-  //     // Handle nested dimensions object
-  //     if (name.startsWith("dimensions.")) {
-  //       const dimensionKey = name.split(".")[1]; // Extract "width", "height", or "depth"
-  //       return {
-  //         ...prev,
-  //         dimensions: {
-  //           ...prev.dimensions,
-  //           [dimensionKey]: updatedValue as number, // Ensure it's a number
-  //         },
-  //       };
-  //     }
-
-  //     return {
-  //       ...prev,
-  //       [name]: updatedValue,
-  //     };
-  //   });
-  // };
-
-  // const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   console.log("e.target.name :>> ", e.target.name);
-  //   console.log("e.target.value :>> ", e.target.value);
-  //   const { name, value, type } = e.target;
-  //   const parsedValue = type === "number" ? String(value) : value;
-
-  //   setNewProduct((prev) => ({
-  //     ...prev!,
-  //     dimensions: {
-  //       ...prev?.dimensions,
-  //       [name]: parsedValue, // Correctly update width, height, or depth
-  //     },
-  //   }));
-  // };
-
-  //converting price to number
+  //add data to newProduct, converting the necessary values to number
   const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
 
     setNewProduct((prev) => ({
       ...prev!,
       [name]: type === "number" ? Number(value) : value, // Convert price to number
-      seller: user!._id, // Assign the entire user object instead of just user.id
+      seller: user!._id, // Assign the entire user object instead of just user.id string
     }));
   };
 
-  // const handleNewProductInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   console.log("e.target.name :>> ", e.target.name);
-  //   console.log("e.target.value :>> ", e.target.value);
-  //   setNewProduct({ ...newProduct!, [e.target.name]: e.target.value });
-  // };
-
-  // const handleAddSeller = () => {
-  //   setNewProduct({ ...newProduct!.seller = user });
-  // };
+  //?======================================================================
 
   const submitNewProduct = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -328,13 +263,11 @@ function Account() {
     console.log("add product result :>> ", result);
 
     if (response.ok) {
-      // setUser(result.user);
       console.log("Product added successfully!");
       alert("Product successfully added!");
       setNewProduct(null);
     } else {
-      // setMessageProduct(result.error || "Failed to update address.");
-      console.log(result.error || "Failed to update address.");
+      console.log(result.error || "Failed to add the product.");
     }
   };
 
@@ -389,8 +322,10 @@ function Account() {
 
   const handleReserveButtonChange = (e: ChangeEvent<HTMLInputElement>) => {
     console.log("e.target.checked :>> ", e.target.checked);
-    setNewProduct({ ...newProduct!, reservation: e.target.checked });
+    setNewProduct({ ...newProduct!, reservation: e.target.checked }); //sets reservation to true or false
   };
+
+  //?====================================================================
 
   return (
     <>

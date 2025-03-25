@@ -29,21 +29,9 @@ const usersSchema = Schema(
     password: {
       type: String,
       require: true,
-      // minLength: [6, "Must be at least 6"],
     },
 
     address: addressSchema,
-    // address: { type: String, default: "" },
-
-    // streetName: { type: String, default: "", require: true },
-    // streetNumber: { type: String, default: "", require: true },
-    // city: { type: String, default: "", require: true },
-    // state: { type: String, default: "", require: false },
-    // country: { type: String, default: "", require: false },
-    // postalcode: { type: String, default: "", require: true },
-
-    // latitude: Number,
-    // longitude: Number,
 
     image: {
       type: String,
@@ -52,10 +40,10 @@ const usersSchema = Schema(
       default:
         "https://img.freepik.com/vecteurs-libre/homme-affaires-caractere-avatar-isole_24877-60111.jpg",
     },
-    // cart: { type: Schema.Types.ObjectId, ref: "Cart" },
+
     role: {
       type: String,
-      enum: ["buyer", "seller"],
+      enum: ["buyer", "seller"], //a set of related values with descriptive names, often used to represent fixed options
       default: "buyer",
       require: true,
     }, // Role-based access

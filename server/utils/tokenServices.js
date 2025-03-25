@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 
 const generateToken = (userId, userRole) => {
-  // const payload = { sub: userId, roles: ["buyer", "seller"] }; //check if roles is really necessary at this point.
   const payload = { sub: userId, role: userRole };
 
   const options = {
