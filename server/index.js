@@ -24,30 +24,7 @@ function addMiddleWares() {
       extended: true,
     })
   );
-  // app.use(cors());
-  //Using CORS options to secure the origin of the requests
-  const allowedOrigins = [
-    "http://localhost:5100",
-    "http://localhost:5173",
-    "http://combay.vercel.app",
-    "https://combay.vercel.app",
-  ];
-  const corsOptions = {
-    origin: function (origin, callback) {
-      // !origin will allow to accept direct calls to the api , with no heading, e.g. http://localhost:5001/api/cities/all
-      //origin will allow requests with no header (origin===undefined), the direct ones (using directly the server url). This solution will now accept only request from those 2 origins, or with no header.
-      //Accepting requests with no header might pose a security threat ...research how convinient the solution is.
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        // if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  };
-  app.use(cors(corsOptions));
-
+  app.use(cors());
   cloudinaryConfig();
   passport.initialize(); //passport-jwt - This module lets you authenticate endpoints using a JSON web token JWT
   passport.use(passportStrategy);
