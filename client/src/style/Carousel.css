@@ -1,0 +1,49 @@
+.scrollmenu {
+  position: relative; /* Ensures child absolute elements (buttons) position correctly */
+  display: flex;
+  align-items: center;
+  overflow: hidden; /* Prevents unwanted scrolling outside bounds */
+  width: 100%;
+}
+
+.scroll-container {
+  text-wrap: wrap;
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 16px;
+  padding: 10px 0;
+  scroll-snap-type: x mandatory; /* Helps with smooth scrolling */
+}
+
+/* Ensure smooth scrolling */
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Arrow buttons */
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8); /* Slightly transparent */
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease;
+}
+
+.carousel-button:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.carousel-button.left {
+  left: 10px;
+}
+
+.carousel-button.right {
+  right: 10px;
+}

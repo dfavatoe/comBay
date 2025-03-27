@@ -11,28 +11,41 @@ body {
 
 #video-container {
   position: relative;
-  padding: 0;
   width: 100vw;
-  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: auto;
   overflow: hidden;
 }
 
 #video {
   width: 100%;
   height: auto;
-  object-fit: fill;
-  z-index: 0;
+  max-height: 75vh;
+  object-fit: contain;
+  position: relative;
+  margin-bottom: 2rem;
 }
 
 #title-container {
   position: absolute;
   top: 50%;
-  left: 0%;
-  transform: translate(0%, -90%);
-  z-index: 5; /* Ensure it's above text animation */
-  width: 100%;
-  padding-inline: 5%;
+  width: 90%; /* Ensures it stays inside the video */
+  max-width: 1100px; /* Prevents it from stretching too much on large screens */
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   text-align: right;
+  z-index: 5;
+  padding-right: 5%; /* Keeps text inside the video */
+}
+
+#title-container h1,
+#title-container p {
+  margin: 0;
 }
 
 h1 {
@@ -86,22 +99,26 @@ h1 {
   text-align: right;
 }
 
-.text-container {
+#text-container {
   position: absolute;
-  opacity: 70%;
-  top: 0%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* color: rgb(244, 180, 60); */
+  width: 90%;
+  height: 90%;
+  top: -50%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transform: translateY(-10%);
+}
+
+.text-container {
   color: white;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
   background: transparent;
-  width: 100vw;
-  height: 100vh;
   font-weight: bold;
   font-size: 36px;
-  overflow: hidden;
-  z-index: 1;
+  text-align: center;
 }
 
 .text-container > div {
@@ -168,5 +185,28 @@ h1 {
   100% {
     transform: scale3d(4, 4, 1) rotate(0.02deg);
     filter: blur(10px);
+  }
+}
+
+@media (max-width: 790px) {
+  #text-container {
+    top: -100%;
+    transform: translateY(0);
+  }
+
+  .text-container {
+    font-size: 18px;
+  }
+}
+
+/* Media query for small screens */
+@media (max-width: 500px) {
+  #text-container {
+    top: -200%;
+    transform: translateY(0);
+  }
+
+  .text-container {
+    font-size: 14px;
   }
 }

@@ -32,6 +32,8 @@ function Reviews({ productId }: ReviewsProp) {
   const [reviewText, setReviewText] = useState<string>("");
   const [reviewRating, setReviewRating] = useState<number>(0);
   const [reviewStars, setReviewStars] = useState<string>("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
 
   const getReviews = async () => {
     if (productId) {
@@ -107,15 +109,19 @@ function Reviews({ productId }: ReviewsProp) {
   const submitNewReview = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); //prevent submit when refreshing page
     if (!user) {
-      alert("Please login first.");
+      setAlertText("Please login first to make a review.");
+      setShowAlert(true);
+
       return;
     }
     // define a new Review object
     if (!reviewText || !reviewRating) {
-      console.log("Fill in the review and choose the rating.");
-      alert(
-        "Please, fill in a review and move the rating bar to choose the number of stars."
+      console.log("Write the review and choose the rating.");
+      setAlertText(
+        "Please, write a review and move the rating bar to choose the number of stars."
       );
+      setShowAlert(true);
+
       return;
     }
 

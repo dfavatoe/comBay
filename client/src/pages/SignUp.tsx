@@ -11,10 +11,19 @@ import {
   RegisterCredentials,
 } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
+import ModalAlert from "../components/ModalAlert";
 
 function SignUp() {
-  const { user, register, userNameMessage, passwordMessage, emailMessage } =
-    useContext(AuthContext);
+  const {
+    user,
+    register,
+    userNameMessage,
+    passwordMessage,
+    emailMessage,
+    showAlert,
+    setShowAlert,
+    alertText,
+  } = useContext(AuthContext);
   const [newUser, setNewUser] = useState<RegisterCredentials | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -182,7 +191,7 @@ function SignUp() {
             </Form.Group>
           </Form.Group>
 
-          <Form.Group className="mb-4">
+          <Form.Group className="mb-2">
             <Form.Label className="d-block">Sign up as:</Form.Label>
             <Form.Check
               inline
@@ -201,11 +210,21 @@ function SignUp() {
               onChange={handleRoleButtonChange}
             />
           </Form.Group>
+          <Form.Text className="d-block mb-4" muted>
+            Selecting 'Buyer' allows you to browse and purchase products. <br />{" "}
+            As a 'Seller' you can register your physical store and list products
+            on our online platform.
+          </Form.Text>
 
           <Button type="submit" className="mb-4" variant="warning">
             Register
           </Button>
         </Form>
+        <ModalAlert
+          showAlert={showAlert}
+          alertText={alertText}
+          setShowAlert={setShowAlert}
+        />
       </Container>
     </>
   );

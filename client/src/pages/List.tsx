@@ -7,6 +7,7 @@ import { Button, Container, Row } from "react-bootstrap";
 
 import { Link, useNavigate } from "react-router";
 import ProductCardList from "../components/ProductCardList";
+import ModalAlert from "../components/ModalAlert";
 
 function List() {
   const { token } = useUserStatus();
@@ -38,7 +39,6 @@ function List() {
       console.log("result :>> ", result);
       if (result.amount === 0) {
         console.log("The list is empty");
-        alert("The list is empty");
       }
       setProductsList(result.records);
     } catch (error) {
@@ -74,11 +74,11 @@ function List() {
                 <Link className="d-inline" to={"/signup"}>
                   Sign up{" "}
                 </Link>
-                <span>or </span>
+                <span>, </span>
                 <Link className="d-inline" to={"/login"}>
                   log in{" "}
                 </Link>
-                to
+                or
               </div>
               <Button
                 onClick={() => {

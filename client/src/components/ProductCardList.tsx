@@ -59,7 +59,6 @@ function ProductCardList({ product }: ProductCardProps) {
                     className="mt-auto mx-auto"
                     style={{ maxWidth: "130px" }}
                     variant="warning"
-                    // onClick={handleAddProductToList}
                     onClick={start}
                     disabled={isActive}
                   >
@@ -97,7 +96,7 @@ function ProductCardList({ product }: ProductCardProps) {
                       className="mt-auto mx-auto"
                       style={{ maxWidth: "130px" }}
                       variant="primary"
-                      // onClick={handleAddProductToList}
+                      // onClick={handle}
                       onClick={reset}
                     >
                       Cancel

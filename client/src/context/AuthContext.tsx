@@ -1,4 +1,10 @@
-import { createContext, ReactNode, SetStateAction, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useState,
+} from "react";
 import {
   LoginCredentials,
   LoginOkResponse,
@@ -29,6 +35,9 @@ type AuthContextType = {
   userNameMessage: string | null;
   emailMessage: string | null;
   passwordMessage: string | null;
+  showAlert: boolean;
+  setShowAlert: Dispatch<React.SetStateAction<boolean>>;
+  alertText: string;
 };
 
 //6. Define initial value of contents shared by the Context
@@ -38,6 +47,8 @@ const contextInitialValue: AuthContextType = {
   emailMessage: null,
   passwordMessage: null,
   userNameMessage: null,
+  showAlert: false,
+  alertText: "",
   login: () => {
     throw new Error("Context not initialized");
   },
@@ -63,6 +74,7 @@ const contextInitialValue: AuthContextType = {
   setUserNameMessage: () => {
     throw new Error("Context not initialized");
   },
+  setShowAlert: () => false,
 };
 
 //1. Create Context
@@ -77,12 +89,15 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [userNameMessage, setUserNameMessage] = useState<string | null>("");
   const [emailMessage, setEmailMessage] = useState<string | null>("");
   const [passwordMessage, setPasswordMessage] = useState<string | null>("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
 
   // register ===================================================
   const register = async (credentials: RegisterCredentials | null) => {
     if (!credentials) {
-      console.log("No empty forms allowed.");
-      alert("Please complete all required fields.");
+      console.log("Complete the form.");
+      setAlertText("Please complete the form.");
+      setShowAlert(true);
       return;
     }
 
@@ -117,7 +132,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
     if (!role) {
       console.log("Role is required.");
-      alert("Please select a role.");
+      setAlertText("Please select a role.");
+      setShowAlert(true);
       hasError = true;
     }
 
@@ -145,9 +161,24 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         `${baseUrl}/api/users/register`,
         requestOptionsUser
       );
-      const result = (await response.json()) as RegisterOkResponse;
+
+      const result = (await response.json()) as RegisterOkResponse; // Parse JSON response
+
+      if (response.status === 400) {
+        setAlertText(result.message || "Email already exists in the database.");
+        setShowAlert(true);
+        return;
+      }
+
+      if (response.status === 500) {
+        setAlertText(
+          "An internal server error occurred. Please try again later."
+        );
+        setShowAlert(true);
+        return;
+      }
+
       console.log(result.message);
-      // alert successful registration
       if (!result.token) {
         throw new Error("Try to register again later");
       }
@@ -155,10 +186,17 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         //store the token in the local storage
         localStorage.setItem("token", result.token);
         console.log("%c User is logged in", "color: green");
+        setAlertText("You were successfully registered!");
+        setShowAlert(true);
         setUser(result.user);
+        setUserNameMessage(null);
+        setEmailMessage(null);
+        setPasswordMessage(null);
       }
     } catch (error) {
       console.log("error :>> ", error);
+      setAlertText(`Something went wrong. ${error}.`);
+      setShowAlert(true);
       setUser(null);
     }
   };
@@ -171,7 +209,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const urlencoded = new URLSearchParams();
     if (!credentials) {
       console.log("No empty forms allowed.");
-      alert("Please complete all required fields.");
+      setAlertText("Please complete all required fields.");
+      setShowAlert(true);
       return;
     }
 
@@ -181,13 +220,21 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
     if (!email) {
       console.log("Email is required.");
-      setEmailMessage("Please, complete the e-mail field.");
+      setEmailMessage("Please enter an email address.");
+      hasError = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      console.log("Invalid email format.");
+      setEmailMessage("Please enter a valid email.");
       hasError = true;
     }
 
     if (!password) {
       console.log("Password is required.");
-      setPasswordMessage("Please, complete the password field.");
+      setPasswordMessage("Please enter a password.");
+      hasError = true;
+    } else if (password.length < 6) {
+      console.log("Password should be at least 6 characters.");
+      setPasswordMessage("Password should be at least 6 characters.");
       hasError = true;
     }
 
@@ -211,18 +258,26 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       );
       const result = (await response.json()) as LoginOkResponse;
       console.log("result :>> ", result);
-      // alert successful login
+      setAlertText("Successful login!");
+      setShowAlert(true);
+      setEmailMessage(null);
+      setPasswordMessage(null);
       console.log(result.message);
+
       if (!result.token) {
-        throw new Error("Unable to retrieve the token"); //! Try to be more specific, handling credentials,etc
+        setAlertText("Unable to retrieve authorization token.");
+        setShowAlert(true);
+        throw new Error("Unable to retrieve the token");
       }
       if (result.token) {
         //store the token in local storage
         localStorage.setItem("token", result.token);
         setUser(result.user);
-        console.log("%c User is logged in", "color: blue");
+        console.log("%c User is logged in", "color: green");
       }
     } catch (error) {
+      setAlertText(`Something went wrong. ${error}.`);
+      setShowAlert(true);
       console.log("error :>> ", error);
     }
   };
@@ -230,6 +285,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   // logout ====================================================
   const logout = () => {
     localStorage.removeItem("token");
+    setAlertText("You were logged out");
+    setShowAlert(true);
     setUser(null);
     console.log("%c User is logged out", "color: red");
   };
@@ -250,6 +307,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         setPasswordMessage,
         setUserNameMessage,
         userNameMessage,
+        showAlert,
+        setShowAlert,
+        alertText,
       }}
     >
       {children}

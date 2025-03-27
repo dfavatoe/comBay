@@ -19,14 +19,18 @@ import {
 import useUserStatus from "../hooks/useUserStatus";
 import { Link } from "react-router";
 import { baseUrl } from "../utils/urls";
+import ModalAlert from "../components/ModalAlert";
 
 function Account() {
   const { token, user, setLoading, setUser } = useUserStatus();
+
   const [newUserName, setNewUserName] = useState("");
   const [completeAddress, setCompleteAddress] =
     useState<CompleteAddress | null>(null);
   const [messageName, setMessageName] = useState("");
   const [messageCompleteAddress, setMessageCompleteAddress] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
 
   //===========================================================
 
@@ -85,7 +89,8 @@ function Account() {
 
     if (!token) {
       console.log("user has to log in first");
-      alert("You have to log in first");
+      setAlertText("You have to log in first.");
+      setShowAlert(true);
       return;
     }
     const myHeaders = new Headers();
@@ -98,7 +103,8 @@ function Account() {
       urlencoded.append("userName", newUserName);
     } else {
       console.log("No empty forms allowed.");
-      alert("Complete the field name.");
+      setAlertText("Complete the field name.");
+      setShowAlert(true);
     }
 
     const requestOptions = {
@@ -142,7 +148,8 @@ function Account() {
     e.preventDefault();
     if (!token) {
       console.log("user has to log in first");
-      alert("You have to log in first");
+      setAlertText("You have to log in first.");
+      setShowAlert(true);
       return;
     }
     const myHeaders = new Headers();
@@ -158,8 +165,9 @@ function Account() {
       urlencoded.append("state", completeAddress.state!);
       urlencoded.append("postalcode", completeAddress.postalcode);
     } else {
-      console.log("Complete the mandatory fields");
-      alert("Complete the mandatory fields");
+      console.log("Complete all fields");
+      setAlertText("Complete all fields");
+      setShowAlert(true);
     }
 
     const requestOptions = {
@@ -194,7 +202,8 @@ function Account() {
 
     if (!token) {
       console.log("User has to log in first");
-      alert("You have to log in first");
+      setAlertText("You have to log in first.");
+      setShowAlert(true);
     }
 
     const requestOptions = {
@@ -241,7 +250,8 @@ function Account() {
 
     if (!token) {
       console.log("user has to log in first");
-      alert("You have to log in first");
+      setAlertText("You have to log in first.");
+      setShowAlert(true);
       return;
     }
 
@@ -264,7 +274,8 @@ function Account() {
 
     if (response.ok) {
       console.log("Product added successfully!");
-      alert("Product successfully added!");
+      setAlertText("Product successfully added!");
+      setShowAlert(true);
       setNewProduct(null);
     } else {
       console.log(result.error || "Failed to add the product.");
@@ -762,6 +773,11 @@ function Account() {
           <Link to={"/signup"}>Sign Up</Link>
         </>
       )}
+      <ModalAlert
+        showAlert={showAlert}
+        alertText={alertText}
+        setShowAlert={setShowAlert}
+      />
     </>
   );
 }

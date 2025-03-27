@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import useUserStatus from "../hooks/useUserStatus";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
-import video from "../assets/comBay_hero.mp4";
+import video from "../assets/comBay_extra_small.mp4";
 import "../style/Home.css";
 import { ProductsRoot, ProductT } from "../types/customTypes";
 import { fetchData } from "../hooks/useFetch";
-import ProductCard from "../components/ProductCard";
 import "../style/Products.css";
+import ProductCarousel from "../components/ProductCarousel";
 
 function Home() {
   const { token, user } = useUserStatus();
@@ -36,7 +36,11 @@ function Home() {
     } else {
       return (
         <>
-          <Container className="m-0 p-0" style={{ maxWidth: "100%" }}>
+          <Container
+            id="home-container"
+            className="m-0 p-0"
+            style={{ maxWidth: "100%" }}
+          >
             <Container id="video-container" fluid>
               <video
                 className="mb-2"
@@ -73,7 +77,6 @@ function Home() {
             {user ? (
               <>
                 <h6>Hello {user.userName}!</h6>
-                {/* <p>{user._id}</p> */}
               </>
             ) : (
               <>
@@ -96,15 +99,8 @@ function Home() {
           <div className="second-header m-4" style={{ textAlign: "center" }}>
             Featured Products
           </div>
-          {/* Scroll Menu */}
-          <div className="scrollmenu my-4">
-            <div className="scroll-container" style={{ textWrap: "wrap" }}>
-              {productsRecords &&
-                productsRecords.map((product) => {
-                  return <ProductCard key={product._id} product={product} />;
-                })}
-            </div>
-          </div>
+          {/* Products Carousel */}
+          <ProductCarousel productsRecords={productsRecords} />
         </>
       );
     }

@@ -84,7 +84,7 @@ const registerNewUser = async (req, res) => {
 
   try {
     //Check if user exists in database
-    const existingUser = await UserModel.findOne({ emai: email });
+    const existingUser = await UserModel.findOne({ email: email });
 
     if (existingUser) {
       return res.status(400).json({

@@ -3,10 +3,18 @@ import { Button, Container, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
 import { LoginCredentials } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
+import ModalAlert from "../components/ModalAlert";
 
 function Login() {
-  const { user, login, emailMessage, passwordMessage } =
-    useContext(AuthContext);
+  const {
+    user,
+    login,
+    emailMessage,
+    passwordMessage,
+    showAlert,
+    setShowAlert,
+    alertText,
+  } = useContext(AuthContext);
 
   const [loginCredentials, setLoginCredentials] =
     useState<LoginCredentials | null>(null);
@@ -31,7 +39,7 @@ function Login() {
 
   return (
     <>
-      <Container>
+      <Container style={{ maxWidth: "600px" }}>
         <h1 className="m-4" style={{ textAlign: "center" }}>
           Login
         </h1>
@@ -101,11 +109,11 @@ function Login() {
             </>
           )}
         </Form>
-        {/* <ModalAlert
+        <ModalAlert
           showAlert={showAlert}
           alertText={alertText}
           setShowAlert={setShowAlert}
-        /> */}
+        />
       </Container>
     </>
   );
