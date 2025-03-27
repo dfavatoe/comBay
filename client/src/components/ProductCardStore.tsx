@@ -2,11 +2,12 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { ProductT } from "../types/customTypes";
 import "../style/ProductCard.css";
 import { Link } from "react-router";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { addProductToList } from "../utils/addProductToList";
 import { baseUrl } from "../utils/urls";
 import useUserStatus from "../hooks/useUserStatus";
 import "../style/styles.css";
+import ModalAlert from "./ModalAlert";
 
 type ProductCardProps = {
   product: ProductT;
@@ -14,6 +15,8 @@ type ProductCardProps = {
 
 function ProductCardStore({ product }: ProductCardProps) {
   const { token, setUser } = useUserStatus();
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
 
   const countStars = (productRating: number | null) => {
     if (productRating) {
@@ -34,6 +37,8 @@ function ProductCardStore({ product }: ProductCardProps) {
       token,
       baseUrl,
       setUser,
+      setShowAlert,
+      setAlertText,
     });
   };
 
@@ -109,6 +114,11 @@ function ProductCardStore({ product }: ProductCardProps) {
           </Row>
         </Card.Body>
       </Card>
+      <ModalAlert
+        showAlert={showAlert}
+        alertText={alertText}
+        setShowAlert={setShowAlert}
+      />
     </Container>
   );
 }

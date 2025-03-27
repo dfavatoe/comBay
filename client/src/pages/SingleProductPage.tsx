@@ -8,12 +8,16 @@ import { addProductToList } from "../utils/addProductToList";
 import useUserStatus from "../hooks/useUserStatus";
 import Reviews from "../components/Reviews";
 import "../style/styles.css";
+import ModalAlert from "../components/ModalAlert";
 
 function SingleProductPage() {
   //State Hooks
   const [productSpecs, setProductSpecs] = useState<ProductSpecs | null>(null);
 
   const { token, setUser } = useUserStatus();
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
 
   // UseRef Hook used to scroll the Page to the Reviews
   const topReviewsRef = useRef<HTMLHeadingElement | null>(null);
@@ -78,6 +82,8 @@ function SingleProductPage() {
       token,
       baseUrl,
       setUser,
+      setShowAlert,
+      setAlertText,
     });
   };
 
@@ -176,6 +182,11 @@ function SingleProductPage() {
         <h4 ref={topReviewsRef}>Top Reviews:</h4>
 
         <Reviews productId={productId!} />
+        <ModalAlert
+          showAlert={showAlert}
+          alertText={alertText}
+          setShowAlert={setShowAlert}
+        />
       </Container>
     </div>
   );
