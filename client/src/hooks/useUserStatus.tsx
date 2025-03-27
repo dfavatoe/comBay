@@ -1,5 +1,6 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { GetProfileOfResponse, User } from "../types/customTypes";
+import { baseUrl } from "../utils/urls";
 
 function useUserStatus(): {
   token: string | null;
@@ -31,7 +32,7 @@ function useUserStatus(): {
 
   const getUserProfile = async () => {
     try {
-      const response = await fetch("http://localhost:5100/api/users/profile/", {
+      const response = await fetch(`${baseUrl}/api/users/profile/`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });

@@ -12,6 +12,7 @@ import {
 } from "../types/customTypes";
 import { AuthContext } from "../context/AuthContext";
 import ModalAlert from "../components/ModalAlert";
+import { baseUrl } from "../utils/urls";
 
 function SignUp() {
   const {
@@ -51,7 +52,7 @@ function SignUp() {
 
     try {
       const response = await fetch(
-        "http://localhost:5100/api/users/uploadimage",
+        `${baseUrl}/api/users/uploadimage`,
         requestOptions
       );
 

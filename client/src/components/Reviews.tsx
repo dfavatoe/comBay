@@ -40,7 +40,7 @@ function Reviews({ productId }: ReviewsProp) {
     if (productId) {
       try {
         const response = await fetch(
-          `http://localhost:5100/api/products/review/${productId}`,
+          `${baseUrl}/api/products/review/${productId}`,
           { method: "GET" }
         );
         console.log("response reviews :>> ", response);

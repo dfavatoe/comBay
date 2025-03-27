@@ -1,8 +1,10 @@
 // Generic hook to fetch data and set a useState variable
 
+import { baseUrl } from "../utils/urls";
+
 const fetchData = async <T,>(endpoint: string, setter: (data: T) => void) => {
   try {
-    const response = await fetch(`http://localhost:5100/api/${endpoint}`);
+    const response = await fetch(`${baseUrl}/api/${endpoint}`);
     if (!response.ok) {
       throw new Error(`Error fetching ${endpoint}: ${response.statusText}`);
     }

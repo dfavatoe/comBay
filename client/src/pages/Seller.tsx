@@ -5,6 +5,7 @@ import { Col, Container, Image, Row } from "react-bootstrap";
 import ProductCardStore from "../components/ProductCardStore";
 import { TileLayer, MapContainer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { baseUrl } from "../utils/urls";
 
 function Seller() {
   const [seller, setSeller] = useState<User | null>(null);
@@ -23,7 +24,7 @@ function Seller() {
     if (sellerId) {
       try {
         const response = await fetch(
-          `http://localhost:5100/api/products/seller/${sellerId}`
+          `${baseUrl}/api/products/seller/${sellerId}`
         );
         console.log("response :>> ", response);
         if (!response.ok) {

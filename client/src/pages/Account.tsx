@@ -54,7 +54,7 @@ function Account() {
 
       try {
         const response = await fetch(
-          "http://localhost:5100/api/users/profile/",
+          `${baseUrl}/api/users/profile/`,
           requestOptions
         );
         console.log("response :>> ", response);
@@ -308,7 +308,7 @@ function Account() {
 
     try {
       const response = await fetch(
-        "http://localhost:5100/api/users/uploadimage",
+        `${baseUrl}/api/users/uploadimage`,
         requestOptions
       );
 
