@@ -7,7 +7,6 @@ import { Button, Container, Row } from "react-bootstrap";
 
 import { Link, useNavigate } from "react-router";
 import ProductCardList from "../components/ProductCardList";
-import ModalAlert from "../components/ModalAlert";
 
 function List() {
   const { token } = useUserStatus();

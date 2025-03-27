@@ -15,6 +15,7 @@ import {
   ReviewT,
 } from "../types/customTypes";
 import { baseUrl } from "../utils/urls";
+import ModalAlert from "./ModalAlert";
 
 interface ReviewsProp {
   productId: string;
@@ -153,7 +154,8 @@ function Reviews({ productId }: ReviewsProp) {
 
     if (response.ok) {
       console.log("New review successfully added.", response);
-      alert("Your review was successfully added");
+      setAlertText("Your review was successfully added");
+      setShowAlert(true);
       getReviews();
     } else {
       console.log(result.error || "Failed to post review.");
@@ -268,6 +270,11 @@ function Reviews({ productId }: ReviewsProp) {
           )}
         </Stack>
       </Container>
+      <ModalAlert
+        showAlert={showAlert}
+        alertText={alertText}
+        setShowAlert={setShowAlert}
+      />
     </>
   );
 }
