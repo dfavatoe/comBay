@@ -214,9 +214,9 @@ function SignUp() {
             />
           </Form.Group>
           <Form.Text className="d-block mb-4" muted>
-            Selecting 'Buyer' allows you to browse and purchase products. <br />{" "}
-            As a 'Seller' you can register your physical store and list products
-            on our online platform.
+            Selecting 'Buyer' allows you to browse products and create a
+            shopping list. <br /> As a 'Seller' you can register your physical
+            store and list products on our online platform.
           </Form.Text>
 
           <Button type="submit" className="mb-4" variant="warning">
