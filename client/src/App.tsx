@@ -31,6 +31,7 @@ const Root = () => {
 };
 
 function App() {
+  console.log("Production or Dev mode?? :>> ", import.meta.env.MODE);
   return (
     <>
       <AuthContextProvider>

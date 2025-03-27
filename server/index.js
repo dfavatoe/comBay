@@ -27,6 +27,7 @@ function addMiddleWares() {
   // app.use(cors());
   //Using CORS options to secure the origin of the requests
   const allowedOrigins = [
+    "http://localhost:5100",
     "http://localhost:5173",
     "http://combay.vercel.app",
     "https://combay.vercel.app",
