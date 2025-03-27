@@ -1,11 +1,5 @@
 import { Dispatch } from "react";
 
-// export interface Root {
-//   message: string;
-//   amount: number;
-//   records: Record[];
-// }
-
 export interface ProductsRoot {
   message: string;
   amount: number;
@@ -15,12 +9,7 @@ export interface ProductSpecs {
   productById: ProductT;
 }
 
-// export interface ProductsList {
-//   listItem: ProductT;
-// }
-
 export interface ProductT {
-  // dimensions: Dimensions;
   width: number;
   height: number;
   depth: number;
@@ -68,12 +57,6 @@ export type addProductT = Pick<
   | "height"
   | "depth"
 > & { seller: string };
-
-// export interface Dimensions {
-//   width: number;
-//   height: number;
-//   depth: number;
-// }
 
 export interface Meta {
   barcode: string;

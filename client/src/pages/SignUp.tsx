@@ -92,7 +92,10 @@ function SignUp() {
 
   return (
     <>
-      <Container className="justify-content-center">
+      <Container
+        className="justify-content-center"
+        style={{ maxWidth: "600px" }}
+      >
         <h1 className="mb-4" style={{ textAlign: "center" }}>
           Sign Up
         </h1>
