@@ -11,6 +11,7 @@ function AboutBlank() {
       <Container className="w-75 d-flex justify-content-center">
         <Image
           src="https://res.cloudinary.com/dsf34lqnj/image/upload/v1740753749/comBay/cd4o6m2cyqomqgkhnrhe.jpg"
+          width="70%"
           fluid
         />
       </Container>
