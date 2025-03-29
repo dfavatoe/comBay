@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import useUserStatus from "../hooks/useUserStatus";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
-// import video from "../assets/comBay_extra_small.mp4";
 import "../style/Home.css";
 import { ProductsRoot, ProductT } from "../types/customTypes";
 import { fetchData } from "../hooks/useFetch";
