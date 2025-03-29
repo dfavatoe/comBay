@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useUserStatus from "../hooks/useUserStatus";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router";
-import video from "../assets/comBay_extra_small.mp4";
+// import video from "../assets/comBay_extra_small.mp4";
 import "../style/Home.css";
 import { ProductsRoot, ProductT } from "../types/customTypes";
 import { fetchData } from "../hooks/useFetch";
@@ -51,7 +51,10 @@ function Home() {
                 loop
                 muted
               >
-                <source src={video} type="video/mp4"></source>
+                <source
+                  src="https://res.cloudinary.com/dsf34lqnj/video/upload/v1743250699/combay_extra_small_wa7v4m.mp4"
+                  type="video/mp4"
+                ></source>
               </video>
               <Container id="title-container" fluid>
                 <h1 aria-label="allBuy has">comBay</h1>
