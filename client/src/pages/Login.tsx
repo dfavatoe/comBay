@@ -68,7 +68,7 @@ function Login() {
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
             <Form.Control
-              type="text"
+              type="password"
               name="password"
               id="password"
               onChange={handleLoginInputChange}
