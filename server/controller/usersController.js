@@ -305,7 +305,7 @@ const putUpdateAddress = async (req, res) => {
 };
 
 //=========================================================
-
+//* This is the valid function to update address
 const updateAddress = async (req, res) => {
   console.log("update address running");
 
